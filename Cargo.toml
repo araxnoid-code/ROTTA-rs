@@ -6,3 +6,10 @@ edition = "2024"
 [dependencies]
 ndarray = "0.16.1"
 rand = "0.9.1"
+
+[dependencies.uuid]
+version = "1.17.0"
+# Lets you generate random UUIDs
+features = [
+    "v4",
+]
