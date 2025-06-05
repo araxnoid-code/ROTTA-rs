@@ -1,22 +1,33 @@
 use ndarray::array;
 
-use crate::rotta_rs::{ add, matmul, Tensor };
+use crate::rotta_rs::{ add, matmul, Module, SSResidual, Sgd, Tensor };
 
 mod rotta_rs;
 
 fn main() {
-    let x = Tensor::new(array![[2.0]]);
-    let w_1 = Tensor::new(array![[3.0]]);
-    let w_2 = Tensor::new(array![[4.0]]);
+    let mut model = Module::init();
+    let optimazer = Sgd::init(model.parameters(), 0.00001);
+    let loss_fn = SSResidual::init();
 
-    let h1 = matmul(&x, &w_1);
-    let h2 = matmul(&h1, &w_2);
-    let z = add(&h2, &h1);
+    let linear = model.liniar_init(1, 1);
 
-    z.backward();
-    // println!("{}", h1);
-    // println!("{}", h2);
-    // println!("{}", z);
+    let input = Tensor::new(array![[1.0], [2.0], [3.0]]);
+    let actual = Tensor::new(array![[1.0], [2.0], [3.0]] * 2.0);
 
-    println!("{}", x.node.lock().unwrap().grad)
+    for epoch in 0..100000000 {
+        let pred = linear.forward(&input);
+
+        let loss = loss_fn.forward(&pred, &actual);
+        println!("=============");
+        println!("prediction:\n{}", pred);
+        println!("actual:\n{}", actual);
+        println!("epoch:{epoch} | loss:{}", loss);
+        println!("=============");
+
+        optimazer.zero_grad();
+
+        loss.backward();
+
+        optimazer.optim();
+    }
 }

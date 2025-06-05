@@ -1,6 +1,9 @@
 mod tensor;
 pub use tensor::*;
 
+mod node;
+pub use node::*;
+
 mod operation;
 pub use operation::*;
 
