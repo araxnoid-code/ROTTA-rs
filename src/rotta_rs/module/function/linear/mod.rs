@@ -1,7 +1,6 @@
 mod linear;
 pub use linear::*;
 use ndarray::Array2;
-use rand::random;
 
 use crate::rotta_rs::{ Module, Tensor, WeightInitialization };
 
@@ -10,8 +9,9 @@ impl Module {
         // weight
         let weight = Array2::from_shape_fn([input, output], |_| {
             match self.initialization {
-                WeightInitialization::Random => random(),
-                _ => 0.0,
+                WeightInitialization::Random => self.random_initialization(),
+                WeightInitialization::Glorot => self.glorot_initialization(input, output),
+                WeightInitialization::He => self.he_initialization(input),
             }
         });
 
@@ -21,8 +21,9 @@ impl Module {
         // bias
         let bias = Array2::from_shape_fn([1, output], |_| {
             match self.initialization {
-                WeightInitialization::Random => random(),
-                _ => 0.0,
+                WeightInitialization::Random => self.random_initialization(),
+                WeightInitialization::Glorot => self.glorot_initialization(input, output),
+                WeightInitialization::He => self.he_initialization(input),
             }
         });
 

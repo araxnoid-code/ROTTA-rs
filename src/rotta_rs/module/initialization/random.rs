@@ -1,4 +1,10 @@
-pub fn random_initialization() -> f64 {
-    let random = rand::random::<f64>();
-    random
+use rand::Rng;
+
+use crate::rotta_rs::Module;
+
+impl Module {
+    pub fn random_initialization(&mut self) -> f64 {
+        let random = self.rng.random();
+        random
+    }
 }
