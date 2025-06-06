@@ -1,12 +1,12 @@
 use ndarray::array;
 
-use crate::rotta_rs::{ add, matmul, Module, SSResidual, Sgd, Tensor };
+use crate::rotta_rs::{ Module, SSResidual, Sgd, Tensor };
 
 mod rotta_rs;
 
 fn main() {
     let mut model = Module::init();
-    let optimazer = Sgd::init(model.parameters(), 0.000001);
+    let optimazer = Sgd::init(model.parameters(), 0.00001);
     let loss_fn = SSResidual::init();
 
     let linear = model.liniar_init(1, 1);
@@ -18,12 +18,12 @@ fn main() {
         let pred = linear.forward(&input);
 
         let loss = loss_fn.forward(&pred, &actual);
-        std::process::Command::new("clear").status().unwrap().success();
         println!("=============");
         println!("prediction:\n{}", pred);
         println!("actual:\n{}", actual);
         println!("epoch:{epoch} | loss:{}", loss);
         println!("=============");
+        std::process::Command::new("clear").status().unwrap().success();
 
         optimazer.zero_grad();
 
