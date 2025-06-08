@@ -6,6 +6,3 @@ pub use function::*;
 
 mod initialization;
 pub use initialization::*;
-
-mod optimazer;
-pub use optimazer::*;

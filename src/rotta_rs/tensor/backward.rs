@@ -1,6 +1,6 @@
 use std::{ clone, collections::HashSet };
 
-use crate::rotta_rs::{ d_add, d_matmul, d_ssresidual, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ d_add, d_matmul, d_relu, d_ssresidual, BackwardLabel, NodeType, Tensor };
 
 impl Tensor {
     pub fn backward(&self) {
@@ -22,6 +22,9 @@ impl Tensor {
                     // opearation
                     BackwardLabel::Matmul(a, b) => d_matmul(a, b, &grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, &grad),
+
+                    // activation
+                    BackwardLabel::Relu(x) => d_relu(x, &grad),
 
                     // loss
                     BackwardLabel::SSResidual(prediction, actual) =>

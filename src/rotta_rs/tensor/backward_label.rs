@@ -6,6 +6,9 @@ pub enum BackwardLabel {
     Matmul(NodeType, NodeType),
     Add(NodeType, NodeType),
 
+    // activation
+    Relu(NodeType),
+
     // loss
     SSResidual(NodeType, NodeType), // prediction, actual
 }
