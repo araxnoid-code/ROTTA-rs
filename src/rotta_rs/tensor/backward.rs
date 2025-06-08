@@ -1,6 +1,15 @@
 use std::{ clone, collections::HashSet };
 
-use crate::rotta_rs::{ d_add, d_matmul, d_relu, d_ssresidual, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{
+    d_add,
+    d_matmul,
+    d_relu,
+    d_softmax,
+    d_ssresidual,
+    BackwardLabel,
+    NodeType,
+    Tensor,
+};
 
 impl Tensor {
     pub fn backward(&self) {
@@ -25,6 +34,7 @@ impl Tensor {
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),
+                    BackwardLabel::Softmax(x, softmax) => d_softmax(x, softmax, &grad),
 
                     // loss
                     BackwardLabel::SSResidual(prediction, actual) =>

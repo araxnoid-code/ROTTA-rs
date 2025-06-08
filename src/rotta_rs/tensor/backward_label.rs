@@ -1,4 +1,4 @@
-use crate::rotta_rs::NodeType;
+use crate::rotta_rs::{ NdArray, NodeType };
 
 #[derive(Debug)]
 pub enum BackwardLabel {
@@ -8,6 +8,7 @@ pub enum BackwardLabel {
 
     // activation
     Relu(NodeType),
+    Softmax(NodeType, NdArray), // node, softmax
 
     // loss
     SSResidual(NodeType, NodeType), // prediction, actual

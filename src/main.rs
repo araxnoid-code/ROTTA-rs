@@ -34,6 +34,4 @@ fn main() {
     //     optimazer.optim();
     // }
 
-    let x = Tensor::new(array![[1.0, 2.0, 3.0, 4.0], [2.0, 3.0, 4.0, 5.0]]);
-    softmax(&x);
 }
