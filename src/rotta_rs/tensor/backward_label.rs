@@ -12,4 +12,5 @@ pub enum BackwardLabel {
 
     // loss
     SSResidual(NodeType, NodeType), // prediction, actual
+    CEL(NodeType, NodeType), // prediction, actual
 }

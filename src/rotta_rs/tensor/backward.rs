@@ -1,6 +1,7 @@
 use std::{ clone, collections::HashSet };
 
 use crate::rotta_rs::{
+    d_cel,
     d_add,
     d_matmul,
     d_relu,
@@ -39,6 +40,8 @@ impl Tensor {
                     // loss
                     BackwardLabel::SSResidual(prediction, actual) =>
                         d_ssresidual(prediction, actual, &grad),
+                    BackwardLabel::CEL(prob_prediction, prob_actual) =>
+                        d_cel(prob_prediction, prob_actual, &grad),
                 }
             }
         }
