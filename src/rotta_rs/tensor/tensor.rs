@@ -1,8 +1,6 @@
 use std::{ fmt::Display, sync::{ Arc, Mutex } };
 
-use uuid::Uuid;
-
-use crate::rotta_rs::{ BackwardLabel, NdArray, Node, NodeType };
+use crate::rotta_rs::{ NdArray, Node, NodeType };
 
 #[derive(Debug)]
 pub struct Tensor {

@@ -45,3 +45,25 @@ pub fn d_add(a: &NodeType, b: &NodeType, grad: &NdArray) {
     // f/db = 1 * grad = grad
     b.lock().as_mut().unwrap().add_grad(grad);
 }
+
+// matmul method
+trait Matmul {
+    fn matmul(&self, b: &NdArray);
+}
+
+impl Matmul for NdArray {
+    fn matmul(&self, b: &NdArray) {
+        let output_shape = [
+            self.shape()[self.shape().len() - 2],
+            self.shape()[self.shape().len() - 1],
+        ];
+
+        let n = self.shape()[self.shape().len() - 2];
+        for row in 0..self.shape().len() - 2 {
+            for coll in 0..self.shape()[self.shape().len() - 1] {
+                for n in 0..n {
+                }
+            }
+        }
+    }
+}
