@@ -1,8 +1,10 @@
 use std::{ clone, collections::HashSet };
 
 use crate::rotta_rs::{
-    d_cel,
     d_add,
+    d_cel,
+    d_divided,
+    d_exp,
     d_matmul,
     d_relu,
     d_softmax,
@@ -32,6 +34,10 @@ impl Tensor {
                     // opearation
                     BackwardLabel::Matmul(a, b) => d_matmul(a, b, &grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, &grad),
+                    BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
+
+                    // method
+                    BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),

@@ -5,6 +5,10 @@ pub enum BackwardLabel {
     // operation
     Matmul(NodeType, NodeType),
     Add(NodeType, NodeType),
+    Diveded(NodeType, NodeType),
+
+    // method
+    Exp(NodeType, NdArray),
 
     // activation
     Relu(NodeType),

@@ -46,24 +46,28 @@ pub fn d_add(a: &NodeType, b: &NodeType, grad: &NdArray) {
     b.lock().as_mut().unwrap().add_grad(grad);
 }
 
-// matmul method
-trait Matmul {
-    fn matmul(&self, b: &NdArray);
+// divided
+pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
+    let output = a.value() / b.value();
+
+    let tensor = Tensor::new(output);
+    tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
+    tensor.node.lock().as_mut().unwrap().label = Some(
+        BackwardLabel::Add(a.node.clone(), b.node.clone())
+    );
+
+    tensor
 }
 
-impl Matmul for NdArray {
-    fn matmul(&self, b: &NdArray) {
-        let output_shape = [
-            self.shape()[self.shape().len() - 2],
-            self.shape()[self.shape().len() - 1],
-        ];
+pub fn d_divided(a: &NodeType, b: &NodeType, grad: &NdArray) {
+    let epsilon = 1e-9;
+    let a_value = a.lock().unwrap().value.clone();
+    let b_value = b.lock().unwrap().value.clone();
+    // da = 1/b * grad
+    let d_a = (1.0 / &b_value) * grad;
+    a.lock().unwrap().add_grad(&d_a);
 
-        let n = self.shape()[self.shape().len() - 2];
-        for row in 0..self.shape().len() - 2 {
-            for coll in 0..self.shape()[self.shape().len() - 1] {
-                for n in 0..n {
-                }
-            }
-        }
-    }
+    // db = -a/b^2 * grad
+    let d_b = -(a_value / (&b_value + epsilon).pow2()) * grad;
+    b.lock().unwrap().add_grad(&d_b);
 }
