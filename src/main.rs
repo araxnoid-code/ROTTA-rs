@@ -22,41 +22,67 @@ fn main() {
     // exp.backward();
     // println!("{}", c.grad());
 
-    let root = BitMapBackend::new("testing.png", (640, 500)).into_drawing_area();
+    // let root = BitMapBackend::new("testing.png", (640, 500)).into_drawing_area();
+    // root.fill(&WHITE).unwrap();
+
+    // let root = root.margin(10, 10, 10, 10);
+    // let mut chart = ChartBuilder::on(&root);
+
+    // let mut chart = chart
+    //     .caption("testing", ("sans-serif", 40).into_font())
+    //     .x_label_area_size(20)
+    //     .y_label_area_size(40)
+    //     .build_cartesian_2d(0f32..10f32, 0f32..10f32)
+    //     .unwrap();
+
+    // chart
+    //     .configure_mesh()
+    //     // We can customize the maximum number of labels allowed for each axis
+    //     // .x_labels(10)
+    //     // .y_labels(10)
+    //     // We can also change the format of the label text
+    //     .y_label_formatter(&(|x| format!("{:.3}", x)))
+    //     .draw()
+    //     .unwrap();
+
+    // chart
+    //     .draw_series(
+    //         PointSeries::of_element(
+    //             vec![(0.0, 5.0), (1.0, 5.0), (3.0, 10.0)],
+    //             5,
+    //             &RED,
+    //             &(|c, s, st| {
+    //                 return EmptyElement::at(c) + Circle::new((0, 0), s, st.filled());
+    //             })
+    //         )
+    //     )
+    //     .unwrap();
+
+    //
+
+    let root = BitMapBackend::new("halo.png", (500, 500)).into_drawing_area();
     root.fill(&WHITE).unwrap();
+    root.margin(10, 10, 10, 10);
 
-    let root = root.margin(10, 10, 10, 10);
-    let mut chart = ChartBuilder::on(&root);
-
-    let mut chart = chart
-        .caption("testing", ("sans-serif", 40).into_font())
+    let mut chart = ChartBuilder::on(&root)
+        .caption("testing", ("sans-serif", 50).into_font())
+        .y_label_area_size(20)
         .x_label_area_size(20)
-        .y_label_area_size(40)
         .build_cartesian_2d(0f32..10f32, 0f32..10f32)
         .unwrap();
 
-    chart
-        .configure_mesh()
-        // We can customize the maximum number of labels allowed for each axis
-        // .x_labels(10)
-        // .y_labels(10)
-        // We can also change the format of the label text
-        .y_label_formatter(&(|x| format!("{:.3}", x)))
-        .draw()
-        .unwrap();
+    chart.configure_mesh().draw().unwrap();
 
     chart
         .draw_series(
             PointSeries::of_element(
-                vec![(0.0, 5.0), (1.0, 5.0), (3.0, 10.0)],
+                vec![(0.0, 0.0)],
                 5,
                 &RED,
-                &(|c, s, st| {
-                    return EmptyElement::at(c) + Circle::new((0, 0), s, st.filled());
+                &(|a, b, c| {
+                    return EmptyElement::at(a) + Circle::new((0, 0), b, c.filled());
                 })
             )
         )
         .unwrap();
-
-    // chart.dra
 }
