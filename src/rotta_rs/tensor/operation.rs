@@ -1,5 +1,7 @@
 use std::sync::{ Arc, Mutex };
 
+use ndarray::Axis;
+
 use crate::rotta_rs::{ BackwardLabel, NdArray, NodeType, Tensor };
 
 // matmul
@@ -40,10 +42,38 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 
 pub fn d_add(a: &NodeType, b: &NodeType, grad: &NdArray) {
     // f/da = 1 * grad = grad
-    a.lock().as_mut().unwrap().add_grad(grad);
+    let grad_a = {
+        let a_lock = a.lock().unwrap();
+        if a_lock.value.shape() != grad.shape() {
+            if a_lock.value.shape()[0] == 1 {
+                let grad_sum = grad.sum_axis(Axis(0));
+                let grad_shape = grad_sum.to_shape(a_lock.grad.dim()).unwrap().to_owned();
+                grad_shape
+            } else {
+                grad.clone()
+            }
+        } else {
+            grad.clone()
+        }
+    };
+    a.lock().as_mut().unwrap().add_grad(&grad_a);
 
     // f/db = 1 * grad = grad
-    b.lock().as_mut().unwrap().add_grad(grad);
+    let grad_b = {
+        let b_lock = b.lock().unwrap();
+        if b_lock.value.shape() != grad.shape() {
+            if b_lock.value.shape()[0] == 1 {
+                let grad_sum = grad.sum_axis(Axis(0));
+                let grad_shape = grad_sum.to_shape(b_lock.grad.dim()).unwrap().to_owned();
+                grad_shape
+            } else {
+                grad.clone()
+            }
+        } else {
+            grad.clone()
+        }
+    };
+    b.lock().as_mut().unwrap().add_grad(&grad_b);
 }
 
 // divided
