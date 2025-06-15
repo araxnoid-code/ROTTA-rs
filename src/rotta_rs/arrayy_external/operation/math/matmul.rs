@@ -1,4 +1,4 @@
-use crate::{ broadcasting, broadcast_concat, matmul_broadcasting, Arrayy, MultipleSum };
+use crate::rotta_rs::*;
 
 // function
 pub fn matmul_2d(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {

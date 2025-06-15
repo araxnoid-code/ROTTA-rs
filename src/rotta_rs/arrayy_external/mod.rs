@@ -1,5 +1,5 @@
-mod arrayy;
-pub use arrayy::*;
+mod array;
+pub use array::*;
 
 mod operation;
 pub use operation::*;

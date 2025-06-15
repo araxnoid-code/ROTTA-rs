@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use crate::{ Arrayy, MultipleSum };
+use crate::rotta_rs::*;
 
 // display
 impl Display for Arrayy {

@@ -4,14 +4,17 @@ pub use tensor::*;
 mod node;
 pub use node::*;
 
-mod operation;
-pub use operation::*;
+mod array;
+pub use array::*;
 
-mod backward;
-pub use backward::*;
+// mod operation;
+// pub use operation::*;
+
+// mod backward;
+// pub use backward::*;
 
 mod backward_label;
 pub use backward_label::*;
 
-mod tensor_method;
-pub use tensor_method::*;
+// mod tensor_method;
+// pub use tensor_method::*;

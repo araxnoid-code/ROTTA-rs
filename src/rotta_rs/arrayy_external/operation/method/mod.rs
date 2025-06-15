@@ -1,6 +1,6 @@
 use std::ops::{ Add, Div, Sub, Mul };
 
-use crate::{ add, divided, minus, mul, permute, slice, ArrSlice, Arrayy };
+use crate::rotta_rs::*;
 
 impl Add for Arrayy {
     type Output = Self;

@@ -1,4 +1,4 @@
-use crate::Arrayy;
+use crate::rotta_rs::*;
 
 pub fn exp(arr: &Arrayy) -> Arrayy {
     let vector = arr.value

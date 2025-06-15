@@ -1,4 +1,4 @@
-use crate::{ broadcasting, broadcast_concat, Arrayy };
+use crate::rotta_rs::*;
 
 // function
 pub fn mul(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {

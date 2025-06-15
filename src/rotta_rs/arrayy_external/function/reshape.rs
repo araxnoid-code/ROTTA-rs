@@ -1,4 +1,4 @@
-use crate::{ Arrayy, MultipleSum };
+use crate::rotta_rs::*;
 
 pub fn reshape(arr: &Arrayy, reshape: Vec<usize>) -> Arrayy {
     let arr_length = arr.value.len();

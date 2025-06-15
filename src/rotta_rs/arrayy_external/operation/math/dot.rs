@@ -1,4 +1,4 @@
-use crate::Arrayy;
+use crate::rotta_rs::*;
 
 // function
 pub fn dot(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {

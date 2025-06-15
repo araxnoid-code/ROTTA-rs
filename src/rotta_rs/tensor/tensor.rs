@@ -5,6 +5,7 @@ use crate::rotta_rs::{ NdArray, Node, NodeType };
 #[derive(Debug)]
 pub struct Tensor {
     pub node: NodeType,
+    // pub value:
 }
 
 impl Tensor {

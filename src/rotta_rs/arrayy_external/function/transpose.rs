@@ -1,4 +1,4 @@
-use crate::Arrayy;
+use crate::rotta_rs::*;
 
 pub fn t_2d(arr: &Arrayy) -> Arrayy {
     let mut shape = arr.shape.clone();

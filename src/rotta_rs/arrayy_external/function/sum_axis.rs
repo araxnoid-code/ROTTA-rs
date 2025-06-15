@@ -1,4 +1,4 @@
-use crate::{ Arrayy, MultipleSum };
+use crate::rotta_rs::*;
 
 pub fn sum_axis(arr: &Arrayy, d: usize) -> Arrayy {
     let mut shape = arr.shape.clone();

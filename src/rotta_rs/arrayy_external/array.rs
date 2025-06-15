@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::{ MultipleSum, RecFlatten };
+use crate::rotta_rs::{ MultipleSum, RecFlatten };
 
 #[derive(Clone)]
 pub struct Arrayy {

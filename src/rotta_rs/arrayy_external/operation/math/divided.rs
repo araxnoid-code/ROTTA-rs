@@ -1,4 +1,4 @@
-use crate::{ broadcasting, broadcast_concat, Arrayy };
+use crate::rotta_rs::*;
 
 // function
 pub fn divided(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
@@ -24,9 +24,6 @@ pub fn divided(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
             (*arr_a).clone()
         };
         let b = if let Ok(arr) = broadcasting(arr_b, b_shape) { arr } else { (*arr_a).clone() };
-
-        println!("{}", a);
-        println!("{}", b);
 
         for i in 0..a.value.len() {
             a.value[i] /= b.value[i];
