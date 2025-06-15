@@ -1,0 +1,45 @@
+use std::ops::{ Add, Div, Sub, Mul };
+
+use crate::{ add, divided, minus, mul, permute, slice, ArrSlice, Arrayy };
+
+impl Add for Arrayy {
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self::Output {
+        add(&self, &rhs)
+    }
+}
+
+impl Sub for Arrayy {
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self::Output {
+        minus(&self, &rhs)
+    }
+}
+
+impl Div for Arrayy {
+    type Output = Self;
+    fn div(self, rhs: Self) -> Self::Output {
+        divided(&self, &rhs)
+    }
+}
+
+impl Mul for Arrayy {
+    type Output = Self;
+    fn mul(self, rhs: Self) -> Self::Output {
+        mul(&self, &rhs)
+    }
+}
+
+// impl Arrayy {
+//     pub fn permute(&mut self, order: Vec<usize>) {
+//         self.update_from(permute(order, self));
+//     }
+
+//     pub fn slice(&mut self, slice_vector: Vec<ArrSlice>) {
+//         self.update_from(slice(&self, slice_vector));
+//     }
+
+//     pub fn t(&mut self){
+
+//     }
+// }
