@@ -1,17 +1,18 @@
 use std::{ fmt::Display, sync::{ Arc, Mutex } };
 
-use crate::rotta_rs::{ NdArray, Node, NodeType };
+use ndarray::array;
+
+use crate::rotta_rs::{ ArrayType, Arrayy, NdArray, Node, NodeType };
 
 #[derive(Debug)]
 pub struct Tensor {
     pub node: NodeType,
-    // pub value:
 }
 
 impl Tensor {
     // initialization
-    pub fn new(value: NdArray) -> Tensor {
-        let node = Node::new(value);
+    pub fn new(array: Arrayy) -> Tensor {
+        let node = Node::new(array);
         let node = Arc::new(Mutex::new(node));
 
         let tensor = Tensor {
@@ -23,12 +24,12 @@ impl Tensor {
 
     // get
     // value
-    pub fn value(&self) -> NdArray {
+    pub fn value_vector(&self) -> Arrayy {
         self.node.lock().unwrap().value.clone()
     }
 
     // grad
-    pub fn grad(&self) -> NdArray {
+    pub fn value_grad(&self) -> Arrayy {
         self.node.lock().unwrap().grad.clone()
     }
 

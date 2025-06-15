@@ -1,25 +1,49 @@
 use std::fmt::Display;
 
-use crate::rotta_rs::{ MultipleSum, RecFlatten };
+use uuid::Uuid;
 
-#[derive(Clone)]
+use crate::rotta_rs::{ BackwardLabel, MultipleSum, NodeType, RecFlatten };
+
+#[derive(Clone, Debug)]
 pub struct Arrayy {
     pub value: Vec<f64>,
     pub shape: Vec<usize>,
 }
 
 impl Arrayy {
+    // create
     pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Arrayy {
         let flatten = vector.rec_flatten();
 
         let arr = Arrayy {
-            value: flatten,
+            value: flatten.clone(),
             shape: shape,
         };
 
         arr
     }
 
+    pub fn zeros(shape: Vec<usize>) -> Arrayy {
+        let length = shape.as_slice().multiple_sum();
+
+        let arr = Arrayy {
+            shape,
+            value: vec![0.0; length],
+        };
+        arr
+    }
+
+    pub fn ones(shape: Vec<usize>) -> Arrayy {
+        let length = shape.as_slice().multiple_sum();
+
+        let arr = Arrayy {
+            shape,
+            value: vec![0.0; length],
+        };
+        arr
+    }
+
+    // get
     pub fn index(&self, index: &[usize]) -> f64 {
         let shape = self.shape.clone();
 
@@ -52,6 +76,7 @@ impl Arrayy {
         self.value[out] = value;
     }
 
+    // update
     pub fn update_from(&mut self, arr: Arrayy) {
         self.value = arr.value;
         self.shape = arr.shape;

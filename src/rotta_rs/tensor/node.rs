@@ -1,22 +1,22 @@
 use uuid::Uuid;
 
-use crate::rotta_rs::{ BackwardLabel, NdArray, NodeType };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, NdArray, NodeType };
 
 #[derive(Debug)]
 pub struct Node {
     pub id: u128,
-    pub value: NdArray,
-    pub grad: NdArray,
+    pub value: Arrayy,
+    pub grad: Arrayy,
     pub parent: Vec<NodeType>,
     pub label: Option<BackwardLabel>,
 }
 
 impl Node {
     // initialization
-    pub fn new(value: NdArray) -> Node {
+    pub fn new(value: Arrayy) -> Node {
         let node = Node {
             id: Uuid::new_v4().as_u128(),
-            grad: ndarray::Array2::zeros(value.dim()),
+            grad: Arrayy::zeros(value.shape.clone()),
             value,
             parent: Vec::new(),
             label: None,
@@ -27,19 +27,19 @@ impl Node {
 
     // gradient
     pub fn ones_grad(&mut self) {
-        self.grad = ndarray::Array2::ones(self.grad.dim());
+        self.grad = Arrayy::ones(self.value.shape.clone());
     }
 
-    pub fn add_grad(&mut self, grad: &NdArray) {
-        self.grad = &self.grad + grad;
+    pub fn add_grad(&mut self, grad: Arrayy) {
+        self.grad = self.grad.clone() + grad;
     }
 
     pub fn zero_grad(&mut self) {
-        self.grad = &self.grad * 0.0;
+        self.grad = self.grad.clone() * Arrayy::zeros(vec![1]);
     }
 
     // weight
-    pub fn update_value(&mut self, value: NdArray) {
+    pub fn update_value(&mut self, value: Arrayy) {
         self.value = value;
     }
 }

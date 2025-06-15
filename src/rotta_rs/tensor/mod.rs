@@ -4,9 +4,6 @@ pub use tensor::*;
 mod node;
 pub use node::*;
 
-mod array;
-pub use array::*;
-
 // mod operation;
 // pub use operation::*;
 

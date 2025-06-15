@@ -1,6 +1,6 @@
 use crate::rotta_rs::{ NdArray, NodeType };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum BackwardLabel {
     // operation
     Matmul(NodeType, NodeType),
