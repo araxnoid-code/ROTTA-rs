@@ -1,6 +1,6 @@
 use std::ops::{ Add, Div, Sub, Mul };
 
-use crate::rotta_rs::*;
+use crate::rotta_rs::{ arrayy_external::{ add, divided, dot }, * };
 
 impl Add for Arrayy {
     type Output = Self;
@@ -30,16 +30,24 @@ impl Mul for Arrayy {
     }
 }
 
-// impl Arrayy {
-//     pub fn permute(&mut self, order: Vec<usize>) {
-//         self.update_from(permute(order, self));
-//     }
+impl Arrayy {
+    pub fn exp(&self) -> Arrayy {
+        exp(self)
+    }
 
-//     pub fn slice(&mut self, slice_vector: Vec<ArrSlice>) {
-//         self.update_from(slice(&self, slice_vector));
-//     }
+    pub fn dot(&self, rhs: Arrayy) -> Arrayy {
+        dot(self, &rhs)
+    }
 
-//     pub fn t(&mut self){
+    //     pub fn permute(&mut self, order: Vec<usize>) {
+    //         self.update_from(permute(order, self));
+    //     }
 
-//     }
-// }
+    //     pub fn slice(&mut self, slice_vector: Vec<ArrSlice>) {
+    //         self.update_from(slice(&self, slice_vector));
+    //     }
+
+    //     pub fn t(&mut self){
+
+    //     }
+}

@@ -1,4 +1,4 @@
-use std::{ fmt::Display, sync::{ Arc, Mutex } };
+use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
 
 use ndarray::array;
 
@@ -24,12 +24,12 @@ impl Tensor {
 
     // get
     // value
-    pub fn value_vector(&self) -> Arrayy {
+    pub fn value(&self) -> Arrayy {
         self.node.lock().unwrap().value.clone()
     }
 
     // grad
-    pub fn value_grad(&self) -> Arrayy {
+    pub fn grad(&self) -> Arrayy {
         self.node.lock().unwrap().grad.clone()
     }
 
@@ -44,5 +44,13 @@ impl Display for Tensor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let string = format!("{}", self.node.lock().unwrap().value);
         f.write_str(&string)
+    }
+}
+
+impl Mul for Tensor {
+    type Output = Self;
+    fn mul(self, rhs: Self) -> Self::Output {
+        let output = self.value() * rhs.value();
+        Tensor::new(output)
     }
 }

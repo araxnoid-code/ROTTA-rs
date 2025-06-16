@@ -2,11 +2,22 @@ use std::sync::{ Arc, Mutex };
 
 use ndarray::Axis;
 
-use crate::rotta_rs::{ BackwardLabel, NdArray, NodeType, Tensor };
+use crate::rotta_rs::{
+    broadcast_concat,
+    broadcasting,
+    reshape,
+    sum_axis,
+    Arrayy,
+    BackwardLabel,
+    NdArray,
+    NodeType,
+    Tensor,
+};
 
 // matmul
-pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
-    let output = a.value().dot(&b.value());
+pub fn dot(a: &Tensor, b: &Tensor) -> Tensor {
+    // a * b = c
+    let output = a.value().dot(b.value());
 
     let tensor = Tensor::new(output);
     tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
@@ -17,18 +28,54 @@ pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
     tensor
 }
 
-pub fn d_matmul(a: &NodeType, b: &NodeType, grad: &NdArray) {
-    // da = b * grad
-    let d_a = grad.dot(&b.lock().unwrap().value.clone().t());
-    a.lock().as_mut().unwrap().add_grad(&d_a);
+pub fn d_dot(a: &NodeType, b: &NodeType, grad: Arrayy) {
+    // d/da = b * grad
+    let d_a = b.lock().unwrap().value.clone() * grad.clone();
+    a.lock().as_mut().unwrap().add_grad(d_a);
 
     // db = a * grad
-    let d_b = a.lock().unwrap().value.clone().t().dot(grad);
-    b.lock().as_mut().unwrap().add_grad(&d_b);
+    let d_b = a.lock().unwrap().value.clone() * grad.clone();
+    b.lock().as_mut().unwrap().add_grad(d_b);
+}
+
+// broadcasting_tensor
+fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<usize>) {
+    let arr = broadcasting(&tensor_arr.value(), broadcast_shape).unwrap_or(tensor_arr.value());
+
+    let tensor = Tensor::new(arr);
+    tensor.update_parent(vec![tensor_arr.node.clone()]);
+    tensor.node.lock().unwrap().label = Some(
+        BackwardLabel::Broadcasting(tensor_arr.node.clone(), tensor.value())
+    );
+}
+
+pub fn d_broadcasting_tensor(tensor_arr: &Tensor, broad_arr: Arrayy, grad: Arrayy) {
+    let broadcasted_shape = &broad_arr.shape;
+    let pre_shape = tensor_arr.value().shape;
+    let mut sum_list = vec![];
+
+    broadcasted_shape
+        .iter()
+        .enumerate()
+        .for_each(|(d, broad)| {
+            if *broad != pre_shape[d] {
+                sum_list.push(d);
+            }
+        });
+
+    let mut sum = broad_arr * grad;
+    for sum_d in sum_list {
+        sum = sum_axis(&sum, sum_d);
+    }
+
+    let d_arr = reshape(&sum, pre_shape);
+    tensor_arr.node.lock().unwrap().add_grad(d_arr);
 }
 
 // add
 pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
+    let broadcasting_shape = broadcast_concat(&a.value(), &b.value());
+
     let output = a.value() + b.value();
 
     let tensor = Tensor::new(output);
