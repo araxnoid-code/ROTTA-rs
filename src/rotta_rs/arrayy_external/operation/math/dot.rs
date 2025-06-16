@@ -4,7 +4,8 @@ use crate::rotta_rs::*;
 pub fn dot(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
     let arr_a_s = arr_a.shape.clone();
     let arr_b_s = arr_b.shape.clone();
-    if arr_a_s == arr_b_s && arr_a_s.len() == 1 {
+
+    if arr_a_s == arr_b_s && arr_a_s.len() == 1 && arr_b_s.len() == 1 {
         //
         let mut sum = 0.0;
 
@@ -16,6 +17,10 @@ pub fn dot(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
 
         return array;
     } else {
-        panic!("error can't dot product")
+        panic!(
+            "error can't dot product cause differend shape, {:?} will dot product with {:?}",
+            arr_a_s,
+            arr_b_s
+        )
     }
 }

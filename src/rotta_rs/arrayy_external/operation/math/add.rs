@@ -1,7 +1,7 @@
 use crate::rotta_rs::*;
 
 // function
-pub fn add(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
+pub fn add_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
     let arr_a_s = arr_a.shape.clone();
     let arr_b_s = arr_b.shape.clone();
     if arr_a_s == arr_b_s {

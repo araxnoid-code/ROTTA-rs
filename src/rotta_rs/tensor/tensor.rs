@@ -22,6 +22,19 @@ impl Tensor {
         tensor
     }
 
+    pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Tensor {
+        let array = Arrayy::from_vector(shape, vector);
+
+        let node = Node::new(array);
+        let node = Arc::new(Mutex::new(node));
+
+        let tensor = Tensor {
+            node,
+        };
+
+        tensor
+    }
+
     // get
     // value
     pub fn value(&self) -> Arrayy {

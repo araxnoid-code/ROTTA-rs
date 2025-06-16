@@ -38,7 +38,7 @@ impl Arrayy {
 
         let arr = Arrayy {
             shape,
-            value: vec![0.0; length],
+            value: vec![1.0; length],
         };
         arr
     }

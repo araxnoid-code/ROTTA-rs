@@ -1,11 +1,11 @@
 use std::ops::{ Add, Div, Sub, Mul };
 
-use crate::rotta_rs::{ arrayy_external::{ add, divided, dot }, * };
+use crate::rotta_rs::{ arrayy_external::{ add_arr, divided, dot }, * };
 
 impl Add for Arrayy {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
-        add(&self, &rhs)
+        add_arr(&self, &rhs)
     }
 }
 
