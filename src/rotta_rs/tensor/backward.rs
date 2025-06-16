@@ -1,6 +1,14 @@
 use std::{ clone, collections::HashSet };
 
-use crate::rotta_rs::{ d_add, d_broadcasting_tensor, d_dot, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{
+    d_add,
+    d_broadcasting_tensor,
+    d_dot,
+    d_matmul,
+    BackwardLabel,
+    NodeType,
+    Tensor,
+};
 
 impl Tensor {
     pub fn backward(&self) {
@@ -21,6 +29,7 @@ impl Tensor {
                 match label {
                     // opearation
                     BackwardLabel::Dot(a, b) => d_dot(a, b, grad),
+                    BackwardLabel::Matmul(a, b) => d_matmul(a, b, grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, grad),
                     // BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
 

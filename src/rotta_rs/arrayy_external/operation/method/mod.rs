@@ -35,19 +35,23 @@ impl Arrayy {
         exp(self)
     }
 
-    pub fn dot(&self, rhs: Arrayy) -> Arrayy {
-        dot_arr(self, &rhs)
+    pub fn dot(&self, rhs: &Arrayy) -> Arrayy {
+        dot_arr(self, rhs)
     }
 
-    //     pub fn permute(&mut self, order: Vec<usize>) {
-    //         self.update_from(permute(order, self));
-    //     }
+    pub fn matmul(&self, rhs: &Arrayy) -> Arrayy {
+        matmul_nd(self, rhs)
+    }
+
+    pub fn permute(&self, order: Vec<usize>) -> Arrayy {
+        permute(order, self)
+    }
 
     //     pub fn slice(&mut self, slice_vector: Vec<ArrSlice>) {
     //         self.update_from(slice(&self, slice_vector));
     //     }
 
-    //     pub fn t(&mut self){
-
-    //     }
+    pub fn t(&self) -> Arrayy {
+        transpose(&self, (-1, -2))
+    }
 }
