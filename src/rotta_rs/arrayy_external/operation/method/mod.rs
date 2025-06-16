@@ -1,6 +1,6 @@
 use std::ops::{ Add, Div, Sub, Mul };
 
-use crate::rotta_rs::{ arrayy_external::{ add_arr, divided, dot }, * };
+use crate::rotta_rs::{ arrayy_external::{ add_arr, divided, dot_arr }, * };
 
 impl Add for Arrayy {
     type Output = Self;
@@ -36,7 +36,7 @@ impl Arrayy {
     }
 
     pub fn dot(&self, rhs: Arrayy) -> Arrayy {
-        dot(self, &rhs)
+        dot_arr(self, &rhs)
     }
 
     //     pub fn permute(&mut self, order: Vec<usize>) {

@@ -14,15 +14,15 @@ use crate::rotta_rs::{
     Tensor,
 };
 
-// matmul
+// dot
 pub fn dot(a: &Tensor, b: &Tensor) -> Tensor {
-    // a * b = c
+    // a dot(b) = c
     let output = a.value().dot(b.value());
 
     let tensor = Tensor::new(output);
     tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
     tensor.node.lock().as_mut().unwrap().label = Some(
-        BackwardLabel::Matmul(a.node.clone(), b.node.clone())
+        BackwardLabel::Dot(a.node.clone(), b.node.clone())
     );
 
     tensor
