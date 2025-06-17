@@ -42,3 +42,33 @@ impl<T: Debug + RecFlatten> RecFlatten for Vec<T> {
         }
     }
 }
+
+impl<T: Debug + RecFlatten> RecFlatten for &[T] {
+    fn rec_flatten(&self) -> Vec<f64> {
+        let mut output: Vec<f64> = Vec::new();
+
+        self.recursive(&mut output);
+        output
+    }
+
+    fn recursive(&self, output: &mut Vec<f64>) {
+        for item in *self {
+            item.recursive(output);
+        }
+    }
+}
+
+impl<T: Debug + RecFlatten, const N: usize> RecFlatten for [T; N] {
+    fn rec_flatten(&self) -> Vec<f64> {
+        let mut output: Vec<f64> = Vec::new();
+
+        self.recursive(&mut output);
+        output
+    }
+
+    fn recursive(&self, output: &mut Vec<f64>) {
+        for item in self {
+            item.recursive(output);
+        }
+    }
+}
