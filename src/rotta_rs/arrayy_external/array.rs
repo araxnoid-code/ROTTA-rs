@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{ fmt::Display, vec };
 
 use uuid::Uuid;
 
@@ -13,10 +13,14 @@ pub struct Arrayy {
 impl Arrayy {
     // create
     pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Arrayy {
-        let flatten = vector.rec_flatten();
+        let length = shape.as_slice().multiple_sum();
+
+        // if length != vector.len() {
+        //     panic!("shape and length of vector not same");
+        // }
 
         let arr = Arrayy {
-            value: flatten.clone(),
+            value: vector,
             shape: shape,
         };
 
@@ -41,6 +45,15 @@ impl Arrayy {
             value: vec![1.0; length],
         };
         arr
+    }
+
+    pub fn arrayy_from_shape_fn<F: FnMut() -> f64>(shape: Vec<usize>, mut f: F) -> Arrayy {
+        let mut vector = vec![];
+        for _ in 0..shape.as_slice().multiple_sum() {
+            vector.push(f());
+        }
+
+        Arrayy::from_vector(shape, vector)
     }
 
     // get

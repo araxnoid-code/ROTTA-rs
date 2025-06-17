@@ -57,6 +57,8 @@ pub fn matmul_nd(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
     shape[len - 1] = *arr_b_s.last().unwrap();
     shape[len - 2] = arr_a_s[arr_a_s.len() - 2];
 
+    // println!("{:?}, {}", shape, output.len());
+
     let arr = Arrayy::from_vector(shape, output);
     // arr_a.clone()
     arr

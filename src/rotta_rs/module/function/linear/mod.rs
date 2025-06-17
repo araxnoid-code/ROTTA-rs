@@ -2,12 +2,12 @@ mod linear;
 pub use linear::*;
 use ndarray::Array2;
 
-use crate::rotta_rs::{ Module, Tensor, WeightInitialization };
+use crate::rotta_rs::{ Arrayy, Module, Tensor, WeightInitialization };
 
 impl Module {
     pub fn liniar_init(&mut self, input: usize, output: usize) -> Linear {
         // weight
-        let weight = Array2::from_shape_fn([input, output], |_| {
+        let weight = Arrayy::arrayy_from_shape_fn(vec![input, output], || {
             match self.initialization {
                 WeightInitialization::Random => self.random_initialization(),
                 WeightInitialization::Glorot => self.glorot_initialization(input, output),
@@ -19,7 +19,7 @@ impl Module {
         self.parameters.lock().unwrap().push(tensor_weight.node.clone());
 
         // bias
-        let bias = Array2::from_shape_fn([1, output], |_| {
+        let bias = Arrayy::arrayy_from_shape_fn(vec![1, output], || {
             match self.initialization {
                 WeightInitialization::Random => self.random_initialization(),
                 WeightInitialization::Glorot => self.glorot_initialization(input, output),

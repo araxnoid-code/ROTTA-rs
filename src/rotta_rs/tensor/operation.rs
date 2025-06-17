@@ -19,6 +19,7 @@ pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
     let output = a.value().matmul(&b.value());
 
     let tensor = Tensor::new(output);
+
     tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
     tensor.node.lock().as_mut().unwrap().label = Some(
         BackwardLabel::Matmul(a.node.clone(), b.node.clone())
