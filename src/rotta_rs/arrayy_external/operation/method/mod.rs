@@ -1,36 +1,15 @@
+mod base_operation;
+pub use base_operation::*;
+
 use std::ops::{ Add, Div, Sub, Mul };
 
 use crate::rotta_rs::{ arrayy_external::{ add_arr, divided, dot_arr }, * };
 
-impl Add for Arrayy {
-    type Output = Self;
-    fn add(self, rhs: Self) -> Self::Output {
-        add_arr(&self, &rhs)
-    }
-}
-
-impl Sub for Arrayy {
-    type Output = Self;
-    fn sub(self, rhs: Self) -> Self::Output {
-        minus(&self, &rhs)
-    }
-}
-
-impl Div for Arrayy {
-    type Output = Self;
-    fn div(self, rhs: Self) -> Self::Output {
-        divided(&self, &rhs)
-    }
-}
-
-impl Mul for Arrayy {
-    type Output = Self;
-    fn mul(self, rhs: Self) -> Self::Output {
-        mul(&self, &rhs)
-    }
-}
-
 impl Arrayy {
+    pub fn sum(&self) -> f64 {
+        self.value.iter().sum::<f64>()
+    }
+
     pub fn exp(&self) -> Arrayy {
         exp(self)
     }
@@ -53,5 +32,13 @@ impl Arrayy {
 
     pub fn t(&self) -> Arrayy {
         transpose(&self, (-1, -2))
+    }
+
+    pub fn powi(&self, n: i32) -> Arrayy {
+        powi_arr(self, n)
+    }
+
+    pub fn powf(&self, n: f64) -> Arrayy {
+        powf_arr(self, n)
     }
 }

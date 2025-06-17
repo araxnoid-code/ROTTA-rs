@@ -7,8 +7,8 @@ pub use rotta_type::*;
 // mod module;
 // pub use module::*;
 
-// mod loss;
-// pub use loss::*;
+mod loss;
+pub use loss::*;
 
 // mod optimazer;
 // pub use optimazer::*;

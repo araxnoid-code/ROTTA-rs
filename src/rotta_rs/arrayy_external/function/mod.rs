@@ -15,3 +15,6 @@ pub use reshape::*;
 
 mod slice;
 pub use slice::*;
+
+mod power;
+pub use power::*;

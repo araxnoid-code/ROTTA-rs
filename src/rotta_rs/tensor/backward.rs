@@ -5,6 +5,7 @@ use crate::rotta_rs::{
     d_broadcasting_tensor,
     d_dot,
     d_matmul,
+    d_ssresidual,
     BackwardLabel,
     NodeType,
     Tensor,
@@ -45,8 +46,8 @@ impl Tensor {
                     // BackwardLabel::Softmax(x, softmax) => d_softmax(x, softmax, &grad),
 
                     // loss
-                    // BackwardLabel::SSResidual(prediction, actual) =>
-                    // d_ssresidual(prediction, actual, &grad),
+                    BackwardLabel::SSResidual(prediction, actual) =>
+                        d_ssresidual(prediction, actual, &grad),
                     // BackwardLabel::CEL(prob_prediction, prob_actual) =>
                     // d_cel(prob_prediction, prob_actual, &grad),
 
