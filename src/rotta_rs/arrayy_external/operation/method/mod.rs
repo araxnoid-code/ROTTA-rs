@@ -11,7 +11,7 @@ impl Arrayy {
     }
 
     pub fn exp(&self) -> Arrayy {
-        exp(self)
+        exp_arr(self)
     }
 
     pub fn dot(&self, rhs: &Arrayy) -> Arrayy {

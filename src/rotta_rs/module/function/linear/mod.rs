@@ -15,7 +15,7 @@ impl Module {
             }
         });
 
-        let tensor_weight = Tensor::new(weight);
+        let tensor_weight = Tensor::from_arrayy(weight);
         self.parameters.lock().unwrap().push(tensor_weight.node.clone());
 
         // bias
@@ -27,7 +27,7 @@ impl Module {
             }
         });
 
-        let tensor_bias = Tensor::new(bias);
+        let tensor_bias = Tensor::from_arrayy(bias);
         self.parameters.lock().unwrap().push(tensor_bias.node.clone());
 
         // linear cfg

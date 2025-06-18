@@ -1,6 +1,6 @@
 use crate::rotta_rs::*;
 
-pub fn sum_axis(arr: &Arrayy, d: usize) -> Arrayy {
+pub fn sum_axis_arr(arr: &Arrayy, d: usize) -> Arrayy {
     let mut shape = arr.shape.clone();
     if d >= shape.len() {
         panic!("array is {} dimension but will sum in dimension {}", shape.len(), d);

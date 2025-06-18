@@ -11,7 +11,7 @@ pub struct Tensor {
 
 impl Tensor {
     // initialization
-    pub fn new(array: Arrayy) -> Tensor {
+    pub fn from_arrayy(array: Arrayy) -> Tensor {
         let node = Node::new(array);
         let node = Arc::new(Mutex::new(node));
 
@@ -64,6 +64,6 @@ impl Mul for Tensor {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
         let output = self.value() * rhs.value();
-        Tensor::new(output)
+        Tensor::from_arrayy(output)
     }
 }

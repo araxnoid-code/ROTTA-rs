@@ -7,7 +7,7 @@ pub fn relu(x: &Tensor) -> Tensor {
         if *x >= 0.0 { *x } else { 0.0 }
     });
 
-    let tensor = Tensor::new(output);
+    let tensor = Tensor::from_arrayy(output);
     tensor.update_parent(vec![x.node.clone()]);
     tensor.node.lock().as_mut().unwrap().label = Some(BackwardLabel::Relu(x.node.clone()));
 

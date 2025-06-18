@@ -1,6 +1,6 @@
 use crate::rotta_rs::*;
 
-pub fn exp(arr: &Arrayy) -> Arrayy {
+pub fn exp_arr(arr: &Arrayy) -> Arrayy {
     let vector = arr.value
         .iter()
         .map(|v| { v.exp() })

@@ -4,9 +4,11 @@ use crate::rotta_rs::{
     d_add,
     d_broadcasting_tensor,
     d_dot,
+    d_exp,
     d_matmul,
     d_relu,
     d_ssresidual,
+    d_sum_axis,
     BackwardLabel,
     NodeType,
     Tensor,
@@ -38,9 +40,10 @@ impl Tensor {
                     // mutation
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>
                         d_broadcasting_tensor(tensor_arr, broad_arr.clone(), grad),
+                    BackwardLabel::SumAxis(x, d) => d_sum_axis(x, *d, &grad),
 
-                    // method
-                    // BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
+                    // function
+                    BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),

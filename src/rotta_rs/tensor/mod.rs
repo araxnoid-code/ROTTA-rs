@@ -15,3 +15,6 @@ pub use backward_label::*;
 
 mod tensor_method;
 pub use tensor_method::*;
+
+mod function;
+pub use function::*;
