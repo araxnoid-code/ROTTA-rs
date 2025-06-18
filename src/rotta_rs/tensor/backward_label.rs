@@ -10,7 +10,7 @@ pub enum BackwardLabel {
 
     // mutation
     Broadcasting(NodeType, Arrayy),
-    SumAxis(NodeType, usize),
+    SumAxis(NodeType, usize, bool), // keep_dim
 
     // method
     Exp(NodeType, Arrayy),

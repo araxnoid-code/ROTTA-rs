@@ -3,6 +3,7 @@ use std::{ clone, collections::HashSet };
 use crate::rotta_rs::{
     d_add,
     d_broadcasting_tensor,
+    d_divided,
     d_dot,
     d_exp,
     d_matmul,
@@ -35,12 +36,12 @@ impl Tensor {
                     BackwardLabel::Dot(a, b) => d_dot(a, b, grad),
                     BackwardLabel::Matmul(a, b) => d_matmul(a, b, grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, grad),
-                    // BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
+                    BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
 
                     // mutation
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>
                         d_broadcasting_tensor(tensor_arr, broad_arr.clone(), grad),
-                    BackwardLabel::SumAxis(x, d) => d_sum_axis(x, *d, &grad),
+                    BackwardLabel::SumAxis(x, d, keep_dim) => d_sum_axis(x, *d, *keep_dim, &grad),
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),

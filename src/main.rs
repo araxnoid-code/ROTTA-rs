@@ -1,4 +1,6 @@
-use crate::rotta_rs::exp;
+use std::process::Termination;
+
+use crate::rotta_rs::{ divided, exp, softmax, sum_axis_keep_dim };
 #[allow(unused_imports)]
 use crate::rotta_rs::{
     add,
@@ -19,10 +21,6 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    let a = Tensor::from_vector(vec![2, 3], vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-    let exp = exp(&a);
-    exp.backward();
-    println!("{}", a.grad());
     // let mut model = Module::init();
     // let optimazer = Sgd::init(model.parameters(), 0.0001);
     // let loss_fn = SSResidual::init();

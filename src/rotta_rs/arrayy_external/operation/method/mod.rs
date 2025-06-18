@@ -3,7 +3,7 @@ pub use base_operation::*;
 
 use std::ops::{ Add, Div, Sub, Mul };
 
-use crate::rotta_rs::{ arrayy_external::{ add_arr, divided, dot_arr }, * };
+use crate::rotta_rs::{ arrayy_external::{ add_arr, divided_arr, dot_arr }, * };
 
 impl Arrayy {
     pub fn sum(&self) -> f64 {
