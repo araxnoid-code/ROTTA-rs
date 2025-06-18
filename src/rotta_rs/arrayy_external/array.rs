@@ -89,6 +89,13 @@ impl Arrayy {
         self.value[out] = value;
     }
 
+    // method
+    pub fn map<F: FnMut(&f64) -> f64>(&self, f: F) -> Arrayy {
+        let vector = self.value.iter().map(f).collect::<Vec<f64>>();
+
+        Arrayy::from_vector(self.shape.clone(), vector)
+    }
+
     // update
     pub fn update_from(&mut self, arr: Arrayy) {
         self.value = arr.value;

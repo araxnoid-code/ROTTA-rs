@@ -5,6 +5,7 @@ use crate::rotta_rs::{
     d_broadcasting_tensor,
     d_dot,
     d_matmul,
+    d_relu,
     d_ssresidual,
     BackwardLabel,
     NodeType,
@@ -42,7 +43,7 @@ impl Tensor {
                     // BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
 
                     // activation
-                    // BackwardLabel::Relu(x) => d_relu(x, &grad),
+                    BackwardLabel::Relu(x) => d_relu(x, &grad),
                     // BackwardLabel::Softmax(x, softmax) => d_softmax(x, softmax, &grad),
 
                     // loss

@@ -3,6 +3,7 @@ use crate::rotta_rs::{
     dot,
     matmul,
     matmul_nd,
+    relu,
     transpose,
     Arrayy,
     Module,
@@ -25,8 +26,9 @@ fn main() {
     let input = Tensor::from_vector(vec![3, 1], vec![1.0, 2.0, 3.0]);
     let actual = Tensor::from_vector(vec![3, 1], vec![2.0, 4.0, 6.0]);
 
-    for epoch in 0..100000 {
+    for epoch in 0..1 {
         let x = linear.forward(&input);
+        let x = relu(&x);
         let pred = linear_2.forward(&x);
 
         let loss = loss_fn.forward(&pred, &actual);

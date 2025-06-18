@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ BackwardLabel, NdArray, Node, NodeType, Tensor };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, NdArray, Node, NodeType, Tensor };
 
 pub fn relu(x: &Tensor) -> Tensor {
     // f(x) = if x >= 0 x, if x < 0 0
@@ -14,7 +14,7 @@ pub fn relu(x: &Tensor) -> Tensor {
     tensor
 }
 
-pub fn d_relu(x: &NodeType, grad: &NdArray) {
+pub fn d_relu(x: &NodeType, grad: &Arrayy) {
     let mut x_lock = x.lock();
 
     // f(x) = if x >= 0 1, if x < 0 0
@@ -26,5 +26,5 @@ pub fn d_relu(x: &NodeType, grad: &NdArray) {
                 if *x >= 0.0 { 1.0 } else { 0.0 }
             }) * grad;
 
-    x_lock.as_mut().unwrap().add_grad(&d_x);
+    x_lock.as_mut().unwrap().add_grad(d_x);
 }
