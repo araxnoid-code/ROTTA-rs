@@ -1,6 +1,6 @@
 use crate::rotta_rs::*;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ArrSlice(pub Option<usize>, pub Option<usize>);
 
 pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {

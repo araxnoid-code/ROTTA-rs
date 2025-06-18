@@ -15,9 +15,9 @@ impl Arrayy {
     pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Arrayy {
         let length = shape.as_slice().multiple_sum();
 
-        // if length != vector.len() {
-        //     panic!("shape and length of vector not same");
-        // }
+        if length != vector.len() {
+            panic!("shape and length of vector not same");
+        }
 
         let arr = Arrayy {
             value: vector,

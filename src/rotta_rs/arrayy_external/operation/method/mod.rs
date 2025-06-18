@@ -41,4 +41,10 @@ impl Arrayy {
     pub fn powf(&self, n: f64) -> Arrayy {
         powf_arr(self, n)
     }
+
+    pub fn unsqueeze(&self) -> Arrayy {
+        let shape = self.shape.clone()[1..].to_vec();
+
+        Arrayy::from_vector(shape, self.value.clone())
+    }
 }

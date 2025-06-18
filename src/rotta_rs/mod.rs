@@ -10,8 +10,8 @@ pub use module::*;
 mod loss;
 pub use loss::*;
 
-// mod optimazer;
-// pub use optimazer::*;
+mod optimazer;
+pub use optimazer::*;
 
 // mod activation;
 // pub use activation::*;

@@ -30,63 +30,59 @@ pub fn matmul_2d(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
 }
 
 pub fn matmul_nd(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
-    let arr_a_s = arr_a.shape.clone();
-    let arr_b_s = arr_b.shape.clone();
-    let mut output_vector = Vec::new();
-
-    if arr_a_s == arr_b_s {
-        matmul_recursive(arr_a.clone(), arr_b.clone(), &mut output_vector);
+    if arr_a.shape.len() == 1 || arr_b.shape.len() == 1 {
+        panic!("can't matmul array cause, {:?} will matmul with {:?}", arr_a.shape, arr_b.shape)
+    } else if arr_a.shape.len() == 2 && arr_b.shape.len() == 2 {
+        matmul_2d(arr_a, arr_b)
     } else {
-        // broadcasting
-        let broad_shape = broadcast_concat(arr_a, arr_b);
-        // println!("{:?}", broad_shape);
+        let shape_a = arr_a.shape.clone();
+        let shape_b = arr_b.shape.clone();
+        let mut index = vec![];
+        let mut d = 0;
 
-        let arr_a = if let Ok(b) = matmul_broadcasting(arr_a, broad_shape.clone()) {
-            b
-        } else {
-            arr_a.clone()
-        };
-        let arr_b = if let Ok(b) = broadcasting(arr_b, broad_shape) { b } else { arr_b.clone() };
+        let mut shape = shape_a.clone();
+        let len = shape.len();
+        shape[len - 1] = *shape_b.last().unwrap();
+        shape[len - 2] = shape_a[shape_a.len() - 2];
+        let mut vector = Vec::with_capacity(shape.as_slice().multiple_sum());
 
-        matmul_recursive(arr_a.clone(), arr_b.clone(), &mut output_vector);
-    }
+        loop {
+            if (shape_a.len() as i32) - (d as i32) == 2 {
+                // matmul operation
+                let slice_range = index
+                    .iter()
+                    .map(|d| { ArrSlice(Some(*d), Some(d + 1)) })
+                    .collect::<Vec<ArrSlice>>();
 
-    let output = output_vector.concat();
-    let mut shape = arr_a_s.clone();
-    let len = shape.len();
-    shape[len - 1] = *arr_b_s.last().unwrap();
-    shape[len - 2] = arr_a_s[arr_a_s.len() - 2];
+                let slice_a = slice(&arr_a, slice_range.clone()).unsqueeze();
+                let slice_b = slice(&arr_b, slice_range).unsqueeze();
 
-    // println!("{:?}, {}", shape, output.len());
+                let matmul = matmul_2d(&slice_a, &slice_b);
+                vector.extend(matmul.value.into_iter());
 
-    let arr = Arrayy::from_vector(shape, output);
-    // arr_a.clone()
-    arr
-}
+                d -= 1;
+            } else {
+                if let None = index.get(d) {
+                    index.push(0);
+                    d += 1;
+                } else {
+                    index[d] += 1;
 
-fn matmul_recursive(arr_a: Arrayy, arr_b: Arrayy, output_vector: &mut Vec<Vec<f64>>) {
-    if arr_a.shape.len() == 2 {
-        let arr = matmul_2d(&arr_a, &arr_b);
-        output_vector.push(arr.value);
-    } else {
-        for d in 0..*arr_a.shape.first().unwrap() {
-            // a
-            let a_shape = &arr_a.shape[1..];
-            let a_items = a_shape.multiple_sum();
-            let start = d * a_items;
-            let stop = start + a_items;
-            let vector = arr_a.value[start..stop].to_vec();
-            let arr_a = Arrayy::from_vector(a_shape.to_vec(), vector);
+                    if index[d] >= shape_a[d] {
+                        index.pop();
 
-            // b
-            let b_shape = &arr_b.shape[1..];
-            let b_items = b_shape.multiple_sum();
-            let start = d * b_items;
-            let stop = start + b_items;
-            let vector = arr_b.value[start..stop].to_vec();
-            let arr_b = Arrayy::from_vector(b_shape.to_vec(), vector);
-
-            matmul_recursive(arr_a, arr_b, output_vector);
+                        if d == 0 {
+                            break;
+                        } else {
+                            d -= 1;
+                        }
+                    } else {
+                        d += 1;
+                    }
+                }
+            }
         }
+
+        Arrayy::from_vector(shape, vector)
     }
 }
