@@ -26,9 +26,9 @@ impl Arrayy {
         permute(order, self)
     }
 
-    //     pub fn slice(&mut self, slice_vector: Vec<ArrSlice>) {
-    //         self.update_from(slice(&self, slice_vector));
-    //     }
+    pub fn ln(&self) -> Arrayy {
+        ln_arr(self)
+    }
 
     pub fn t(&self) -> Arrayy {
         transpose(&self, (-1, -2))

@@ -18,3 +18,6 @@ pub use slice::*;
 
 mod power;
 pub use power::*;
+
+mod ln;
+pub use ln::*;
