@@ -1,8 +1,6 @@
 use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
 
-use ndarray::array;
-
-use crate::rotta_rs::{ ArrayType, Arrayy, NdArray, Node, NodeType, RecFlatten };
+use crate::rotta_rs::{ Arrayy, Node, NodeType, RecFlatten };
 
 #[derive(Debug)]
 pub struct Tensor {

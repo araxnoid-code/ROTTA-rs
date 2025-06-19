@@ -33,4 +33,8 @@ impl Module {
     pub fn update_seed(&mut self, seed: u64) {
         self.rng = StdRng::seed_from_u64(seed);
     }
+
+    pub fn update_initialization(&mut self, initialization: WeightInitialization) {
+        self.initialization = initialization;
+    }
 }

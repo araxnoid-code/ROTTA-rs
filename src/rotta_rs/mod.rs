@@ -16,5 +16,5 @@ pub use optimazer::*;
 mod activation;
 pub use activation::*;
 
-mod arrayy_external;
-pub use arrayy_external::*;
+mod arrayy;
+pub use arrayy::*;

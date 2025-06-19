@@ -1,11 +1,4 @@
-use crate::rotta_rs::{
-    arrayy_external::sum_axis_arr,
-    reshape,
-    Arrayy,
-    BackwardLabel,
-    NodeType,
-    Tensor,
-};
+use crate::rotta_rs::{ arrayy::sum_axis_arr, reshape, Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn sum_axis(x: &Tensor, d: usize) -> Tensor {
     let array = x.value();
