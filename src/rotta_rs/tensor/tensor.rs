@@ -2,7 +2,7 @@ use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
 
 use ndarray::array;
 
-use crate::rotta_rs::{ ArrayType, Arrayy, NdArray, Node, NodeType };
+use crate::rotta_rs::{ ArrayType, Arrayy, NdArray, Node, NodeType, RecFlatten };
 
 #[derive(Debug)]
 pub struct Tensor {
@@ -11,6 +11,16 @@ pub struct Tensor {
 
 impl Tensor {
     // initialization
+    pub fn new<T: RecFlatten>(arr: T) -> Tensor {
+        let (shape, vector) = arr.rec_flatten();
+        let arr = Arrayy::from_vector(shape, vector);
+        let node = Arc::new(Mutex::new(Node::new(arr)));
+
+        Tensor {
+            node,
+        }
+    }
+
     pub fn from_arrayy(array: Arrayy) -> Tensor {
         let node = Node::new(array);
         let node = Arc::new(Mutex::new(node));
@@ -44,6 +54,11 @@ impl Tensor {
     // grad
     pub fn grad(&self) -> Arrayy {
         self.node.lock().unwrap().grad.clone()
+    }
+
+    // shape
+    pub fn shape(&self) -> Vec<usize> {
+        self.node.lock().unwrap().value.shape.clone()
     }
 
     // update

@@ -20,4 +20,7 @@ use crate::rotta_rs::{
 
 mod rotta_rs;
 
-fn main() {}
+fn main() {
+    let tensor = Tensor::new([[1.0], [2.0], [3.0]]);
+    println!("{:?}", tensor.shape())
+}

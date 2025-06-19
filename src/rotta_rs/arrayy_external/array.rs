@@ -1,8 +1,6 @@
-use std::{ fmt::Display, vec };
+use std::vec;
 
-use uuid::Uuid;
-
-use crate::rotta_rs::{ BackwardLabel, MultipleSum, NodeType, RecFlatten };
+use crate::rotta_rs::{ MultipleSum, RecFlatten };
 
 #[derive(Clone, Debug)]
 pub struct Arrayy {
@@ -12,6 +10,12 @@ pub struct Arrayy {
 
 impl Arrayy {
     // create
+
+    pub fn new<T: RecFlatten>(arr: T) -> Arrayy {
+        let (shape, vector) = arr.rec_flatten();
+        Arrayy::from_vector(shape, vector)
+    }
+
     pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Arrayy {
         let length = shape.as_slice().multiple_sum();
 
