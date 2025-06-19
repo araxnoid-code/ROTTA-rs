@@ -23,17 +23,25 @@ pub fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<u
 
 pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arrayy) {
     let broadcasted_shape = &broad_arr.shape;
+
     let pre_shape = tensor_arr.lock().unwrap().value.shape.clone();
     let mut sum_list = vec![];
 
-    broadcasted_shape
-        .iter()
-        .enumerate()
-        .for_each(|(d, broad)| {
-            if *broad != pre_shape[d] {
-                sum_list.push(d);
+    let mut broad_rev = broadcasted_shape.clone();
+    broad_rev.reverse();
+
+    let mut pre_shape_rev = pre_shape.clone();
+    pre_shape_rev.reverse();
+
+    for d in 0..broad_rev.len() {
+        if let Some(pre) = pre_shape_rev.get(d) {
+            if &broad_rev[d] != pre {
+                sum_list.push(broad_rev.len() - 1 - d);
             }
-        });
+        } else {
+            sum_list.push(broad_rev.len() - 1 - d);
+        }
+    }
 
     let mut sum = grad;
 

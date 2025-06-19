@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NdArray, NodeType };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType };
 
 #[derive(Debug)]
 pub struct Node {

@@ -1,6 +1,6 @@
 use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
 
-use crate::rotta_rs::{ Arrayy, Node, NodeType, RecFlatten };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, Node, NodeType, RecFlatten };
 
 #[derive(Debug)]
 pub struct Tensor {
@@ -63,6 +63,11 @@ impl Tensor {
     // parent
     pub fn update_parent(&self, parent: Vec<NodeType>) {
         self.node.lock().as_mut().unwrap().parent = parent;
+    }
+
+    // label
+    pub fn update_label(&self, label: Option<BackwardLabel>) {
+        self.node.lock().as_mut().unwrap().label = label;
     }
 }
 

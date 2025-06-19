@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ add, matmul, NdArray, Tensor };
+use crate::rotta_rs::{ add, matmul, Tensor };
 
 pub struct Linear {
     pub weight: Tensor,

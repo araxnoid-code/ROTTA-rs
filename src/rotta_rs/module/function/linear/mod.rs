@@ -1,6 +1,5 @@
 mod linear;
 pub use linear::*;
-use ndarray::Array2;
 
 use crate::rotta_rs::{ Arrayy, Module, Tensor, WeightInitialization };
 

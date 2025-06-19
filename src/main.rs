@@ -3,7 +3,9 @@ use crate::rotta_rs::{
     divided,
     dot,
     matmul,
+    powi,
     relu,
+    softplus,
     Arrayy,
     Module,
     SSResidual,
@@ -14,17 +16,4 @@ use crate::rotta_rs::{
 
 mod rotta_rs;
 
-fn main() {
-    let tensor_a = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let tensor_b = Tensor::new([
-        [1.0, 2.0],
-        [1.0, 2.0],
-        [1.0, 2.0],
-    ]);
-
-    let result = matmul(&tensor_a, &tensor_b);
-}
+fn main() {}

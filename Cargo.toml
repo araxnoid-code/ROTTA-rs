@@ -4,7 +4,6 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
-ndarray = "0.16.1"
 plotters = "0.3.7"
 rand = "0.9.1"
 rand_distr = "0.5.1"

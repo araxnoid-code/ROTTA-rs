@@ -1,6 +1,4 @@
-use ndarray::array;
-
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NdArray, Node, NodeType, Tensor };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, Node, NodeType, Tensor };
 
 pub struct SSResidual {}
 

@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NdArray, Node, NodeType, Tensor };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn relu(x: &Tensor) -> Tensor {
     // f(x) = if x >= 0 x, if x < 0 0

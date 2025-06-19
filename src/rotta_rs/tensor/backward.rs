@@ -1,4 +1,4 @@
-use std::{ clone, collections::HashSet };
+use std::{ collections::HashSet };
 
 use crate::rotta_rs::{
     d_add,
@@ -7,7 +7,9 @@ use crate::rotta_rs::{
     d_divided,
     d_dot,
     d_exp,
+    d_ln,
     d_matmul,
+    d_powi,
     d_relu,
     d_ssresidual,
     d_sum_axis,
@@ -46,6 +48,8 @@ impl Tensor {
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
+                    BackwardLabel::Powi(x, powi) => d_powi(x, *powi, &grad),
+                    BackwardLabel::Ln(x) => d_ln(x, &grad),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),
@@ -56,8 +60,6 @@ impl Tensor {
                         d_ssresidual(prediction, actual, &grad),
                     BackwardLabel::CEL(prob_prediction, prob_actual) =>
                         d_cel(prob_prediction, prob_actual, &grad),
-
-                    _ => (),
                 }
             }
         }
