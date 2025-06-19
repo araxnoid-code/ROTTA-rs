@@ -1,32 +1,32 @@
 use std::ops::Mul;
 
-use crate::rotta_rs::{ mul, Arrayy };
+use crate::rotta_rs::{ mul_arr, Arrayy };
 
 impl Mul for Arrayy {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
-        mul(&self, &rhs)
+        mul_arr(&self, &rhs)
     }
 }
 
 impl Mul<&Arrayy> for &Arrayy {
     type Output = Arrayy;
     fn mul(self, rhs: &Arrayy) -> Self::Output {
-        mul(self, rhs)
+        mul_arr(self, rhs)
     }
 }
 
 impl Mul<Arrayy> for &Arrayy {
     type Output = Arrayy;
     fn mul(self, rhs: Arrayy) -> Self::Output {
-        mul(self, &rhs)
+        mul_arr(self, &rhs)
     }
 }
 
 impl Mul<&Arrayy> for Arrayy {
     type Output = Arrayy;
     fn mul(self, rhs: &Arrayy) -> Self::Output {
-        mul(&self, rhs)
+        mul_arr(&self, rhs)
     }
 }
 
@@ -35,14 +35,14 @@ impl Mul<&Arrayy> for Arrayy {
 impl Mul<f64> for Arrayy {
     type Output = Arrayy;
     fn mul(self, rhs: f64) -> Self::Output {
-        mul(&self, &Arrayy::from_vector(vec![1], vec![rhs]))
+        mul_arr(&self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
 impl Mul<f64> for &Arrayy {
     type Output = Arrayy;
     fn mul(self, rhs: f64) -> Self::Output {
-        mul(self, &Arrayy::from_vector(vec![1], vec![rhs]))
+        mul_arr(self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
@@ -50,7 +50,7 @@ impl Mul<Arrayy> for f64 {
     type Output = Arrayy;
     fn mul(self, rhs: Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);
-        mul(&a, &rhs)
+        mul_arr(&a, &rhs)
     }
 }
 
@@ -58,6 +58,6 @@ impl Mul<&Arrayy> for f64 {
     type Output = Arrayy;
     fn mul(self, rhs: &Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);
-        mul(&a, rhs)
+        mul_arr(&a, rhs)
     }
 }

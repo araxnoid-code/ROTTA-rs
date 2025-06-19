@@ -6,3 +6,6 @@ pub use softmax::*;
 
 mod softplus;
 pub use softplus::*;
+
+mod sigmoid;
+pub use sigmoid::*;

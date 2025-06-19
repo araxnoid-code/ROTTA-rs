@@ -7,6 +7,7 @@ pub enum BackwardLabel {
     Matmul(NodeType, NodeType),
     Add(NodeType, NodeType),
     Diveded(NodeType, NodeType),
+    Mul(NodeType, NodeType),
 
     // mutation
     Broadcasting(NodeType, Arrayy),

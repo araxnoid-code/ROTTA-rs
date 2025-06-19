@@ -9,6 +9,7 @@ use crate::rotta_rs::{
     d_exp,
     d_ln,
     d_matmul,
+    d_mul,
     d_powi,
     d_relu,
     d_ssresidual,
@@ -40,6 +41,7 @@ impl Tensor {
                     BackwardLabel::Matmul(a, b) => d_matmul(a, b, grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, grad),
                     BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
+                    BackwardLabel::Mul(a, b) => d_mul(a, b, &grad),
 
                     // mutation
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>
