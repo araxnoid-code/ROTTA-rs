@@ -29,3 +29,35 @@ impl Sub<Arrayy> for &Arrayy {
         minus(self, &rhs)
     }
 }
+
+// f64
+
+impl Sub<f64> for Arrayy {
+    type Output = Arrayy;
+    fn sub(self, rhs: f64) -> Self::Output {
+        minus(&self, &Arrayy::from_vector(vec![1], vec![rhs]))
+    }
+}
+
+impl Sub<f64> for &Arrayy {
+    type Output = Arrayy;
+    fn sub(self, rhs: f64) -> Self::Output {
+        minus(self, &Arrayy::from_vector(vec![1], vec![rhs]))
+    }
+}
+
+impl Sub<Arrayy> for f64 {
+    type Output = Arrayy;
+    fn sub(self, rhs: Arrayy) -> Self::Output {
+        let a = Arrayy::from_vector(vec![1], vec![self]);
+        minus(&a, &rhs)
+    }
+}
+
+impl Sub<&Arrayy> for f64 {
+    type Output = Arrayy;
+    fn sub(self, rhs: &Arrayy) -> Self::Output {
+        let a = Arrayy::from_vector(vec![1], vec![self]);
+        minus(&a, rhs)
+    }
+}

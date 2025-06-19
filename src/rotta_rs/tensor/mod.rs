@@ -13,8 +13,8 @@ pub use backward::*;
 mod backward_label;
 pub use backward_label::*;
 
-mod tensor_method;
-pub use tensor_method::*;
+mod method;
+pub use method::*;
 
 mod function;
 pub use function::*;

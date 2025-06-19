@@ -7,11 +7,6 @@ pub struct Linear {
 
 impl Linear {
     pub fn forward(&self, x: &Tensor) -> Tensor {
-        let mul = &matmul(x, &self.weight);
-        // println!("{}", mul);
-
-        let output = add(&self.bias, mul);
-
-        output
+        &matmul(x, &self.weight) + &self.bias
     }
 }
