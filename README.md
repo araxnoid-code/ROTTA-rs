@@ -1,3 +1,5 @@
+![image alt](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta_logo.png?raw=true)
+
 # ROTTA-rs
 AI framework built on the rust programming language
 
