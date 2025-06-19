@@ -195,3 +195,26 @@ fn main() {
     }
 }
 ```
+
+## Support Developer With Donations
+- Trakteer
+
+[https://trakteer.id/araxnoid/tip](https://trakteer.id/araxnoid/tip)
+
+## follow me on social media to get the latest updates
+- youtube
+
+araxnoid
+
+[click here to go directly to youtube](https://www.youtube.com/@araxnoid-v5o)
+
+- tiktok
+
+araxnoid
+
+[click here to go directly to tiktok](https://www.tiktok.com/@araxnoid_code)
+
+## contact
+- Gmail
+
+araxnoid0@gmail.com
