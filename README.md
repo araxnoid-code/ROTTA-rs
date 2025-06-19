@@ -69,7 +69,7 @@ fn main() {
 }
 ```
 
-## Opeoperations On Tensors
+## Operations On Tensors
 This version still has many shortcomings in the operations that can be performed on tensors, including:
 
 - add
