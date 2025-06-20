@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use crate::rotta_rs::{
     broadcast_concat,
     broadcasting_tensor_non_panic,
@@ -32,4 +34,29 @@ pub fn d_mul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
     // db = a * grad
     let db = &a.lock().unwrap().value * grad;
     b.lock().unwrap().add_grad(db);
+}
+
+// method
+
+impl Mul<&Tensor> for &Tensor {
+    type Output = Tensor;
+    fn mul(self, rhs: &Tensor) -> Self::Output {
+        mul(self, rhs)
+    }
+}
+
+impl Mul<f64> for &Tensor {
+    type Output = Tensor;
+    fn mul(self, rhs: f64) -> Self::Output {
+        let rhs = Tensor::from_vector(vec![1], vec![rhs]);
+        mul(self, &rhs)
+    }
+}
+
+impl Mul<&Tensor> for f64 {
+    type Output = Tensor;
+    fn mul(self, rhs: &Tensor) -> Self::Output {
+        let float = Tensor::from_vector(vec![1], vec![self]);
+        mul(&float, rhs)
+    }
 }

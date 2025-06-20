@@ -8,6 +8,7 @@ use crate::rotta_rs::{
     sigmoid,
     softmax,
     softplus,
+    tanh,
     Arrayy,
     CrossEntropyLoss,
     Module,

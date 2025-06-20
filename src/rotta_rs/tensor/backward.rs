@@ -13,6 +13,7 @@ use crate::rotta_rs::{
     d_powi,
     d_relu,
     d_ssresidual,
+    d_sub,
     d_sum_axis,
     BackwardLabel,
     NodeType,
@@ -42,6 +43,7 @@ impl Tensor {
                     BackwardLabel::Add(a, b) => d_add(a, b, grad),
                     BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
                     BackwardLabel::Mul(a, b) => d_mul(a, b, &grad),
+                    BackwardLabel::Sub(a, b) => d_sub(a, b, &grad),
 
                     // mutation
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>

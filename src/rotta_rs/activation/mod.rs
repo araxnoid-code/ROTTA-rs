@@ -9,3 +9,6 @@ pub use softplus::*;
 
 mod sigmoid;
 pub use sigmoid::*;
+
+mod tanh;
+pub use tanh::*;

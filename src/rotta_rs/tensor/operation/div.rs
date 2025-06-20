@@ -1,3 +1,5 @@
+use std::ops::Div;
+
 use crate::rotta_rs::{
     broadcast_concat,
     broadcasting_tensor_non_panic,
@@ -33,4 +35,29 @@ pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
     // db = -a/b^2
     let db = -1.0 * (a_value / b_value.powi(2)) * grad;
     b.lock().unwrap().add_grad(db);
+}
+
+// method
+
+impl Div<&Tensor> for &Tensor {
+    type Output = Tensor;
+    fn div(self, rhs: &Tensor) -> Self::Output {
+        divided(self, rhs)
+    }
+}
+
+impl Div<f64> for &Tensor {
+    type Output = Tensor;
+    fn div(self, rhs: f64) -> Self::Output {
+        let rhs = Tensor::from_vector(vec![1], vec![rhs]);
+        divided(self, &rhs)
+    }
+}
+
+impl Div<&Tensor> for f64 {
+    type Output = Tensor;
+    fn div(self, rhs: &Tensor) -> Self::Output {
+        let float = Tensor::from_vector(vec![1], vec![self]);
+        divided(&float, rhs)
+    }
 }

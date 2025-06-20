@@ -8,6 +8,7 @@ pub enum BackwardLabel {
     Add(NodeType, NodeType),
     Diveded(NodeType, NodeType),
     Mul(NodeType, NodeType),
+    Sub(NodeType, NodeType),
 
     // mutation
     Broadcasting(NodeType, Arrayy),
