@@ -22,9 +22,10 @@ impl CrossEntropyLoss {
         tensor
     }
 
-    pub fn test_forward(&self, prediction: &Tensor, actual: &Tensor) {
-        let prediction_shape = prediction.shape();
-        let actual_shape = actual.shape();
+    pub fn test_forward(&self, prob_prediction: &Tensor, prob_actual: &Tensor) -> Tensor {
+        let epsilon = 1e-9;
+        let prediction_shape = prob_prediction.shape();
+        let actual_shape = prob_actual.shape();
         if prediction_shape.len() != 2 || actual_shape.len() != 1 {
             panic!(
                 "prediction probability and actual probability for this cross entropy loss must be 2D(Batch, Class) for prediction and 1D(Batch) for actual\n
@@ -34,28 +35,56 @@ impl CrossEntropyLoss {
             );
         }
 
-        let pred_arr = prediction.value();
-        let actual_arr = actual.value();
+        let pred_arr = prob_prediction.value();
+        let actual_arr = prob_actual.value();
 
         // prob_actual * log(1/prob_prediction)
         let mut loss_batch = Arrayy::new([0.0]);
         for batch in 0..prediction_shape[0] {
             let actual_class = actual_arr.index([batch].as_slice());
-            let loss = (1.0 / pred_arr.index([batch, actual_class as usize].as_slice())).ln();
+            let loss = (
+                1.0 /
+                (pred_arr.index([batch, actual_class as usize].as_slice()) + epsilon)
+            ).ln();
 
             loss_batch = loss_batch + loss;
         }
 
-        println!("{}", loss_batch)
+        let tensor = Tensor::from_arrayy(loss_batch);
+        tensor.update_parent(vec![prob_prediction.node.clone(), prob_actual.node.clone()]);
+        tensor.node.lock().as_mut().unwrap().label = Some(
+            BackwardLabel::CEL(prob_prediction.node.clone(), prob_actual.node.clone())
+        );
+
+        tensor
     }
 }
 
 pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) {
+    println!("{}", grad);
     // df/dprediction = -prob_actual/prob_prediction
     let epsilon = 1e-9;
     let prob_pred = prob_prediction.lock().unwrap().value.clone();
     let prob_actual = prob_actual.lock().unwrap().value.clone();
 
     let d_pred = -1.0 * (prob_actual / (prob_pred + epsilon)) * grad;
+    prob_prediction.lock().as_mut().unwrap().add_grad(d_pred);
+}
+
+pub fn d_cel_test(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) {
+    let epsilon = 1e-9;
+    let prob_pred = prob_prediction.lock().unwrap().value.clone();
+    let prob_actual = prob_actual.lock().unwrap().value.clone();
+
+    let mut d_pred = prob_prediction.lock().unwrap().grad.clone();
+    for batch in 0..prob_pred.shape[0] {
+        let actual_class = prob_actual.index([batch].as_slice());
+        let pred_value = prob_pred.index([batch, actual_class as usize].as_slice());
+
+        let d = -(1.0 / (pred_value + epsilon)) * grad.index([0].as_slice());
+        d_pred.index_mut([batch, actual_class as usize].as_slice(), d);
+    }
+
+    // println!("{}", prob_pred)
     prob_prediction.lock().as_mut().unwrap().add_grad(d_pred);
 }
