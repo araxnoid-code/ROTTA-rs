@@ -56,7 +56,7 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
                             slice
                         );
                     }
-                    vector.push(arr.index(&index));
+                    vector.push(arr.index(index.clone()).value[0]);
                 }
 
                 if index[current_d] < *shape.last().unwrap() - 1 {
@@ -120,7 +120,10 @@ pub fn slice_mut(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: Arrayy) {
                 let stop = range.1.unwrap_or(shape[current_d]);
 
                 if index[current_d] >= start && index[current_d] < stop {
-                    arr.index_mut(index.as_slice(), replace.value[replace_id]);
+                    arr.index_mut(
+                        index.clone(),
+                        Arrayy::from_vector(vec![1], vec![replace.value[replace_id]])
+                    );
                     replace_id += 1;
                 }
 

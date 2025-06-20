@@ -26,10 +26,10 @@ impl CrossEntropyLoss {
         // prob_actual * log(1/prob_prediction)
         let mut loss_batch = Arrayy::new([0.0]);
         for batch in 0..prediction_shape[0] {
-            let actual_class = actual_arr.index([batch].as_slice());
+            let actual_class = actual_arr.index(vec![batch]);
             let loss = (
                 1.0 /
-                (pred_arr.index([batch, actual_class as usize].as_slice()) + epsilon)
+                (pred_arr.index(vec![batch, actual_class.value[0] as usize]) + epsilon)
             ).ln();
 
             loss_batch = loss_batch + loss;
@@ -52,11 +52,11 @@ pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) 
 
     let mut d_pred = prob_prediction.lock().unwrap().grad.clone();
     for batch in 0..prob_pred.shape[0] {
-        let actual_class = prob_actual.index([batch].as_slice());
-        let pred_value = prob_pred.index([batch, actual_class as usize].as_slice());
+        let actual_class = prob_actual.index(vec![batch]);
+        let pred_value = prob_pred.index(vec![batch, actual_class.value[0] as usize]);
 
-        let d = -(1.0 / (pred_value + epsilon)) * grad.index([0].as_slice());
-        d_pred.index_mut([batch, actual_class as usize].as_slice(), d);
+        let d = -1.0 * (1.0 / (pred_value + epsilon)) * grad.index(vec![0]);
+        d_pred.index_mut(vec![batch, actual_class.value[0] as usize], d);
     }
 
     // println!("{}", prob_pred)

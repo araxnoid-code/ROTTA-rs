@@ -15,7 +15,7 @@ pub fn matmul_2d(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
             for coll in 0..*o {
                 let mut sum = 0.0;
                 for i in 0..*n {
-                    sum += arr_a.index(&[row, i][..]) * arr_b.index(&[i, coll][..]);
+                    sum = sum + (arr_a.index(vec![row, i]) * arr_b.index(vec![i, coll])).value[0];
                 }
                 vector.push(sum);
             }

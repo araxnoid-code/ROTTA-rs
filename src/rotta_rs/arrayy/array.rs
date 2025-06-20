@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::rotta_rs::{ MultipleSum, RecFlatten };
+use crate::rotta_rs::{ MultipleSum, RecFlatten, Tensor };
 
 #[derive(Clone, Debug)]
 pub struct Arrayy {
@@ -61,11 +61,17 @@ impl Arrayy {
     }
 
     // get
-    pub fn index(&self, index: &[usize]) -> f64 {
+    pub fn index(&self, index: Vec<usize>) -> Arrayy {
         let shape = self.shape.clone();
 
         let mut out = 0;
         let mut count = 1;
+        let slicing = (&self.shape[index.len()..]).multiple_sum();
+        let mut new_shape = self.shape[index.len()..].to_vec();
+        if new_shape.is_empty() {
+            new_shape.push(1);
+        }
+
         for index in index {
             let multiple = (&shape[count..]).multiple_sum();
             let pointing = index * multiple;
@@ -74,11 +80,14 @@ impl Arrayy {
             count += 1;
         }
 
-        self.value[out]
+        let arrayy = Arrayy::from_vector(new_shape, self.value[out..out + slicing].to_vec());
+
+        arrayy
     }
 
-    pub fn index_mut(&mut self, index: &[usize], value: f64) {
+    pub fn index_mut(&mut self, index: Vec<usize>, value: Arrayy) {
         let shape = self.shape.clone();
+        let slicing = (&self.shape[index.len()..]).multiple_sum();
 
         let mut out = 0;
         let mut count = 1;
@@ -90,7 +99,7 @@ impl Arrayy {
             count += 1;
         }
 
-        self.value[out] = value;
+        self.value[out..out + slicing].copy_from_slice(&value.value[..]);
     }
 
     // method

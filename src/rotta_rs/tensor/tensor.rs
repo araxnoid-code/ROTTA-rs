@@ -78,10 +78,10 @@ impl Display for Tensor {
     }
 }
 
-impl Mul for Tensor {
-    type Output = Self;
-    fn mul(self, rhs: Self) -> Self::Output {
-        let output = self.value() * rhs.value();
-        Tensor::from_arrayy(output)
-    }
-}
+// impl Mul for Tensor {
+//     type Output = Self;
+//     fn mul(self, rhs: Self) -> Self::Output {
+//         let output = self.value() * rhs.value();
+//         Tensor::from_arrayy(output)
+//     }
+// }

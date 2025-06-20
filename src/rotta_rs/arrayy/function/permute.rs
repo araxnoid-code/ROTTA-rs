@@ -36,7 +36,7 @@ pub fn permute(order: Vec<usize>, arr: &Arrayy) -> Arrayy {
                 for i in &order {
                     permute_index.push(index[*i]);
                 }
-                output.index_mut(&permute_index, arr.index(&index));
+                output.index_mut(permute_index, arr.index(index.clone()));
 
                 if index[current_d] < *shape.last().unwrap() - 1 {
                     index[current_d] += 1;
