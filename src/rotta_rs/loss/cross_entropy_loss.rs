@@ -21,6 +21,33 @@ impl CrossEntropyLoss {
 
         tensor
     }
+
+    pub fn test_forward(&self, prediction: &Tensor, actual: &Tensor) {
+        let prediction_shape = prediction.shape();
+        let actual_shape = actual.shape();
+        if prediction_shape.len() != 2 || actual_shape.len() != 1 {
+            panic!(
+                "prediction probability and actual probability for this cross entropy loss must be 2D(Batch, Class) for prediction and 1D(Batch) for actual\n
+                your prediction is {}D and actual is {}D",
+                prediction_shape.len(),
+                actual_shape.len()
+            );
+        }
+
+        let pred_arr = prediction.value();
+        let actual_arr = actual.value();
+
+        // prob_actual * log(1/prob_prediction)
+        let mut loss_batch = Arrayy::new([0.0]);
+        for batch in 0..prediction_shape[0] {
+            let actual_class = actual_arr.index([batch].as_slice());
+            let loss = (1.0 / pred_arr.index([batch, actual_class as usize].as_slice())).ln();
+
+            loss_batch = loss_batch + loss;
+        }
+
+        println!("{}", loss_batch)
+    }
 }
 
 pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) {
