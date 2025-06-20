@@ -22,16 +22,13 @@ mod rotta_rs;
 
 fn main() {
     let pred = Tensor::new([[0.5, 0.25, 0.25]]);
-    // let actual = Tensor::new([1.0, 0.0, 0.0]);
-    let actual_batch = Tensor::new([0.0]);
+    let actual_batch = Tensor::new([1.0]);
 
     let loss_fn = CrossEntropyLoss::init();
 
-    let loss = loss_fn.test_forward(&pred, &actual_batch);
+    let loss = loss_fn.forward(&pred, &actual_batch);
 
     loss.backward();
-
-    println!("{}", pred.grad())
 
     // let mut model = Module::init();
     // model.update_initialization(WeightInitialization::He);
