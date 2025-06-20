@@ -1,6 +1,6 @@
 use crate::rotta_rs::{
     broadcasting,
-    reshape,
+    to_shape,
     sum_axis_arr,
     Arrayy,
     BackwardLabel,
@@ -49,6 +49,6 @@ pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arr
         sum = sum_axis_arr(&sum, sum_d);
     }
 
-    let d_arr = reshape(&sum, pre_shape);
+    let d_arr = to_shape(&sum, pre_shape);
     tensor_arr.lock().unwrap().add_grad(d_arr);
 }

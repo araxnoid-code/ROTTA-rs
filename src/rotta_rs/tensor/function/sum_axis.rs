@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ arrayy::sum_axis_arr, reshape, Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ arrayy::sum_axis_arr, to_shape, Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn sum_axis(x: &Tensor, d: usize) -> Tensor {
     let array = x.value();
@@ -15,7 +15,7 @@ pub fn d_sum_axis(x: &NodeType, d: usize, keep_dim: bool, grad: &Arrayy) {
         let mut new_shape = grad.shape.clone();
         new_shape.insert(d, 1);
 
-        let d = ones * reshape(grad, new_shape);
+        let d = ones * to_shape(grad, new_shape);
         x.lock().unwrap().add_grad(d);
     } else {
         let ones = Arrayy::ones(x.lock().unwrap().value.shape.clone());
