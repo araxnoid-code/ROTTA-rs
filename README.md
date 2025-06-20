@@ -3,44 +3,29 @@
 # ROTTA-rs
 AI framework built on the rust programming language
 
-## version 0.0.1
-tensor
-- powered by arrayy(look in the folder with the name arrayy)
+## version 0.0.2
+### New
+- Softplus
+- ln
+- powi
+- sigmoid
+- mul operation for tensor
+- sub operation for tensor
+- rename 'reshape' method to 'to_shape' in Arrayy
+- update the algorithm of cross entropy loss
+- update the algorithm of indexing on Arrayy
 
-optimazer
-- SGD
+### fix bug
+- fix bug in tensor broadcasting
+- fix bug in derivative of divided for tensor
 
-loss function
-- Sum Square Residual
-- Cross Entropy Loss
+## Install on your code
+for now ROTTA-rs is still not available on crates.io, to use ROTTA-rs you can access the zip file on this link and extract it into your rust project.
 
-activation function
-- Relu
-- Softmax
 
-module
-- linear function
-- has 3 weight initialization methods(Random, Glorot(default), He)
-
-How to change weight initialization:
+suggestion: for convenience you can extract it into the src folder along with the main.rs file then access the ROTTA-rs module using:
 ```rust
 mod rotta_rs;
-
-fn main() {
-    let mut model = Module::init();
-    model.update_initialization(WeightInitialization::He);
-}
-```
-- default seed is 42
-
-How to change module seed:
-```rust
-mod rotta_rs;
-
-fn main() {
-    let mut model = Module::init();
-    model.update_seed(43);
-}
 ```
 
 ## How To Make Tensor
