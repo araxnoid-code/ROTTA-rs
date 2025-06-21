@@ -21,3 +21,6 @@ pub use power::*;
 
 mod ln;
 pub use ln::*;
+
+mod sum;
+pub use sum::*;

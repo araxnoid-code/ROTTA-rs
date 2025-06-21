@@ -1,9 +1,5 @@
 mod base_operation;
-pub use base_operation::*;
-
-use std::ops::{ Add, Div, Sub, Mul };
-
-use crate::rotta_rs::{ arrayy::{ add_arr, divided_arr, dot_arr }, * };
+use crate::rotta_rs::{ arrayy::* };
 
 impl Arrayy {
     pub fn sum(&self) -> f64 {
