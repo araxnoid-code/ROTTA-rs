@@ -19,15 +19,30 @@ AI framework built on the rust programming language
 - fix bug in tensor broadcasting
 - fix bug in derivative of divided for tensor
 
+you can see other versions via this [link](https://github.com/araxnoid-code/ROTTA-rs/tags)
+
+You can see what changes have occurred in the previous version at this [link](https://github.com/araxnoid-code/ROTTA-rs/blob/main/version.md)
+
 ## Install on your code
 for now ROTTA-rs is still not available on crates.io, to use ROTTA-rs you can access the zip file on this link and extract it into your rust project.
 
+[ROTTA-rs.zip](https://github.com/araxnoid-code/ROTTA-rs/blob/main/rotta_rs_module)
+
+note: ROTTA-rs also uses external dependencies, don't forget to add them in Cargo.toml
+
+|   dependencies    | version | features |
+|   :-----------    | :------ | :---     |
+|   `rand`          | 0.9.1   | _        |
+|   `rand_distr`    | 0.5.1   | _        |
+|   `uuid`          | 1.17.0  | `v4`     |
 
 suggestion: for convenience you can extract it into the src folder along with the main.rs file then access the ROTTA-rs module using:
 ```rust
 mod rotta_rs;
 ```
 
+
+# general introduction
 ## How To Make Tensor
 the only data types possible on tensors are f64
 
@@ -56,7 +71,7 @@ fn main() {
 }
 ```
 
-## Operations On Tensors
+## Basic Operations On Tensors
 This version still has many shortcomings in the operations that can be performed on tensors, including:
 
 - add
@@ -77,6 +92,48 @@ fn main() {
     let result = &tensor_a + &tensor_b;
     // or
     let result = add(&tensor_a, &tensor_b);
+}
+```
+
+- sub
+```rust
+mod rotta_rs;
+
+fn main() {
+    let tensor_a = Tensor::new([
+        [1.0, 2.0, 3.0],
+        [1.0, 2.0, 3.0],
+    ]);
+
+    let tensor_b = Tensor::new([
+        [1.0, 2.0, 3.0],
+        [1.0, 2.0, 3.0],
+    ]);
+
+    let result = &tensor_a - &tensor_b;
+    // or
+    let result = sub(&tensor_a, &tensor_b);
+}
+```
+
+- mul
+```rust
+mod rotta_rs;
+
+fn main() {
+    let tensor_a = Tensor::new([
+        [1.0, 2.0, 3.0],
+        [1.0, 2.0, 3.0],
+    ]);
+
+    let tensor_b = Tensor::new([
+        [1.0, 2.0, 3.0],
+        [1.0, 2.0, 3.0],
+    ]);
+
+    let result = &tensor_a * &tensor_b;
+    // or
+    let result = mul(&tensor_a, &tensor_b);
 }
 ```
 
@@ -137,6 +194,8 @@ fn main() {
 other operations
 - exp
 - sum axis
+- powi
+- ln
 
 ## How To Make AI Model
 ```rust
@@ -205,3 +264,8 @@ araxnoid
 - Gmail
 
 araxnoid0@gmail.com
+
+## DEPEDENCIES
+- [rand](https://crates.io/crates/rand)
+- [rand_distr](https://crates.io/crates/rand_distr)
+- [uuid](https://crates.io/crates/uuid)
