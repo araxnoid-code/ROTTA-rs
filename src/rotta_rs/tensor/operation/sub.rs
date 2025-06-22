@@ -5,33 +5,74 @@ use crate::rotta_rs::{
     broadcasting_tensor_non_panic,
     Arrayy,
     BackwardLabel,
+    MultipleSum,
     NodeType,
     Tensor,
 };
 
 pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
-    let broadcast_shape = broadcast_concat(&a.value(), &b.value());
+    let a_arr = a.value();
+    let b_arr = b.value();
 
-    let broadcast_a = broadcasting_tensor_non_panic(a, broadcast_shape.clone());
-    let broadcast_b = broadcasting_tensor_non_panic(b, broadcast_shape);
+    if a_arr.shape.multiple_sum() == 1 || b_arr.shape.multiple_sum() == 1 {
+        // skalar
+        let output = a_arr - b_arr;
 
-    let tensor = Tensor::from_arrayy(broadcast_a.value() - broadcast_b.value());
-    tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
-    tensor.update_label(
-        Some(BackwardLabel::Sub(broadcast_a.node.clone(), broadcast_b.node.clone()))
-    );
+        let tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
+        tensor.node.lock().as_mut().unwrap().label = Some(
+            BackwardLabel::Sub(a.node.clone(), b.node.clone())
+        );
 
-    tensor
+        tensor
+    } else if a_arr.shape == b_arr.shape {
+        // same shape
+        let output = a_arr - b_arr;
+
+        let tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
+        tensor.node.lock().as_mut().unwrap().label = Some(
+            BackwardLabel::Sub(a.node.clone(), b.node.clone())
+        );
+
+        tensor
+    } else {
+        // broadcasting
+        let broadcast_shape = broadcast_concat(&a.value(), &b.value());
+
+        let broadcast_a = broadcasting_tensor_non_panic(a, broadcast_shape.clone());
+        let broadcast_b = broadcasting_tensor_non_panic(b, broadcast_shape);
+
+        let output = broadcast_a.value() - broadcast_b.value();
+        let tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
+        tensor.node.lock().as_mut().unwrap().label = Some(
+            BackwardLabel::Sub(broadcast_a.node.clone(), broadcast_b.node.clone())
+        );
+
+        tensor
+    }
 }
 
 pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
     // d/da = 1  * grad = grad
-    a.lock().unwrap().add_grad(grad.clone());
+    let d_a = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
+        Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![grad.sum()])
+    } else {
+        grad.clone()
+    };
+    a.lock().unwrap().add_grad(d_a);
 
     // db = -1 * grad = -grad
+    let d_b = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
+        Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![grad.sum()])
+    } else {
+        grad.clone()
+    };
+
     b.lock()
         .unwrap()
-        .add_grad(-1.0 * grad);
+        .add_grad(-1.0 * d_b);
 }
 
 // method

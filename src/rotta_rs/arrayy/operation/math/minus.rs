@@ -21,7 +21,7 @@ pub fn minus(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
 
             let vector = arr_b.value
                 .iter()
-                .map(|v| *v - skalar)
+                .map(|v| skalar - *v)
                 .collect::<Vec<f64>>();
 
             Arrayy::from_vector(arr_b_s.clone(), vector)

@@ -15,8 +15,8 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
     let a_arr = a.value();
     let b_arr = b.value();
 
-    // skalar
     if a_arr.shape.multiple_sum() == 1 || b_arr.shape.multiple_sum() == 1 {
+        // skalar
         let output = a_arr + b_arr;
 
         let tensor = Tensor::from_arrayy(output);
@@ -27,6 +27,7 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 
         tensor
     } else if a_arr.shape == b_arr.shape {
+        // same shape
         let output = a_arr + b_arr;
 
         let tensor = Tensor::from_arrayy(output);
@@ -37,6 +38,7 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 
         tensor
     } else {
+        // broadcasting
         let broadcast_shape = broadcast_concat(&a.value(), &b.value());
 
         let broadcast_a = broadcasting_tensor_non_panic(a, broadcast_shape.clone());
