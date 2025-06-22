@@ -24,3 +24,9 @@ pub use ln::*;
 
 mod sum;
 pub use sum::*;
+
+mod abs;
+pub use abs::*;
+
+mod sign;
+pub use sign::*;

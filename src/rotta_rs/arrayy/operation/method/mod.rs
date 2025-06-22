@@ -38,9 +38,21 @@ impl Arrayy {
         powf_arr(self, n)
     }
 
-    pub fn unsqueeze(&self) -> Arrayy {
+    pub fn squeeze(&self) -> Arrayy {
         let shape = self.shape.clone()[1..].to_vec();
 
         Arrayy::from_vector(shape, self.value.clone())
+    }
+
+    pub fn len(&self) -> usize {
+        self.value.len()
+    }
+
+    pub fn abs(&self) -> Arrayy {
+        abs_arr(self)
+    }
+
+    pub fn sign(&self) -> Arrayy {
+        sign_arr(self)
     }
 }

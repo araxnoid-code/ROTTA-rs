@@ -13,11 +13,13 @@ pub enum BackwardLabel {
     // mutation
     Broadcasting(NodeType, Arrayy),
     SumAxis(NodeType, usize, bool), // keep_dim
+    Sum(NodeType),
 
     // method
     Exp(NodeType, Arrayy),
     Powi(NodeType, i32),
     Ln(NodeType),
+    Abs(NodeType),
 
     // activation
     Relu(NodeType),

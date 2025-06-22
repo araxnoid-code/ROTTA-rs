@@ -22,7 +22,7 @@ pub fn mul(a: &Tensor, b: &Tensor) -> Tensor {
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
         tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::Diveded(a.node.clone(), b.node.clone())
+            BackwardLabel::Mul(a.node.clone(), b.node.clone())
         );
 
         tensor
@@ -33,7 +33,7 @@ pub fn mul(a: &Tensor, b: &Tensor) -> Tensor {
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
         tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::Diveded(a.node.clone(), b.node.clone())
+            BackwardLabel::Mul(a.node.clone(), b.node.clone())
         );
 
         tensor
@@ -48,7 +48,7 @@ pub fn mul(a: &Tensor, b: &Tensor) -> Tensor {
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
         tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::Diveded(broadcast_a.node.clone(), broadcast_b.node.clone())
+            BackwardLabel::Mul(broadcast_a.node.clone(), broadcast_b.node.clone())
         );
 
         tensor

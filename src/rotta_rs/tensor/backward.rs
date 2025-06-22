@@ -1,6 +1,7 @@
 use std::{ collections::HashSet };
 
 use crate::rotta_rs::{
+    d_abs,
     d_add,
     d_broadcasting_tensor,
     d_cel,
@@ -14,6 +15,7 @@ use crate::rotta_rs::{
     d_relu,
     d_ssresidual,
     d_sub,
+    d_sum,
     d_sum_axis,
     BackwardLabel,
     NodeType,
@@ -39,7 +41,7 @@ impl Tensor {
                 match label {
                     // opearation
                     BackwardLabel::Dot(a, b) => d_dot(a, b, grad),
-                    BackwardLabel::Matmul(a, b) => d_matmul(a, b, grad),
+                    BackwardLabel::Matmul(a, b) => d_matmul(a, b, &grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, grad),
                     BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
                     BackwardLabel::Mul(a, b) => d_mul(a, b, &grad),
@@ -49,11 +51,13 @@ impl Tensor {
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>
                         d_broadcasting_tensor(tensor_arr, broad_arr.clone(), grad),
                     BackwardLabel::SumAxis(x, d, keep_dim) => d_sum_axis(x, *d, *keep_dim, &grad),
+                    BackwardLabel::Sum(x) => d_sum(x, &grad),
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
                     BackwardLabel::Powi(x, powi) => d_powi(x, *powi, &grad),
                     BackwardLabel::Ln(x) => d_ln(x, &grad),
+                    BackwardLabel::Abs(x) => d_abs(x, &grad),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),

@@ -13,3 +13,9 @@ pub use powi::*;
 
 mod ln;
 pub use ln::*;
+
+mod sum;
+pub use sum::*;
+
+mod abs;
+pub use abs::*;

@@ -54,8 +54,8 @@ pub fn matmul_nd(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                     .map(|d| { ArrSlice(Some(*d), Some(d + 1)) })
                     .collect::<Vec<ArrSlice>>();
 
-                let slice_a = slice(&arr_a, slice_range.clone()).unsqueeze();
-                let slice_b = slice(&arr_b, slice_range).unsqueeze();
+                let slice_a = slice(&arr_a, slice_range.clone()).squeeze();
+                let slice_b = slice(&arr_b, slice_range).squeeze();
 
                 let matmul = matmul_2d(&slice_a, &slice_b);
                 vector.extend(matmul.value.into_iter());
