@@ -35,7 +35,7 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
         });
 
     let mut current_d = 0;
-    let mut index: Vec<usize> = vec![];
+    let mut index = vec![];
     let mut vector = vec![];
     loop {
         if current_d >= shape.len() - 1 {
@@ -56,7 +56,15 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
                             slice
                         );
                     }
-                    vector.push(arr.index(index.clone()).value[0]);
+                    vector.push(
+                        arr.index(
+                            index
+                                .clone()
+                                .into_iter()
+                                .map(|v| v as i32)
+                                .collect::<Vec<i32>>()
+                        ).value[0]
+                    );
                 }
 
                 if index[current_d] < *shape.last().unwrap() - 1 {
@@ -121,7 +129,11 @@ pub fn slice_mut(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: Arrayy) {
 
                 if index[current_d] >= start && index[current_d] < stop {
                     arr.index_mut(
-                        index.clone(),
+                        index
+                            .clone()
+                            .into_iter()
+                            .map(|v| v as i32)
+                            .collect::<Vec<i32>>(),
                         Arrayy::from_vector(vec![1], vec![replace.value[replace_id]])
                     );
                     replace_id += 1;

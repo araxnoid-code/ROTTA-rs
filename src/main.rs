@@ -5,6 +5,7 @@ use rand_distr::num_traits::float::FloatCore;
 use crate::rotta_rs::{
     dot,
     matmul,
+    negative_indexing,
     permute,
     sum,
     sum_arr,
@@ -21,8 +22,7 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    // println!("{}", permute.grad());
-    // println!("{}", back);
+    let tensor = Tensor::rand(vec![2, 2, 3]);
 
     // let mut model = Module::init();
     // let optimazaer = Sgd::init(model.parameters(), 0.0001);

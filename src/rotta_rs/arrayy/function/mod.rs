@@ -30,3 +30,6 @@ pub use abs::*;
 
 mod sign;
 pub use sign::*;
+
+mod negative_indexing;
+pub use negative_indexing::*;
