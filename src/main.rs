@@ -1,3 +1,5 @@
+use std::time::UNIX_EPOCH;
+
 use rand_distr::num_traits::float::FloatCore;
 
 use crate::rotta_rs::{
@@ -25,8 +27,10 @@ fn main() {
     let input = Tensor::new([[1.0], [2.0], [3.0], [4.0], [5.0]]);
     let label = Tensor::new([[10.0], [12.0], [13.0], [14.0], [15.0]]);
 
-    let linear_1 = model.liniar_init(1, 16);
-    let linear_2 = model.liniar_init(16, 1);
+    let linear_1 = model.liniar_init(1, 512);
+    let linear_2 = model.liniar_init(512, 1);
+
+    let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
 
     for epoch in 0..2500 {
         let x = linear_1.forward(&input);
@@ -41,4 +45,8 @@ fn main() {
 
         optimazaer.optim();
     }
+
+    let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
+    println!("{}ms", tok - tik);
 }
