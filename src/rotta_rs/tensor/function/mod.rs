@@ -19,3 +19,9 @@ pub use sum::*;
 
 mod abs;
 pub use abs::*;
+
+mod index;
+pub use index::*;
+
+mod permute;
+pub use permute::*;

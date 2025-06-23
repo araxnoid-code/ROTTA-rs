@@ -41,14 +41,7 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
         let broadcast_shape = broadcast_concat(&a.value(), &b.value());
 
         let broadcast_a = broadcasting_tensor_non_panic(a, broadcast_shape.clone());
-        // if !a.node.lock().unwrap().requires_grad {
-        //     broadcast_a.requires_grad(false);
-        // }
-
         let broadcast_b = broadcasting_tensor_non_panic(b, broadcast_shape);
-        // if !b.node.lock().unwrap().requires_grad {
-        //     broadcast_b.requires_grad(false);
-        // }
 
         let output = broadcast_a.value() - broadcast_b.value();
         let tensor = Tensor::from_arrayy(output);
@@ -100,7 +93,7 @@ impl Sub<f64> for &Tensor {
     type Output = Tensor;
     fn sub(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
-        rhs.requires_grad(false);
+        rhs.set_requires_grad(false);
         sub(self, &rhs)
     }
 }
@@ -109,7 +102,7 @@ impl Sub<&Tensor> for f64 {
     type Output = Tensor;
     fn sub(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
-        float.requires_grad(false);
+        float.set_requires_grad(false);
         sub(&float, rhs)
     }
 }

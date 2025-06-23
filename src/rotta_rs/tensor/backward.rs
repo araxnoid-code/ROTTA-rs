@@ -8,9 +8,11 @@ use crate::rotta_rs::{
     d_divided,
     d_dot,
     d_exp,
+    d_index,
     d_ln,
     d_matmul,
     d_mul,
+    d_permute,
     d_powi,
     d_relu,
     d_ssresidual,
@@ -48,10 +50,12 @@ impl Tensor {
                     BackwardLabel::Sub(a, b) => d_sub(a, b, &grad),
 
                     // mutation
+                    BackwardLabel::Index(x, index) => d_index(x, index.clone(), &grad),
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>
                         d_broadcasting_tensor(tensor_arr, broad_arr.clone(), grad),
                     BackwardLabel::SumAxis(x, d, keep_dim) => d_sum_axis(x, *d, *keep_dim, &grad),
                     BackwardLabel::Sum(x) => d_sum(x, &grad),
+                    BackwardLabel::Permute(x, order) => d_permute(x, order.clone(), &grad),
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),

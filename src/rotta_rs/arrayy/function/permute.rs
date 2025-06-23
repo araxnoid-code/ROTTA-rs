@@ -1,6 +1,6 @@
 use crate::rotta_rs::*;
 
-pub fn permute(order: Vec<usize>, arr: &Arrayy) -> Arrayy {
+pub fn permute_arr(order: &Vec<usize>, arr: &Arrayy) -> Arrayy {
     let shape = arr.shape.clone();
 
     let mut permute_shape = vec![];
@@ -11,7 +11,7 @@ pub fn permute(order: Vec<usize>, arr: &Arrayy) -> Arrayy {
             shape
         );
     }
-    for i in &order {
+    for i in order {
         if i >= &shape.len() {
             panic!(
                 "permute list out of array shape, permute list is {:?}, but array shape is {:?}",
@@ -33,7 +33,7 @@ pub fn permute(order: Vec<usize>, arr: &Arrayy) -> Arrayy {
             } else {
                 // operation do here
                 let mut permute_index = vec![];
-                for i in &order {
+                for i in order {
                     permute_index.push(index[*i]);
                 }
                 output.index_mut(permute_index, arr.index(index.clone()));

@@ -55,6 +55,11 @@ impl Tensor {
         self.node.lock().unwrap().value.clone()
     }
 
+    // requires gradient
+    pub fn requires_grad(&self) -> bool {
+        self.node.lock().unwrap().requires_grad
+    }
+
     // grad
     pub fn grad(&self) -> Arrayy {
         self.node.lock().unwrap().grad.clone()
@@ -76,7 +81,7 @@ impl Tensor {
         self.node.lock().as_mut().unwrap().label = label;
     }
 
-    pub fn requires_grad(&self, stat: bool) {
+    pub fn set_requires_grad(&self, stat: bool) {
         self.node.lock().unwrap().requires_grad = stat;
     }
 }

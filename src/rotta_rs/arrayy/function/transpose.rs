@@ -1,4 +1,4 @@
-use crate::rotta_rs::*;
+use crate::rotta_rs::{ arrayy::permute_arr, Arrayy };
 
 pub fn transpose(arr: &Arrayy, d: (i32, i32)) -> Arrayy {
     let shape = arr.shape.clone();
@@ -39,5 +39,5 @@ pub fn transpose(arr: &Arrayy, d: (i32, i32)) -> Arrayy {
     order[dimension_t[0] as usize] = dimension_t[1] as usize;
     order[dimension_t[1] as usize] = dimension_t[0] as usize;
 
-    permute(order, arr)
+    permute_arr(&order, arr)
 }

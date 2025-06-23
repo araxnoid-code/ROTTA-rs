@@ -93,7 +93,7 @@ impl Add<f64> for &Tensor {
     type Output = Tensor;
     fn add(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
-        rhs.requires_grad(false);
+        rhs.set_requires_grad(false);
         add(self, &rhs)
     }
 }
@@ -102,7 +102,7 @@ impl Add<&Tensor> for f64 {
     type Output = Tensor;
     fn add(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
-        float.requires_grad(false);
+        float.set_requires_grad(false);
         add(&float, rhs)
     }
 }

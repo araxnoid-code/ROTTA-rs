@@ -18,8 +18,8 @@ impl Arrayy {
         matmul_nd(self, rhs)
     }
 
-    pub fn permute(&self, order: Vec<usize>) -> Arrayy {
-        permute(order, self)
+    pub fn permute(&self, order: &Vec<usize>) -> Arrayy {
+        permute_arr(order, self)
     }
 
     pub fn ln(&self) -> Arrayy {

@@ -5,6 +5,7 @@ use rand_distr::num_traits::float::FloatCore;
 use crate::rotta_rs::{
     dot,
     matmul,
+    permute,
     sum,
     sum_arr,
     sum_axis,
@@ -20,33 +21,36 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    let mut model = Module::init();
-    let optimazaer = Sgd::init(model.parameters(), 0.0001);
-    let loss_fn = MSE::init();
+    // println!("{}", permute.grad());
+    // println!("{}", back);
 
-    let input = Tensor::new([[1.0], [2.0], [3.0], [4.0], [5.0]]);
-    let label = Tensor::new([[10.0], [12.0], [13.0], [14.0], [15.0]]);
+    // let mut model = Module::init();
+    // let optimazaer = Sgd::init(model.parameters(), 0.0001);
+    // let loss_fn = MSE::init();
 
-    let linear_1 = model.liniar_init(1, 512);
-    let linear_2 = model.liniar_init(512, 1);
+    // let input = Tensor::new([[1.0], [2.0], [3.0], [4.0], [5.0]]);
+    // let label = Tensor::new([[10.0], [12.0], [13.0], [14.0], [15.0]]);
 
-    let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+    // let linear_1 = model.liniar_init(1, 512);
+    // let linear_2 = model.liniar_init(512, 1);
 
-    for epoch in 0..2500 {
-        let x = linear_1.forward(&input);
-        let logits = linear_2.forward(&x);
+    // let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
 
-        let loss = loss_fn.forward(&logits, &label);
-        println!("epoch:{epoch} | loss => {}", loss);
+    // for epoch in 0..2500 {
+    //     let x = linear_1.forward(&input);
+    //     let logits = linear_2.forward(&x);
 
-        optimazaer.zero_grad();
+    //     let loss = loss_fn.forward(&logits, &label);
+    //     println!("epoch:{epoch} | loss => {}", loss);
 
-        loss.backward();
+    //     optimazaer.zero_grad();
 
-        optimazaer.optim();
-    }
+    //     loss.backward();
 
-    let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+    //     optimazaer.optim();
+    // }
 
-    println!("{}ms", tok - tik);
+    // let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
+    // println!("{}ms", tok - tik);
 }

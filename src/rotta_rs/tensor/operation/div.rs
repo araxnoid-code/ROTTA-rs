@@ -97,7 +97,7 @@ impl Div<f64> for &Tensor {
     type Output = Tensor;
     fn div(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
-        rhs.requires_grad(false);
+        rhs.set_requires_grad(false);
         divided(self, &rhs)
     }
 }
@@ -106,7 +106,7 @@ impl Div<&Tensor> for f64 {
     type Output = Tensor;
     fn div(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
-        float.requires_grad(false);
+        float.set_requires_grad(false);
         divided(&float, rhs)
     }
 }
