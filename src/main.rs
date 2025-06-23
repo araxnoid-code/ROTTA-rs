@@ -1,6 +1,19 @@
 use rand_distr::num_traits::float::FloatCore;
 
-use crate::rotta_rs::{ sum, sum_arr, Arrayy, Module, SSResidual, Sgd, Tensor, MAE, MSE };
+use crate::rotta_rs::{
+    dot,
+    matmul,
+    sum,
+    sum_arr,
+    sum_axis,
+    Arrayy,
+    Module,
+    SSResidual,
+    Sgd,
+    Tensor,
+    MAE,
+    MSE,
+};
 
 mod rotta_rs;
 

@@ -15,16 +15,15 @@ pub fn relu(x: &Tensor) -> Tensor {
 }
 
 pub fn d_relu(x: &NodeType, grad: &Arrayy) {
-    let mut x_lock = x.lock();
+    let mut x_lock = x.lock().unwrap();
 
     // f(x) = if x >= 0 1, if x < 0 0
-    let d_x =
-        x_lock
-            .as_ref()
-            .unwrap()
-            .value.map(|x| {
+    if x_lock.requires_grad {
+        let d_x =
+            x_lock.value.map(|x| {
                 if *x >= 0.0 { 1.0 } else { 0.0 }
             }) * grad;
 
-    x_lock.as_mut().unwrap().add_grad(d_x);
+        x_lock.add_grad(d_x);
+    }
 }

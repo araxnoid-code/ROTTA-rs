@@ -52,8 +52,9 @@ impl Arrayy {
     }
 
     pub fn arrayy_from_shape_fn<F: FnMut() -> f64>(shape: Vec<usize>, mut f: F) -> Arrayy {
-        let mut vector = vec![];
-        for _ in 0..shape.as_slice().multiple_sum() {
+        let len = shape.multiple_sum();
+        let mut vector = Vec::with_capacity(len);
+        for _ in 0..len {
             vector.push(f());
         }
 

@@ -41,7 +41,14 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
         let broadcast_shape = broadcast_concat(&a.value(), &b.value());
 
         let broadcast_a = broadcasting_tensor_non_panic(a, broadcast_shape.clone());
+        // if !a.node.lock().unwrap().requires_grad {
+        //     broadcast_a.requires_grad(false);
+        // }
+
         let broadcast_b = broadcasting_tensor_non_panic(b, broadcast_shape);
+        // if !b.node.lock().unwrap().requires_grad {
+        //     broadcast_b.requires_grad(false);
+        // }
 
         let output = broadcast_a.value() - broadcast_b.value();
         let tensor = Tensor::from_arrayy(output);
@@ -55,24 +62,29 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
+    let mut a = a.lock().unwrap();
+    let mut b = b.lock().unwrap();
+
     // d/da = 1  * grad = grad
-    let d_a = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
-        Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![grad.sum()])
-    } else {
-        grad.clone()
-    };
-    a.lock().unwrap().add_grad(d_a);
+    if a.requires_grad {
+        let d_a = if a.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(a.value.shape.clone(), vec![grad.sum()])
+        } else {
+            grad.clone()
+        };
+        a.add_grad(d_a);
+    }
 
     // db = -1 * grad = -grad
-    let d_b = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
-        Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![grad.sum()])
-    } else {
-        grad.clone()
-    };
+    if b.requires_grad {
+        let d_b = if b.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(b.value.shape.clone(), vec![grad.sum()])
+        } else {
+            grad.clone()
+        };
 
-    b.lock()
-        .unwrap()
-        .add_grad(-1.0 * d_b);
+        b.add_grad(-1.0 * d_b);
+    }
 }
 
 // method
@@ -88,6 +100,7 @@ impl Sub<f64> for &Tensor {
     type Output = Tensor;
     fn sub(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
+        rhs.requires_grad(false);
         sub(self, &rhs)
     }
 }
@@ -96,6 +109,7 @@ impl Sub<&Tensor> for f64 {
     type Output = Tensor;
     fn sub(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
+        float.requires_grad(false);
         sub(&float, rhs)
     }
 }

@@ -13,7 +13,9 @@ pub fn sum(x: &Tensor) -> Tensor {
 pub fn d_sum(x: &NodeType, grad: &Arrayy) {
     let mut x = x.lock().unwrap();
 
-    let d_x = Arrayy::ones(x.value.shape.clone()) * grad;
+    if x.requires_grad {
+        let d_x = Arrayy::ones(x.value.shape.clone()) * grad;
 
-    x.add_grad(d_x);
+        x.add_grad(d_x);
+    }
 }

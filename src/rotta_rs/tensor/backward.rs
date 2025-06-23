@@ -40,7 +40,7 @@ impl Tensor {
             if let Some(label) = &node.label {
                 match label {
                     // opearation
-                    BackwardLabel::Dot(a, b) => d_dot(a, b, grad),
+                    BackwardLabel::Dot(a, b) => d_dot(a, b, &grad),
                     BackwardLabel::Matmul(a, b) => d_matmul(a, b, &grad),
                     BackwardLabel::Add(a, b) => d_add(a, b, grad),
                     BackwardLabel::Diveded(a, b) => d_divided(a, b, &grad),
@@ -75,16 +75,17 @@ impl Tensor {
 
 pub fn build(node_arc: NodeType, graph: &mut Vec<NodeType>, vitited: &mut HashSet<u128>) {
     let node = node_arc.lock().unwrap();
-    if let None = vitited.get(&node.id) {
-        vitited.insert(node.id);
+    if node.requires_grad {
+        if let None = vitited.get(&node.id) {
+            vitited.insert(node.id);
 
-        let parents = node.parent.clone();
+            let parents = node.parent.clone();
 
-        for parent in parents {
-            build(parent, graph, vitited);
+            for parent in parents {
+                build(parent, graph, vitited);
+            }
+
+            graph.push(node_arc.clone());
         }
-
-        graph.push(node_arc.clone());
     }
-    // let parent = node.lock().unwrap().parent.clone();
 }

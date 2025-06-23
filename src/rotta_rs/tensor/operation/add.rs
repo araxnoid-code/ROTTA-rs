@@ -56,22 +56,28 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_add(a: &NodeType, b: &NodeType, grad: Arrayy) {
-    // f/da = 1 * grad = grad
+    let mut a = a.lock().unwrap();
+    let mut b = b.lock().unwrap();
 
-    let d_a = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
-        Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![grad.sum()])
-    } else {
-        grad.clone()
-    };
-    a.lock().as_mut().unwrap().add_grad(d_a);
+    // f/da = 1 * grad = grad
+    if a.requires_grad {
+        let d_a = if a.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(a.value.shape.clone(), vec![grad.sum()])
+        } else {
+            grad.clone()
+        };
+        a.add_grad(d_a);
+    }
 
     // f/db = 1 * grad = grad
-    let d_b = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
-        Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![grad.sum()])
-    } else {
-        grad.clone()
-    };
-    b.lock().as_mut().unwrap().add_grad(d_b);
+    if b.requires_grad {
+        let d_b = if b.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(b.value.shape.clone(), vec![grad.sum()])
+        } else {
+            grad.clone()
+        };
+        b.add_grad(d_b);
+    }
 }
 
 // method
@@ -87,6 +93,7 @@ impl Add<f64> for &Tensor {
     type Output = Tensor;
     fn add(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
+        rhs.requires_grad(false);
         add(self, &rhs)
     }
 }
@@ -95,6 +102,7 @@ impl Add<&Tensor> for f64 {
     type Output = Tensor;
     fn add(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
+        float.requires_grad(false);
         add(&float, rhs)
     }
 }

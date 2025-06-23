@@ -9,6 +9,7 @@ pub struct Node {
     pub grad: Arrayy,
     pub parent: Vec<NodeType>,
     pub label: Option<BackwardLabel>,
+    pub requires_grad: bool,
 }
 
 impl Node {
@@ -20,6 +21,7 @@ impl Node {
             value,
             parent: Vec::new(),
             label: None,
+            requires_grad: true,
         };
 
         node

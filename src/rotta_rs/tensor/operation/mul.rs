@@ -56,26 +56,33 @@ pub fn mul(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_mul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
+    let mut a = a.lock().unwrap();
+    let mut b = b.lock().unwrap();
+
     // da = b * grad
-    let da = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
-        let da = &b.lock().unwrap().value * grad;
-        Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![da.sum()])
-    } else {
-        let da = &b.lock().unwrap().value * grad;
-        da
-    };
-    a.lock().unwrap().add_grad(da);
+    if a.requires_grad {
+        let da = if a.value.shape.multiple_sum() == 1 {
+            let da = &b.value * grad;
+            Arrayy::from_vector(a.value.shape.clone(), vec![da.sum()])
+        } else {
+            let da = &b.value * grad;
+            da
+        };
+        a.add_grad(da);
+    }
 
     // db = a * grad
-    let db = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
-        let db = &a.lock().unwrap().value * grad;
-        Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![db.sum()])
-    } else {
-        let db = &a.lock().unwrap().value * grad;
-        db
-    };
+    if b.requires_grad {
+        let db = if b.value.shape.multiple_sum() == 1 {
+            let db = &a.value * grad;
+            Arrayy::from_vector(b.value.shape.clone(), vec![db.sum()])
+        } else {
+            let db = &a.value * grad;
+            db
+        };
 
-    b.lock().unwrap().add_grad(db);
+        b.add_grad(db);
+    }
 }
 
 // method
@@ -91,6 +98,7 @@ impl Mul<f64> for &Tensor {
     type Output = Tensor;
     fn mul(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
+        rhs.requires_grad(false);
         mul(self, &rhs)
     }
 }
@@ -99,6 +107,7 @@ impl Mul<&Tensor> for f64 {
     type Output = Tensor;
     fn mul(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
+        float.requires_grad(false);
         mul(&float, rhs)
     }
 }

@@ -9,21 +9,6 @@ pub fn sum_axis(x: &Tensor, d: usize) -> Tensor {
     tensor
 }
 
-pub fn d_sum_axis(x: &NodeType, d: usize, keep_dim: bool, grad: &Arrayy) {
-    if !keep_dim {
-        let ones = Arrayy::ones(x.lock().unwrap().value.shape.clone());
-        let mut new_shape = grad.shape.clone();
-        new_shape.insert(d, 1);
-
-        let d = ones * to_shape(grad, new_shape);
-        x.lock().unwrap().add_grad(d);
-    } else {
-        let ones = Arrayy::ones(x.lock().unwrap().value.shape.clone());
-        let d = ones * grad;
-        x.lock().unwrap().add_grad(d);
-    }
-}
-
 pub fn sum_axis_keep_dim(x: &Tensor, d: usize) -> Tensor {
     let array = x.value();
 
@@ -36,4 +21,23 @@ pub fn sum_axis_keep_dim(x: &Tensor, d: usize) -> Tensor {
     tensor.node.lock().unwrap().label = Some(BackwardLabel::SumAxis(x.node.clone(), d, true));
 
     tensor
+}
+
+pub fn d_sum_axis(x: &NodeType, d: usize, keep_dim: bool, grad: &Arrayy) {
+    let mut x = x.lock().unwrap();
+
+    if x.requires_grad {
+        if !keep_dim {
+            let ones = Arrayy::ones(x.value.shape.clone());
+            let mut new_shape = grad.shape.clone();
+            new_shape.insert(d, 1);
+
+            let d = ones * to_shape(grad, new_shape);
+            x.add_grad(d);
+        } else {
+            let ones = Arrayy::ones(x.value.shape.clone());
+            let d = ones * grad;
+            x.add_grad(d);
+        }
+    }
 }

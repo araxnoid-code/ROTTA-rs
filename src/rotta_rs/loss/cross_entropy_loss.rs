@@ -47,18 +47,19 @@ impl CrossEntropyLoss {
 
 pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) {
     let epsilon = 1e-9;
-    let prob_pred = prob_prediction.lock().unwrap().value.clone();
-    let prob_actual = prob_actual.lock().unwrap().value.clone();
+    let mut prob_pred = prob_prediction.lock().unwrap();
+    let prob_actual = prob_actual.lock().unwrap();
 
-    let mut d_pred = prob_prediction.lock().unwrap().grad.clone();
-    for batch in 0..prob_pred.shape[0] {
-        let actual_class = prob_actual.index(vec![batch]);
-        let pred_value = prob_pred.index(vec![batch, actual_class.value[0] as usize]);
+    if prob_pred.requires_grad {
+        let mut d_pred = prob_pred.grad.clone();
+        for batch in 0..prob_pred.value.shape[0] {
+            let actual_class = prob_actual.value.index(vec![batch]);
+            let pred_value = prob_pred.value.index(vec![batch, actual_class.value[0] as usize]);
 
-        let d = -1.0 * (1.0 / (pred_value + epsilon)) * grad.index(vec![0]);
-        d_pred.index_mut(vec![batch, actual_class.value[0] as usize], d);
+            let d = -1.0 * (1.0 / (pred_value + epsilon)) * grad.index(vec![0]);
+            d_pred.index_mut(vec![batch, actual_class.value[0] as usize], d);
+        }
+
+        prob_pred.add_grad(d_pred);
     }
-
-    // println!("{}", prob_pred)
-    prob_prediction.lock().as_mut().unwrap().add_grad(d_pred);
 }

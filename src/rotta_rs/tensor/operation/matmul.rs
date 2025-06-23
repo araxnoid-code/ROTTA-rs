@@ -15,11 +15,18 @@ pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_matmul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
+    let mut a = a.lock().unwrap();
+    let mut b = b.lock().unwrap();
+
     // da = grad * b^t
-    let d_a = grad.matmul(&b.lock().unwrap().value.clone().t());
-    a.lock().as_mut().unwrap().add_grad(d_a);
+    if a.requires_grad {
+        let d_a = grad.matmul(&b.value.t());
+        a.add_grad(d_a);
+    }
 
     // // db = a * grad
-    let d_b = a.lock().unwrap().value.clone().t().matmul(grad);
-    b.lock().as_mut().unwrap().add_grad(d_b);
+    if b.requires_grad {
+        let d_b = a.value.t().matmul(grad);
+        b.add_grad(d_b);
+    }
 }

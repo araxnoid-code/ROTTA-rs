@@ -10,14 +10,12 @@ pub fn powi(x: &Tensor, n: i32) -> Tensor {
 }
 
 pub fn d_powi(x: &NodeType, powi: i32, grad: &Arrayy) {
-    // d/x = n * x^n-1
-    let dx =
-        (powi as f64) *
-        &x
-            .lock()
-            .unwrap()
-            .value.powi(powi - 1) *
-        grad;
+    let mut x = x.lock().unwrap();
 
-    x.lock().unwrap().add_grad(dx);
+    // d/x = n * x^n-1
+    if x.requires_grad {
+        let dx = (powi as f64) * &x.value.powi(powi - 1) * grad;
+
+        x.add_grad(dx);
+    }
 }

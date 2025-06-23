@@ -55,28 +55,33 @@ pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let a_value = a.lock().unwrap().value.clone();
-    let b_value = b.lock().unwrap().value.clone();
+    let mut a = a.lock().unwrap();
+    let mut b = b.lock().unwrap();
 
     // da = 1/b
-    let da = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
-        let da = (Arrayy::from_vector(vec![1], vec![1.0]) / &b_value) * grad;
-        Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![da.sum()])
-    } else {
-        let da = (Arrayy::from_vector(vec![1], vec![1.0]) / &b_value) * grad;
-        da
-    };
-    a.lock().unwrap().add_grad(da);
+    if a.requires_grad {
+        let da = if a.value.shape.multiple_sum() == 1 {
+            let da = (1.0 / &b.value) * grad;
+            Arrayy::from_vector(a.value.shape.clone(), vec![da.sum()])
+        } else {
+            let da = (1.0 / &b.value) * grad;
+            da
+        };
+        a.add_grad(da);
+    }
 
     // db = -a/b^2
-    let db = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
-        let db = -1.0 * (a_value / b_value.powi(2)) * grad;
-        Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![db.sum()])
-    } else {
-        let db = -1.0 * (a_value / b_value.powi(2)) * grad;
-        db
-    };
-    b.lock().unwrap().add_grad(db);
+
+    if b.requires_grad {
+        let db = if b.value.shape.multiple_sum() == 1 {
+            let db = -1.0 * (&a.value / &b.value.powi(2)) * grad;
+            Arrayy::from_vector(b.value.shape.clone(), vec![db.sum()])
+        } else {
+            let db = -1.0 * (&a.value / &b.value.powi(2)) * grad;
+            db
+        };
+        b.add_grad(db);
+    }
 }
 
 // method
@@ -92,6 +97,7 @@ impl Div<f64> for &Tensor {
     type Output = Tensor;
     fn div(self, rhs: f64) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
+        rhs.requires_grad(false);
         divided(self, &rhs)
     }
 }
@@ -100,6 +106,7 @@ impl Div<&Tensor> for f64 {
     type Output = Tensor;
     fn div(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);
+        float.requires_grad(false);
         divided(&float, rhs)
     }
 }
