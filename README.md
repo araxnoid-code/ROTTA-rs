@@ -3,21 +3,26 @@
 # ROTTA-rs
 AI framework built on the rust programming language
 
-## version 0.0.2
+## version 0.0.3
 ### New
-- Softplus
-- ln
-- powi
-- sigmoid
-- mul operation for tensor
-- sub operation for tensor
-- rename 'reshape' method to 'to_shape' in Arrayy
-- update the algorithm of cross entropy loss
-- update the algorithm of indexing on Arrayy
+- negative indexing for sum_axis, slice, indexing, reshape.
+- reshape
+- to_shape
+- slice
+- permute
+- requires_grad
+- Mean Absolute Error
+- Mean Square Error
+- sign(just for arrayy)
+- abs
+- sum function
+
+### Optimalization
+- optimizing operations with scalars
 
 ### fix bug
-- fix bug in tensor broadcasting
-- fix bug in derivative of divided for tensor
+- fixed a bug in basic math in arrayy
+- fixed backward error in multiple tensor
 
 you can see other versions via this [link](https://github.com/araxnoid-code/ROTTA-rs/tags)
 
