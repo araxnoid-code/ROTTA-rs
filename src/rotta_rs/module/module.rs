@@ -17,7 +17,7 @@ impl Module {
     pub fn init() -> Module {
         Module {
             parameters: Arc::new(Mutex::new(Vec::new())),
-            initialization: WeightInitialization::Glorot,
+            initialization: WeightInitialization::He,
 
             // rng
             rng: StdRng::seed_from_u64(42),

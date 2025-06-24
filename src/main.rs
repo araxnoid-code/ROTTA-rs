@@ -11,16 +11,21 @@ use crate::rotta_rs::{
     reshape_arr,
     sigmoid,
     slice_arr,
+    softmax,
+    softplus,
     sum,
     sum_arr,
     sum_axis,
     sum_axis_arr,
+    tanh,
     ArrSlice,
     Arrayy,
+    CrossEntropyLoss,
     Module,
     SSResidual,
     Sgd,
     Tensor,
+    WeightInitialization,
     MAE,
     MSE,
 };
@@ -28,46 +33,9 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    // println!("{}", tensor.grad());
-    // println!("{}", to_shape)
-
     let mut model = Module::init();
-    let optimazaer = Sgd::init(model.parameters(), 0.0001);
-    let loss_fn = MSE::init();
+    let optimazer = Sgd::init(model.parameters(), 0.00001);
 
-    let input = Tensor::new([[1.0], [2.0], [3.0], [4.0], [5.0]]);
-    let label = Tensor::new([[10.0], [12.0], [13.0], [14.0], [15.0]]);
-
-    let linear_1 = model.liniar_init(1, 512);
-    let linear_2 = model.liniar_init(512, 512);
-    let linear_3 = model.liniar_init(512, 512);
-    let linear_4 = model.liniar_init(512, 512);
-    let linear_5 = model.liniar_init(512, 1);
-
-    let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-
-    for epoch in 0..2500 {
-        let x = linear_1.forward(&input);
-        let x = relu(&x);
-        let x = linear_2.forward(&x);
-        let x = relu(&x);
-        let x = linear_3.forward(&x);
-        let x = relu(&x);
-        let x = linear_4.forward(&x);
-        let x = sigmoid(&x);
-        let logits = linear_5.forward(&x);
-
-        let loss = loss_fn.forward(&logits, &label);
-        println!("epoch:{epoch} | loss => {}", loss);
-
-        optimazaer.zero_grad();
-
-        loss.backward();
-
-        optimazaer.optim();
-    }
-
-    let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-
-    println!("{}ms", tok - tik);
+    optimazer.zero_grad();
+    optimazer.optim();
 }

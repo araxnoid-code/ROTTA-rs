@@ -11,7 +11,7 @@ pub fn slice(x: &Tensor, range: Vec<ArrSlice>) -> Tensor {
 pub fn slice_replace(x: &Tensor, range: Vec<ArrSlice>, replace: &Tensor) {
     if !x.requires_grad() {
         // only can to tensor requires_gradient=false
-        slice_replace_arr(&mut x.value(), range, &replace.value());
+        x.node.lock().unwrap().value.slice_replace(range, &replace.value());
     } else {
         panic!("{}", "can't change manualy a tensor if the tensor is requires_grad=true")
     }

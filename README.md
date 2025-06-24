@@ -1,7 +1,13 @@
+<div align=center>
+
 ![image alt](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
+</div>
+
+<div align=center>
 
 # ROTTA-rs
 AI framework built on the rust programming language
+</div>
 
 ## version 0.0.3
 ### New
@@ -48,175 +54,7 @@ mod rotta_rs;
 ```
 
 
-# general introduction
-## How To Make Tensor
-the only data types possible on tensors are f64
-
-There are 3 ways to create a tensor
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [4.0, 5.0, 6.0],
-    ]);
-
-    //
-
-    let tensor = Tensor::from_vector(vec![3, 2], vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-
-    //
-
-    let arrayy = Arrayy::new([
-        [1.0, 2.0, 3.0],
-        [4.0, 5.0, 6.0],
-    ]);
-
-    let tensor = Tensor::from_arrayy(arrayy);
-}
-```
-
-## Basic Operations On Tensors
-This version still has many shortcomings in the operations that can be performed on tensors, including:
-
-- add
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor_a = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let tensor_b = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let result = &tensor_a + &tensor_b;
-    // or
-    let result = add(&tensor_a, &tensor_b);
-}
-```
-
-- sub
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor_a = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let tensor_b = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let result = &tensor_a - &tensor_b;
-    // or
-    let result = sub(&tensor_a, &tensor_b);
-}
-```
-
-- mul
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor_a = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let tensor_b = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let result = &tensor_a * &tensor_b;
-    // or
-    let result = mul(&tensor_a, &tensor_b);
-}
-```
-
-- devided
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor_a = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let tensor_b = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let result = &tensor_a / &tensor_b;
-    // or
-    let result = divided(&tensor_a, &tensor_b);
-}
-```
-
-- dot product
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor_a = Tensor::new([1.0, 2.0, 3.0]);
-
-    let tensor_b = Tensor::new([1.0, 2.0, 3.0]);
-
-    let result = dot(&tensor_a, &tensor_b);
-}
-```
-
-- matmul
-```rust
-mod rotta_rs;
-
-fn main() {
-    let tensor_a = Tensor::new([
-        [1.0, 2.0, 3.0],
-        [1.0, 2.0, 3.0],
-    ]);
-
-    let tensor_b = Tensor::new([
-        [1.0, 2.0],
-        [1.0, 2.0],
-        [1.0, 2.0],
-    ]);
-
-    let result = matmul(&tensor_a, &tensor_b);
-}
-```
-
-other operations
-- exp
-- sum axis
-- powi
-- ln
-
-## How To Make AI Model
-```rust
-mod rotta_rs;
-
-fn main() {
-    let mut model = Module::init();
-    let optimazer = Sgd::init(model.parameters(), 0.00001);
-    let loss_fn = SSResidual::init();
-
-    let linear = model.liniar_init(1, 1);
-}
-```
-
-## Create Training
+## Simple AI Model
 ```rust
 mod rotta_rs;
 
@@ -248,10 +86,16 @@ fn main() {
 }
 ```
 
-## Support Developer With Donations
-- Trakteer
+## GUIDE
+You can access this link to go to the guide page
 
-[https://trakteer.id/araxnoid/tip](https://trakteer.id/araxnoid/tip)
+[GUIDE](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/guide.md)
+
+
+## Support Developer With Donations
+- Saweria
+
+[https://saweria.co/araxnoid](https://saweria.co/araxnoidtip)
 
 ## follow me on social media to get the latest updates
 - youtube

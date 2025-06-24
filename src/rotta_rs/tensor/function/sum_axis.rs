@@ -1,3 +1,5 @@
+use rand::seq::IndexedRandom;
+
 use crate::rotta_rs::{
     arrayy::sum_axis_arr,
     to_shape_arr,
@@ -21,7 +23,10 @@ pub fn sum_axis_keep_dim(x: &Tensor, d: i32) -> Tensor {
 
     let sum = sum_axis_arr(&array, d);
     let mut keep_dim = sum.shape.clone();
-    keep_dim.insert(d as usize, 1);
+    keep_dim.insert(
+        (if d < 0 { ((array.shape.len() as i32) + d) as usize } else { d as usize }) as usize,
+        1
+    );
 
     let tensor = Tensor::from_vector(keep_dim, sum.value);
     tensor.update_parent(vec![x.node.clone()]);

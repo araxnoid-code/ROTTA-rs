@@ -3,6 +3,7 @@ use crate::rotta_rs::{
     exp,
     index,
     index_replace,
+    ln,
     permute,
     powi,
     reshape,
@@ -11,6 +12,7 @@ use crate::rotta_rs::{
     slice_replace,
     sum,
     sum_axis,
+    sum_axis_keep_dim,
     to_shape as to_shape_tensor,
     transpose,
     ArrSlice,
@@ -28,6 +30,10 @@ impl Tensor {
 
     pub fn exp(&self) -> Tensor {
         exp(self)
+    }
+
+    pub fn ln(&self) -> Tensor {
+        ln(self)
     }
 
     pub fn powi(&self, n: i32) -> Tensor {
@@ -54,6 +60,10 @@ impl Tensor {
         sum_axis(self, d)
     }
 
+    pub fn sum_axis_keep_dim(&self, d: i32) -> Tensor {
+        sum_axis_keep_dim(self, d)
+    }
+
     pub fn index_replace(&self, index: Vec<i32>, replace: Tensor) {
         if !self.node.lock().unwrap().requires_grad {
             index_replace(self, index, replace);
@@ -70,7 +80,7 @@ impl Tensor {
         slice(self, range)
     }
 
-    pub fn slice_replcae(&self, range: Vec<ArrSlice>, replace: &Tensor) {
+    pub fn slice_replace(&self, range: Vec<ArrSlice>, replace: &Tensor) {
         slice_replace(self, range, replace);
     }
 
