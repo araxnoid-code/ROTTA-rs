@@ -3,7 +3,7 @@
 ![image alt](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
 
 
-</div align=center>
+</div>
 
 <div align=center>
 
