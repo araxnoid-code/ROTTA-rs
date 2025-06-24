@@ -95,7 +95,7 @@ You can access this link to go to the guide page
 ## Support Developer With Donations
 - Saweria
 
-[https://saweria.co/araxnoid](https://saweria.co/araxnoidtip)
+[https://saweria.co/araxnoid](https://saweria.co/araxnoid)
 
 ## follow me on social media to get the latest updates
 - youtube
