@@ -15,13 +15,13 @@ impl MultipleSum for &[usize] {
     }
 }
 
-// i32 and f64
-// pub trait ArrayyType {}
+impl MultipleSum for Vec<usize> {
+    fn multiple_sum(&self) -> usize {
+        let mut result = 1;
+        for item in self.iter() {
+            result *= item;
+        }
 
-// impl ArrayyType for i32 {}
-
-// impl ArrayyType for f64 {}
-
-// impl Debug for Box<ArrayyType> {
-//     // fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {}
-// }
+        result
+    }
+}

@@ -15,7 +15,12 @@ pub fn matmul_2d(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
             for coll in 0..*o {
                 let mut sum = 0.0;
                 for i in 0..*n {
-                    sum = sum + (arr_a.index(vec![row, i]) * arr_b.index(vec![i, coll])).value[0];
+                    sum =
+                        sum +
+                        (
+                            arr_a.index(vec![row as i32, i as i32]) *
+                            arr_b.index(vec![i as i32, coll as i32])
+                        ).value[0];
                 }
                 vector.push(sum);
             }
@@ -54,8 +59,8 @@ pub fn matmul_nd(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                     .map(|d| { ArrSlice(Some(*d), Some(d + 1)) })
                     .collect::<Vec<ArrSlice>>();
 
-                let slice_a = slice(&arr_a, slice_range.clone()).unsqueeze();
-                let slice_b = slice(&arr_b, slice_range).unsqueeze();
+                let slice_a = slice_arr(&arr_a, slice_range.clone()).squeeze();
+                let slice_b = slice_arr(&arr_b, slice_range).squeeze();
 
                 let matmul = matmul_2d(&slice_a, &slice_b);
                 vector.extend(matmul.value.into_iter());
@@ -68,7 +73,7 @@ pub fn matmul_nd(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                 } else {
                     index[d] += 1;
 
-                    if index[d] >= shape_a[d] {
+                    if index[d] >= (shape_a[d] as i32) {
                         index.pop();
 
                         if d == 0 {

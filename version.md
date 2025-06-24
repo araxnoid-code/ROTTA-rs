@@ -1,3 +1,19 @@
+# version 0.0.2
+### New
+- Softplus
+- ln
+- powi
+- sigmoid
+- mul operation for tensor
+- sub operation for tensor
+- rename 'reshape' method to 'to_shape' in Arrayy
+- update the algorithm of cross entropy loss
+- update the algorithm of indexing on Arrayy
+
+### fix bug
+- fix bug in tensor broadcasting
+- fix bug in derivative of divided for tensor
+
 # version 0.0.1
 tensor
 - powered by arrayy(look in the folder with the name arrayy)

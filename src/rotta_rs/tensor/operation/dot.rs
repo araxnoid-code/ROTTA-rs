@@ -14,12 +14,19 @@ pub fn dot(a: &Tensor, b: &Tensor) -> Tensor {
     tensor
 }
 
-pub fn d_dot(a: &NodeType, b: &NodeType, grad: Arrayy) {
+pub fn d_dot(a: &NodeType, b: &NodeType, grad: &Arrayy) {
+    let mut a = a.lock().unwrap();
+    let mut b = b.lock().unwrap();
+
     // d/da = b * grad
-    let d_a = b.lock().unwrap().value.clone() * grad.clone();
-    a.lock().as_mut().unwrap().add_grad(d_a);
+    if a.requires_grad {
+        let d_a = &b.value * grad;
+        a.add_grad(d_a);
+    }
 
     // db = a * grad
-    let d_b = a.lock().unwrap().value.clone() * grad.clone();
-    b.lock().as_mut().unwrap().add_grad(d_b);
+    if b.requires_grad {
+        let d_b = &a.value * grad;
+        b.add_grad(d_b);
+    }
 }

@@ -9,6 +9,7 @@ pub struct Node {
     pub grad: Arrayy,
     pub parent: Vec<NodeType>,
     pub label: Option<BackwardLabel>,
+    pub requires_grad: bool,
 }
 
 impl Node {
@@ -20,6 +21,7 @@ impl Node {
             value,
             parent: Vec::new(),
             label: None,
+            requires_grad: true,
         };
 
         node
@@ -31,7 +33,9 @@ impl Node {
     }
 
     pub fn add_grad(&mut self, grad: Arrayy) {
-        self.grad = self.grad.clone() + grad;
+        if self.requires_grad {
+            self.grad = self.grad.clone() + grad;
+        }
     }
 
     pub fn zero_grad(&mut self) {

@@ -13,3 +13,27 @@ pub use powi::*;
 
 mod ln;
 pub use ln::*;
+
+mod sum;
+pub use sum::*;
+
+mod abs;
+pub use abs::*;
+
+mod index;
+pub use index::*;
+
+mod permute;
+pub use permute::*;
+
+mod slice;
+pub use slice::*;
+
+mod to_shape;
+pub use to_shape::*;
+
+mod transpose;
+pub use transpose::*;
+
+mod sign;
+pub use sign::*;

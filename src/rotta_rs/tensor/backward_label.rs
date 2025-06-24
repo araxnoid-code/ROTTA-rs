@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, NodeType };
+use crate::rotta_rs::{ ArrSlice, Arrayy, NodeType };
 
 #[derive(Debug, Clone)]
 pub enum BackwardLabel {
@@ -11,13 +11,20 @@ pub enum BackwardLabel {
     Sub(NodeType, NodeType),
 
     // mutation
+    Index(NodeType, Vec<i32>),
     Broadcasting(NodeType, Arrayy),
-    SumAxis(NodeType, usize, bool), // keep_dim
+    SumAxis(NodeType, i32, bool), // keep_dim
+    Sum(NodeType),
+    Permute(NodeType, Vec<usize>),
+    Slice(NodeType, Vec<ArrSlice>),
+    ToShape(NodeType, Vec<usize>),
 
     // method
     Exp(NodeType, Arrayy),
     Powi(NodeType, i32),
     Ln(NodeType),
+    Abs(NodeType),
+    Sign(NodeType),
 
     // activation
     Relu(NodeType),

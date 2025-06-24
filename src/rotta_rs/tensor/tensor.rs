@@ -1,6 +1,8 @@
 use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
 
-use crate::rotta_rs::{ Arrayy, BackwardLabel, Node, NodeType, RecFlatten };
+use rand::random;
+
+use crate::rotta_rs::{ Arrayy, BackwardLabel, MultipleSum, Node, NodeType, RecFlatten };
 
 #[derive(Debug)]
 pub struct Tensor {
@@ -43,10 +45,19 @@ impl Tensor {
         tensor
     }
 
+    pub fn rand(shape: Vec<usize>) -> Tensor {
+        Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || random::<f64>()))
+    }
+
     // get
     // value
     pub fn value(&self) -> Arrayy {
         self.node.lock().unwrap().value.clone()
+    }
+
+    // requires gradient
+    pub fn requires_grad(&self) -> bool {
+        self.node.lock().unwrap().requires_grad
     }
 
     // grad
@@ -68,6 +79,10 @@ impl Tensor {
     // label
     pub fn update_label(&self, label: Option<BackwardLabel>) {
         self.node.lock().as_mut().unwrap().label = label;
+    }
+
+    pub fn set_requires_grad(&self, stat: bool) {
+        self.node.lock().unwrap().requires_grad = stat;
     }
 }
 

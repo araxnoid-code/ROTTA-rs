@@ -24,16 +24,18 @@ impl SSResidual {
 }
 
 pub fn d_ssresidual(prediction: &NodeType, actual: &NodeType, grad: &Arrayy) {
-    let prediction_value = prediction.lock().unwrap().value.clone();
-    let actual_value = actual.lock().unwrap().value.clone();
+    let prediction_value = prediction.lock().unwrap();
+    let mut actual_value = actual.lock().unwrap();
 
     // df/dprediction = -2(actual - prediction) * grad
-    let d_predcition =
-        Arrayy::from_vector(vec![1], vec![-2.0]) * (&actual_value - &prediction_value) * grad;
-    prediction.lock().as_mut().unwrap().add_grad(d_predcition);
+    if prediction_value.requires_grad {
+        let d_predcition = -2.0 * (&actual_value.value - &prediction_value.value) * grad;
+        prediction.lock().as_mut().unwrap().add_grad(d_predcition);
+    }
 
     // df/dactual = 2(actual - prediction) * grad
-    let d_actual =
-        Arrayy::from_vector(vec![1], vec![2.0]) * (actual_value - prediction_value) * grad;
-    actual.lock().as_mut().unwrap().add_grad(d_actual);
+    if actual_value.requires_grad {
+        let d_actual = 2.0 * (&actual_value.value - &prediction_value.value) * grad;
+        actual_value.add_grad(d_actual);
+    }
 }

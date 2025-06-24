@@ -1,11 +1,29 @@
-use crate::rotta_rs::*;
+use crate::rotta_rs::{ Arrayy, MultipleSum };
 
-pub fn to_shape(arr: &Arrayy, reshape: Vec<usize>) -> Arrayy {
-    let arr_length = arr.value.len();
-    let reshape_length = reshape.as_slice().multiple_sum();
-    if arr_length != reshape_length {
-        panic!("error, array have length {} but reshape to {:?}", arr_length, reshape);
+pub fn reshape_arr(x: &Arrayy, reshape: Vec<i32>) -> Arrayy {
+    let mut minus_index = None;
+    let mut shape = reshape
+        .into_iter()
+        .enumerate()
+        .map(|(i, d)| {
+            if d > 0 {
+                d as usize
+            } else if d == -1 {
+                if let None = minus_index {
+                    minus_index = Some(i);
+                    1
+                } else {
+                    panic!("reshape only admit one negative value")
+                }
+            } else {
+                panic!("reshape out of shape")
+            }
+        })
+        .collect::<Vec<usize>>();
+
+    if let Some(idx) = minus_index {
+        shape[idx] = x.len() / shape.multiple_sum();
     }
 
-    Arrayy::from_vector(reshape, arr.value.clone())
+    x.to_shape(shape)
 }

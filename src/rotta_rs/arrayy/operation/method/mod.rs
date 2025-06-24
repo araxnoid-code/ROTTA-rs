@@ -1,9 +1,5 @@
 mod base_operation;
-pub use base_operation::*;
-
-use std::ops::{ Add, Div, Sub, Mul };
-
-use crate::rotta_rs::{ arrayy::{ add_arr, divided_arr, dot_arr }, * };
+use crate::rotta_rs::{ arrayy::* };
 
 impl Arrayy {
     pub fn sum(&self) -> f64 {
@@ -22,8 +18,8 @@ impl Arrayy {
         matmul_nd(self, rhs)
     }
 
-    pub fn permute(&self, order: Vec<usize>) -> Arrayy {
-        permute(order, self)
+    pub fn permute(&self, order: &Vec<usize>) -> Arrayy {
+        permute_arr(&order, self)
     }
 
     pub fn ln(&self) -> Arrayy {
@@ -31,7 +27,11 @@ impl Arrayy {
     }
 
     pub fn t(&self) -> Arrayy {
-        transpose(&self, (-1, -2))
+        transpose_arr(&self, (-1, -2))
+    }
+
+    pub fn transpose(&self, d: (i32, i32)) -> Arrayy {
+        transpose_arr(self, d)
     }
 
     pub fn powi(&self, n: i32) -> Arrayy {
@@ -42,9 +42,37 @@ impl Arrayy {
         powf_arr(self, n)
     }
 
-    pub fn unsqueeze(&self) -> Arrayy {
+    pub fn squeeze(&self) -> Arrayy {
         let shape = self.shape.clone()[1..].to_vec();
 
         Arrayy::from_vector(shape, self.value.clone())
+    }
+
+    pub fn len(&self) -> usize {
+        self.value.len()
+    }
+
+    pub fn abs(&self) -> Arrayy {
+        abs_arr(self)
+    }
+
+    pub fn sign(&self) -> Arrayy {
+        sign_arr(self)
+    }
+
+    pub fn slice(&self, range: Vec<ArrSlice>) -> Arrayy {
+        slice_arr(self, range)
+    }
+
+    pub fn slice_replace(&mut self, range: Vec<ArrSlice>, replace: &Arrayy) {
+        slice_replace_arr(self, range, replace);
+    }
+
+    pub fn to_shape(&self, to_shape: Vec<usize>) -> Arrayy {
+        to_shape_arr(self, to_shape)
+    }
+
+    pub fn reshape(&self, reshape: Vec<i32>) -> Arrayy {
+        reshape_arr(self, reshape)
     }
 }
