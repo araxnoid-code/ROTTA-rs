@@ -31,3 +31,9 @@ pub use slice::*;
 
 mod to_shape;
 pub use to_shape::*;
+
+mod transpose;
+pub use transpose::*;
+
+mod sign;
+pub use sign::*;

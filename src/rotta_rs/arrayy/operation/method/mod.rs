@@ -27,7 +27,11 @@ impl Arrayy {
     }
 
     pub fn t(&self) -> Arrayy {
-        transpose(&self, (-1, -2))
+        transpose_arr(&self, (-1, -2))
+    }
+
+    pub fn transpose(&self, d: (i32, i32)) -> Arrayy {
+        transpose_arr(self, d)
     }
 
     pub fn powi(&self, n: i32) -> Arrayy {

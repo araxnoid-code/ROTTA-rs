@@ -15,6 +15,7 @@ use crate::rotta_rs::{
     d_permute,
     d_powi,
     d_relu,
+    d_sign,
     d_slice,
     d_ssresidual,
     d_sub,
@@ -66,6 +67,7 @@ impl Tensor {
                     BackwardLabel::Powi(x, powi) => d_powi(x, *powi, &grad),
                     BackwardLabel::Ln(x) => d_ln(x, &grad),
                     BackwardLabel::Abs(x) => d_abs(x, &grad),
+                    BackwardLabel::Sign(x) => d_sign(x),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),

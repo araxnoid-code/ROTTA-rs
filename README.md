@@ -6,6 +6,7 @@ AI framework built on the rust programming language
 ## version 0.0.3
 ### New
 - negative indexing for sum_axis, slice, indexing, reshape.
+- transpose
 - reshape
 - to_shape
 - slice
@@ -13,7 +14,7 @@ AI framework built on the rust programming language
 - requires_grad
 - Mean Absolute Error
 - Mean Square Error
-- sign(just for arrayy)
+- sign
 - abs
 - sum function
 

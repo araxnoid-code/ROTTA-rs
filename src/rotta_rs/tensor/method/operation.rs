@@ -6,16 +6,26 @@ use crate::rotta_rs::{
     permute,
     powi,
     reshape,
+    sign,
     slice,
     slice_replace,
     sum,
     sum_axis,
     to_shape as to_shape_tensor,
+    transpose,
     ArrSlice,
     Tensor,
 };
 
 impl Tensor {
+    pub fn t(&self) -> Tensor {
+        transpose(self, (-1, -2))
+    }
+
+    pub fn transpose(&self, d: (i32, i32)) -> Tensor {
+        transpose(self, d)
+    }
+
     pub fn exp(&self) -> Tensor {
         exp(self)
     }
@@ -70,5 +80,9 @@ impl Tensor {
 
     pub fn reshape(&self, re_shape: Vec<i32>) -> Tensor {
         reshape(self, re_shape)
+    }
+
+    pub fn sign(&self) -> Tensor {
+        sign(self)
     }
 }

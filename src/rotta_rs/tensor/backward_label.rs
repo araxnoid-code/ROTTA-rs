@@ -24,6 +24,7 @@ pub enum BackwardLabel {
     Powi(NodeType, i32),
     Ln(NodeType),
     Abs(NodeType),
+    Sign(NodeType),
 
     // activation
     Relu(NodeType),

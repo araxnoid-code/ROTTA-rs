@@ -26,11 +26,6 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    // println!("{}", );
-
-    // let to_shape = tensor.to_shape(vec![3, 2, 2]);
-    // to_shape.backward();
-
     // println!("{}", tensor.grad());
     // println!("{}", to_shape)
 
