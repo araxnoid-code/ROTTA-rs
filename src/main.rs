@@ -7,7 +7,7 @@ use crate::rotta_rs::{
     matmul,
     negative_indexing,
     permute,
-    slice,
+    slice_arr,
     sum,
     sum_arr,
     sum_axis,
@@ -25,13 +25,18 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    let tensor = Arrayy::from_vector(
+    let tensor = Tensor::from_vector(
         vec![2, 2, 3],
         vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0]
     );
 
-    println!("{}", tensor);
-    println!("{}", sum_axis_arr(&tensor, -1))
+    let slice = tensor.slice(
+        vec![ArrSlice(Some(0), Some(1)), ArrSlice(Some(1), Some(2)), ArrSlice(Some(1), Some(-1))]
+    );
+    slice.backward();
+
+    println!("{}", tensor.grad());
+    println!("{}", slice)
 
     // let mut model = Module::init();
     // let optimazaer = Sgd::init(model.parameters(), 0.0001);

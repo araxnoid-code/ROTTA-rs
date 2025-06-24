@@ -1,4 +1,15 @@
-use crate::rotta_rs::{ abs, index, index_replace, permute, powi, sum, Tensor };
+use crate::rotta_rs::{
+    abs,
+    index,
+    index_replace,
+    permute,
+    powi,
+    slice,
+    slice_replace,
+    sum,
+    ArrSlice,
+    Tensor,
+};
 
 impl Tensor {
     pub fn powi(&self, n: i32) -> Tensor {
@@ -31,5 +42,13 @@ impl Tensor {
 
     pub fn permute(&self, order: Vec<usize>) -> Tensor {
         permute(self, order)
+    }
+
+    pub fn slice(&self, range: Vec<ArrSlice>) -> Tensor {
+        slice(self, range)
+    }
+
+    pub fn slice_replcae(&self, range: Vec<ArrSlice>, replace: &Tensor) {
+        slice_replace(self, range, replace);
     }
 }

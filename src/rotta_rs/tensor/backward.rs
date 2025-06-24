@@ -15,6 +15,7 @@ use crate::rotta_rs::{
     d_permute,
     d_powi,
     d_relu,
+    d_slice,
     d_ssresidual,
     d_sub,
     d_sum,
@@ -56,6 +57,7 @@ impl Tensor {
                     BackwardLabel::SumAxis(x, d, keep_dim) => d_sum_axis(x, *d, *keep_dim, &grad),
                     BackwardLabel::Sum(x) => d_sum(x, &grad),
                     BackwardLabel::Permute(x, order) => d_permute(x, order.clone(), &grad),
+                    BackwardLabel::Slice(x, range) => d_slice(x, range.clone(), &grad),
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),

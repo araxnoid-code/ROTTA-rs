@@ -25,3 +25,6 @@ pub use index::*;
 
 mod permute;
 pub use permute::*;
+
+mod slice;
+pub use slice::*;

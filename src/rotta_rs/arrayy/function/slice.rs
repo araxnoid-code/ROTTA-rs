@@ -6,7 +6,7 @@ pub struct ArrSlice(pub Option<i32>, pub Option<i32>);
 #[derive(Debug, Clone)]
 struct ArrRange(pub Option<usize>, pub Option<usize>);
 
-pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
+pub fn slice_arr(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
     // slice_negative_indexing
     let shape = arr.shape.clone();
     let slice = slice
@@ -147,7 +147,7 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
     Arrayy::from_vector(new_shape, vector)
 }
 
-pub fn slice_mut(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: Arrayy) {
+pub fn slice_replace_arr(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: &Arrayy) {
     let shape = arr.shape.clone();
     let slice = slice
         .iter()

@@ -10,7 +10,11 @@ pub fn index(x: &Tensor, index: Vec<i32>) -> Tensor {
 
 pub fn index_replace(x: &Tensor, index: Vec<i32>, replace: Tensor) {
     // only can to tensor requires_gradient=false
-    x.node.lock().unwrap().value.index_mut(index, replace.value());
+    if !x.requires_grad() {
+        x.node.lock().unwrap().value.index_mut(index, replace.value());
+    } else {
+        panic!("{}", "can't change manualy a tensor if the tensor is requires_grad=true")
+    }
 }
 
 pub fn d_index(x: &NodeType, index: Vec<i32>, grad: &Arrayy) {
