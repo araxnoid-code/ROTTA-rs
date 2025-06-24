@@ -49,7 +49,7 @@ pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arr
         let mut sum = grad;
 
         for sum_d in sum_list {
-            sum = sum_axis_arr(&sum, sum_d);
+            sum = sum_axis_arr(&sum, sum_d as i32);
         }
 
         let d_arr = to_shape(&sum, pre_shape);

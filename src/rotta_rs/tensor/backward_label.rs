@@ -11,9 +11,9 @@ pub enum BackwardLabel {
     Sub(NodeType, NodeType),
 
     // mutation
-    Index(NodeType, Vec<usize>),
+    Index(NodeType, Vec<i32>),
     Broadcasting(NodeType, Arrayy),
-    SumAxis(NodeType, usize, bool), // keep_dim
+    SumAxis(NodeType, i32, bool), // keep_dim
     Sum(NodeType),
     Permute(NodeType, Vec<usize>),
 

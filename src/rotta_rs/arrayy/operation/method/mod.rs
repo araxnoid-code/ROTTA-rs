@@ -19,7 +19,7 @@ impl Arrayy {
     }
 
     pub fn permute(&self, order: &Vec<usize>) -> Arrayy {
-        permute_arr(order, self)
+        permute_arr(&order, self)
     }
 
     pub fn ln(&self) -> Arrayy {

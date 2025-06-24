@@ -1,7 +1,11 @@
 use crate::rotta_rs::*;
 
-pub fn sum_axis_arr(arr: &Arrayy, d: usize) -> Arrayy {
+pub fn sum_axis_arr(arr: &Arrayy, d: i32) -> Arrayy {
     let mut shape = arr.shape.clone();
+
+    // sum axis negative indexing
+    let d = if d < 0 { ((shape.len() as i32) + d) as usize } else { d as usize };
+
     if d >= shape.len() {
         panic!("array is {} dimension but will sum in dimension {}", shape.len(), d);
     }

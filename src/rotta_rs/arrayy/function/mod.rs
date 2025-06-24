@@ -10,8 +10,8 @@ pub use sum_axis::*;
 mod exp;
 pub use exp::*;
 
-mod reshape;
-pub use reshape::*;
+mod to_shape;
+pub use to_shape::*;
 
 mod slice;
 pub use slice::*;

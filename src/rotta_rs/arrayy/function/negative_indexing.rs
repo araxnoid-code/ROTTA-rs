@@ -13,7 +13,7 @@ pub fn negative_indexing(x: &Vec<usize>, idx: Vec<i32>) -> Result<Vec<usize>, St
 
             indexing.push(*d as usize);
         } else {
-            let operate = (x.len() as i32) + d;
+            let operate = (x[i] as i32) + d;
             if operate < 0 {
                 // err
                 return Err(format!("indexing out of shape"));

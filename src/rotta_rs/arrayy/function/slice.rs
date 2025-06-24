@@ -1,10 +1,48 @@
 use crate::rotta_rs::*;
 
 #[derive(Debug, Clone)]
-pub struct ArrSlice(pub Option<usize>, pub Option<usize>);
+pub struct ArrSlice(pub Option<i32>, pub Option<i32>);
+
+#[derive(Debug, Clone)]
+struct ArrRange(pub Option<usize>, pub Option<usize>);
 
 pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
+    // slice_negative_indexing
     let shape = arr.shape.clone();
+    let slice = slice
+        .iter()
+        .enumerate()
+        .map(|(idx, slice)| {
+            let mut start = slice.0.unwrap_or(0);
+            if start < 0 {
+                start = (shape[idx] as i32) + start;
+
+                if start < 0 {
+                    panic!(
+                        "slice out of shape, array shape is {:?} but will slice by {:?}",
+                        shape,
+                        slice
+                    );
+                }
+            }
+
+            let mut stop = slice.1.unwrap_or(shape[idx] as i32);
+            if stop < 0 {
+                stop = (shape[idx] as i32) + stop + 1;
+
+                if stop < 0 {
+                    panic!(
+                        "slice out of shape, array shape is {:?} but will slice by {:?}",
+                        shape,
+                        slice
+                    );
+                }
+            }
+
+            ArrRange(Some(start as usize), Some(stop as usize))
+        })
+        .collect::<Vec<ArrRange>>();
+
     let new_shape = arr.shape
         .iter()
         .enumerate()
@@ -44,7 +82,7 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
                 index.push(0);
             } else {
                 // operation do here
-                let range = slice.get(current_d).unwrap_or(&ArrSlice(None, None));
+                let range = slice.get(current_d).unwrap_or(&&ArrRange(None, None));
                 let start = range.0.unwrap_or(0);
                 let stop = range.1.unwrap_or(shape[current_d]);
 
@@ -81,12 +119,12 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
             }
         } else {
             if let None = index.get(current_d) {
-                let range = slice.get(current_d).unwrap_or(&ArrSlice(None, None));
+                let range = slice.get(current_d).unwrap_or(&ArrRange(None, None));
                 let start_range = range.0.unwrap_or(0);
                 index.push(start_range);
                 current_d += 1;
             } else {
-                let range = slice.get(current_d).unwrap_or(&ArrSlice(None, None));
+                let range = slice.get(current_d).unwrap_or(&ArrRange(None, None));
                 if
                     index[current_d] < shape[current_d] - 1 &&
                     index[current_d] < range.1.unwrap_or(shape[current_d]) - 1
@@ -111,6 +149,39 @@ pub fn slice(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
 
 pub fn slice_mut(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: Arrayy) {
     let shape = arr.shape.clone();
+    let slice = slice
+        .iter()
+        .enumerate()
+        .map(|(idx, slice)| {
+            let mut start = slice.0.unwrap_or(0);
+            if start < 0 {
+                start = (shape[idx] as i32) + start;
+
+                if start < 0 {
+                    panic!(
+                        "slice out of shape, array shape is {:?} but will slice by {:?}",
+                        shape,
+                        slice
+                    );
+                }
+            }
+
+            let mut stop = slice.1.unwrap_or(shape[idx] as i32);
+            if stop < 0 {
+                stop = (shape[idx] as i32) + stop + 1;
+
+                if stop < 0 {
+                    panic!(
+                        "slice out of shape, array shape is {:?} but will slice by {:?}",
+                        shape,
+                        slice
+                    );
+                }
+            }
+
+            ArrRange(Some(start as usize), Some(stop as usize))
+        })
+        .collect::<Vec<ArrRange>>();
 
     let mut current_d = 0;
     let mut index: Vec<usize> = vec![];
@@ -123,7 +194,7 @@ pub fn slice_mut(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: Arrayy) {
                 index.push(0);
             } else {
                 // operation do here
-                let range = slice.get(current_d).unwrap_or(&ArrSlice(None, None));
+                let range = slice.get(current_d).unwrap_or(&ArrRange(None, None));
                 let start = range.0.unwrap_or(0);
                 let stop = range.1.unwrap_or(shape[current_d]);
 
@@ -153,12 +224,12 @@ pub fn slice_mut(arr: &mut Arrayy, slice: Vec<ArrSlice>, replace: Arrayy) {
             }
         } else {
             if let None = index.get(current_d) {
-                let range = slice.get(current_d).unwrap_or(&ArrSlice(None, None));
+                let range = slice.get(current_d).unwrap_or(&ArrRange(None, None));
                 let start_range = range.0.unwrap_or(0);
                 index.push(start_range);
                 current_d += 1;
             } else {
-                let range = slice.get(current_d).unwrap_or(&ArrSlice(None, None));
+                let range = slice.get(current_d).unwrap_or(&ArrRange(None, None));
                 if
                     index[current_d] < shape[current_d] - 1 &&
                     index[current_d] < range.1.unwrap_or(shape[current_d]) - 1
