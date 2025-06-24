@@ -20,6 +20,7 @@ use crate::rotta_rs::{
     d_sub,
     d_sum,
     d_sum_axis,
+    d_to_shape,
     BackwardLabel,
     NodeType,
     Tensor,
@@ -58,6 +59,7 @@ impl Tensor {
                     BackwardLabel::Sum(x) => d_sum(x, &grad),
                     BackwardLabel::Permute(x, order) => d_permute(x, order.clone(), &grad),
                     BackwardLabel::Slice(x, range) => d_slice(x, range.clone(), &grad),
+                    BackwardLabel::ToShape(x, to_shape) => d_to_shape(x, to_shape.clone(), &grad),
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),

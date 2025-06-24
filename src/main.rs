@@ -25,18 +25,16 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    let tensor = Tensor::from_vector(
-        vec![2, 2, 3],
-        vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0]
-    );
+    // let tensor = Tensor::from_vector(
+    // vec![2, 2, 3],
+    // vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0]
+    // );
 
-    let slice = tensor.slice(
-        vec![ArrSlice(Some(0), Some(1)), ArrSlice(Some(1), Some(2)), ArrSlice(Some(1), Some(-1))]
-    );
-    slice.backward();
+    // let to_shape = tensor.to_shape(vec![3, 2, 2]);
+    // to_shape.backward();
 
-    println!("{}", tensor.grad());
-    println!("{}", slice)
+    // println!("{}", tensor.grad());
+    // println!("{}", to_shape)
 
     // let mut model = Module::init();
     // let optimazaer = Sgd::init(model.parameters(), 0.0001);

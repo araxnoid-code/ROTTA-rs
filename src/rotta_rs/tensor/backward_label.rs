@@ -17,6 +17,7 @@ pub enum BackwardLabel {
     Sum(NodeType),
     Permute(NodeType, Vec<usize>),
     Slice(NodeType, Vec<ArrSlice>),
+    ToShape(NodeType, Vec<usize>),
 
     // method
     Exp(NodeType, Arrayy),

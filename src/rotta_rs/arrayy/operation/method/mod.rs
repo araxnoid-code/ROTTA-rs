@@ -63,4 +63,8 @@ impl Arrayy {
     pub fn slice_replace(&mut self, range: Vec<ArrSlice>, replace: &Arrayy) {
         slice_replace_arr(self, range, replace);
     }
+
+    pub fn to_shape(&self, to_shape: Vec<usize>) -> Arrayy {
+        to_shape_arr(self, to_shape)
+    }
 }

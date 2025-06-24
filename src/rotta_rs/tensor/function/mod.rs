@@ -28,3 +28,6 @@ pub use permute::*;
 
 mod slice;
 pub use slice::*;
+
+mod to_shape;
+pub use to_shape::*;
