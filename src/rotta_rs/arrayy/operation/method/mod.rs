@@ -67,4 +67,8 @@ impl Arrayy {
     pub fn to_shape(&self, to_shape: Vec<usize>) -> Arrayy {
         to_shape_arr(self, to_shape)
     }
+
+    pub fn reshape(&self, reshape: Vec<i32>) -> Arrayy {
+        reshape_arr(self, reshape)
+    }
 }

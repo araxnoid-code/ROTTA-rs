@@ -9,6 +9,15 @@ pub fn to_shape(x: &Tensor, to_shape: Vec<usize>) -> Tensor {
     tensor
 }
 
+pub fn reshape(x: &Tensor, reshape: Vec<i32>) -> Tensor {
+    let arr = x.value().reshape(reshape);
+    let tensor = Tensor::from_arrayy(arr);
+    tensor.update_parent(vec![x.node.clone()]);
+    tensor.update_label(Some(BackwardLabel::ToShape(x.node.clone(), x.shape())));
+
+    tensor
+}
+
 pub fn d_to_shape(x: &NodeType, to_shape: Vec<usize>, grad: &Arrayy) {
     let mut x = x.lock().unwrap();
 

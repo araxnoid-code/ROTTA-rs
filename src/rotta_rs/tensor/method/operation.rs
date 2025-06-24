@@ -5,6 +5,7 @@ use crate::rotta_rs::{
     index_replace,
     permute,
     powi,
+    reshape,
     slice,
     slice_replace,
     sum,
@@ -65,5 +66,9 @@ impl Tensor {
 
     pub fn to_shape(&self, to_shape: Vec<usize>) -> Tensor {
         to_shape_tensor(self, to_shape)
+    }
+
+    pub fn reshape(&self, re_shape: Vec<i32>) -> Tensor {
+        reshape(self, re_shape)
     }
 }

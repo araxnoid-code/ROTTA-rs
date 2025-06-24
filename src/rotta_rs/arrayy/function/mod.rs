@@ -33,3 +33,6 @@ pub use sign::*;
 
 mod negative_indexing;
 pub use negative_indexing::*;
+
+mod reshape;
+pub use reshape::*;
