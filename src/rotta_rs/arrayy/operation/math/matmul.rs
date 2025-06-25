@@ -99,7 +99,7 @@ pub fn matmul_nd(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
     }
 }
 
-pub fn matmul_multithread(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
+pub fn matmul_multithread_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
     // multithread
     let shape_a = arr_a.shape.clone();
     let shape_b = arr_b.shape.clone();

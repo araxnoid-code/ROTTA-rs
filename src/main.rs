@@ -3,9 +3,11 @@ use std::{ sync::{ Arc, Mutex }, time::UNIX_EPOCH };
 use rand_distr::num_traits::float::FloatCore;
 
 use crate::rotta_rs::{
+    add_arr,
+    add_multithread_arr,
     dot,
     matmul,
-    matmul_multithread,
+    matmul_multithread_arr,
     matmul_nd,
     negative_indexing,
     permute,
@@ -35,6 +37,35 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
+    let x = Arrayy::ones(vec![2048, 2048]);
+    let z = Arrayy::ones(vec![2048, 2048]);
+
+    let mut avg = 0;
+    for _ in 0..10 {
+        let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
+        add_arr(&x, &z);
+
+        let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
+        println!("{}ms", tok - tik);
+        avg += tok - tik;
+    }
+    println!("avg normal {}ms", avg / 10);
+
+    let mut avg = 0;
+    for _ in 0..10 {
+        let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
+        add_multithread_arr(&x, &z);
+
+        let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
+        println!("{}ms", tok - tik);
+        avg += tok - tik;
+    }
+    println!("avg multi {}ms", avg / 10)
+
     // let mut model = Module::init();
     // let optimazer = Sgd::init(model.parameters(), 0.00001);
     // let loss_fn = SSResidual::init();
