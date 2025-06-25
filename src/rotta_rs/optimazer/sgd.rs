@@ -1,10 +1,11 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::rotta_rs::{ Arrayy, NodeType };
+use crate::rotta_rs::{ Arrayy, Backward, NodeType };
 
 pub struct Sgd {
     parameters: Arc<Mutex<Vec<NodeType>>>,
     lr: Arrayy,
+    pub auto_zero_grad_execute: bool,
 }
 
 impl Sgd {
@@ -13,6 +14,7 @@ impl Sgd {
         Sgd {
             parameters,
             lr,
+            auto_zero_grad_execute: true,
         }
     }
 
@@ -24,12 +26,17 @@ impl Sgd {
     }
 
     // optimazer
-    pub fn optim(&self) {
+    pub fn optim(&self, backward: Backward) {
         for node_type in self.parameters.lock().unwrap().iter() {
             let mut node = node_type.lock();
             let node_mutex = node.as_mut().unwrap();
             let new = &node_mutex.value - &self.lr * &node_mutex.grad;
             node_mutex.update_value(new);
+        }
+
+        // auto_grad_zero
+        if self.auto_zero_grad_execute {
+            backward.zero_grad();
         }
     }
 }

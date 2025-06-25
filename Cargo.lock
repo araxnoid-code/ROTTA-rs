@@ -155,7 +155,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rotta-rs"
+name = "rotta_rs"
 version = "0.0.3"
 dependencies = [
  "rand",

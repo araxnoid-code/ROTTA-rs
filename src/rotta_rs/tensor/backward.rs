@@ -1,4 +1,4 @@
-use std::{ collections::HashSet };
+use std::{ collections::HashSet, sync::{ Arc, Mutex } };
 
 use crate::rotta_rs::{
     d_abs,
@@ -27,8 +27,23 @@ use crate::rotta_rs::{
     Tensor,
 };
 
+pub struct Backward {
+    map: Arc<Mutex<Vec<NodeType>>>,
+}
+
+impl Backward {
+    pub fn zero_grad(&self) {
+        for node in self.map.lock().unwrap().iter() {
+            let mut node = node.lock().unwrap();
+            if node.auto_zero_grad {
+                node.zero_grad();
+            }
+        }
+    }
+}
+
 impl Tensor {
-    pub fn backward(&self) {
+    pub fn backward(&self) -> Backward {
         let node = self.node.clone();
         node.lock().as_mut().unwrap().ones_grad();
 
@@ -80,6 +95,12 @@ impl Tensor {
                 }
             }
         }
+
+        let backward = Backward {
+            map: Arc::new(Mutex::new(graph)),
+        };
+
+        backward
     }
 }
 

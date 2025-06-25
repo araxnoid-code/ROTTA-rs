@@ -81,8 +81,20 @@ impl Tensor {
         self.node.lock().as_mut().unwrap().label = label;
     }
 
+    pub fn update_parent_label(&self, parent: Vec<NodeType>, label: Option<BackwardLabel>) {
+        let mut node = self.node.lock().unwrap();
+        node.parent = parent;
+        node.label = label;
+    }
+
+    // requires grad
     pub fn set_requires_grad(&self, stat: bool) {
         self.node.lock().unwrap().requires_grad = stat;
+    }
+
+    // auto zero grad
+    pub fn set_auto_zero_grad(&self, stat: bool) {
+        self.node.lock().unwrap().auto_zero_grad = stat;
     }
 }
 
