@@ -562,31 +562,31 @@ fn main() {
 - MSE
 ```rust
 fn main() {
-    let sum_square_residual = MSE::init();
+    let mse = MSE::init();
 
     let prediction = Tensor::new([[1.0, 2.0, 3.0]]);
     let actual = Tensor::new([[2.0, 3.0, 4.0]]);
 
-    let loss = sum_square_residual.forward(&prediction, &actual);
+    let loss = mse.forward(&prediction, &actual);
 }
 ```
 
 - MAE
 ```rust
 fn main() {
-    let sum_square_residual = MAE::init();
+    let mae = MAE::init();
 
     let prediction = Tensor::new([[1.0, 2.0, 3.0]]);
     let actual = Tensor::new([[2.0, 3.0, 4.0]]);
 
-    let loss = sum_square_residual.forward(&prediction, &actual);
+    let loss = mae.forward(&prediction, &actual);
 }
 ```
 
 - Cross Entropy Loss
 ```rust
 fn main() {
-    let sum_square_residual = CrossEntropyLoss::init();
+    let cel = CrossEntropyLoss::init();
 
     // [B, C]
     let prediction = Tensor::new([
@@ -599,7 +599,7 @@ fn main() {
     // [B]
     let actual = Tensor::new([0.0, 1.0, 2.0]);
 
-    let loss = sum_square_residual.forward(&prob_prediction, &actual);
+    let loss = cel.forward(&prob_prediction, &actual);
     println!("{}", loss);
 }
 ```
