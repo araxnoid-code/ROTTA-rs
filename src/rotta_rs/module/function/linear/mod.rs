@@ -1,7 +1,9 @@
 mod linear;
+use std::sync::{ Arc, Mutex };
+
 pub use linear::*;
 
-use crate::rotta_rs::{ Arrayy, Module, Tensor, WeightInitialization };
+use crate::rotta_rs::{ Arrayy, Module, Tensor, TrainEvalHandler, WeightInitialization };
 
 impl Module {
     pub fn liniar_init(&mut self, input: usize, output: usize) -> Linear {
@@ -34,6 +36,8 @@ impl Module {
             weight: tensor_weight,
             bias: tensor_bias,
         };
+
+        // self.functions.push(Box::new(Arc::new(Mutex::new(linear_cfg))));
 
         linear_cfg
     }

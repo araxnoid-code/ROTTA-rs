@@ -2,9 +2,9 @@ use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
 
 use rand::random;
 
-use crate::rotta_rs::{ Arrayy, BackwardLabel, MultipleSum, Node, NodeType, RecFlatten };
+use crate::rotta_rs::{ Arrayy, BackwardLabel, Node, NodeType, RecFlatten };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Tensor {
     pub node: NodeType,
 }

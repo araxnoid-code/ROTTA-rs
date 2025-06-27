@@ -2,11 +2,12 @@ use std::sync::{ Arc, Mutex };
 
 use rand::{ rngs::StdRng, SeedableRng };
 
-use crate::rotta_rs::{ NodeType, WeightInitialization };
+use crate::rotta_rs::{ NodeType, TrainEvalHandler, WeightInitialization };
 
 pub struct Module {
     pub parameters: Arc<Mutex<Vec<NodeType>>>,
     pub initialization: WeightInitialization,
+    pub eval_handlers: Vec<Arc<Mutex<bool>>>,
 
     // rng
     pub rng: StdRng,
@@ -18,6 +19,7 @@ impl Module {
         Module {
             parameters: Arc::new(Mutex::new(Vec::new())),
             initialization: WeightInitialization::He,
+            eval_handlers: vec![],
 
             // rng
             rng: StdRng::seed_from_u64(42),
@@ -27,6 +29,19 @@ impl Module {
     // parameters
     pub fn parameters(&self) -> Arc<Mutex<Vec<Arc<Mutex<crate::rotta_rs::Node>>>>> {
         self.parameters.clone()
+    }
+
+    // eval & training
+    pub fn train(&self) {
+        for p in &self.eval_handlers {
+            *p.lock().unwrap() = false;
+        }
+    }
+
+    pub fn eval(&self) {
+        for p in &self.eval_handlers {
+            *p.lock().unwrap() = true;
+        }
     }
 
     // update seed

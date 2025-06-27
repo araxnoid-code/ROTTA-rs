@@ -61,6 +61,16 @@ impl Arrayy {
         Arrayy::from_vector(shape, vector)
     }
 
+    pub fn arrayy_from_element(shape: Vec<usize>, element: f64) -> Arrayy {
+        let len = shape.multiple_sum();
+        let mut vector = Vec::with_capacity(len);
+        for _ in 0..len {
+            vector.push(element);
+        }
+
+        Arrayy::from_vector(shape, vector)
+    }
+
     // get
     pub fn index(&self, index: Vec<i32>) -> Arrayy {
         let shape = self.shape.clone();
