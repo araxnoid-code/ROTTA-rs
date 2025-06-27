@@ -17,6 +17,7 @@ use crate::rotta_rs::{
     Module,
     SSResidual,
     Sgd,
+    SgdMomen,
     Tensor,
     MSE,
 };
@@ -38,22 +39,44 @@ fn main() {
 
     let mut model = Module::init();
 
-    let optimazer = Sgd::init(model.parameters(), 0.0001);
+    let mut optimazer = SgdMomen::init(model.parameters(), 0.0000000001);
     let loss_fn = MSE::init();
 
     let linear = model.liniar_init(1, 256);
     let mut drop = model.dropout_init(0.3);
     let linear_2 = model.liniar_init(256, 1);
 
-    let input = Tensor::new([[1.0], [2.0], [3.0], [4.0]]);
-    let actual = Tensor::new([[10.0], [20.0], [30.0], [40.0]]);
+    let input = Tensor::new([
+        [1.0],
+        [2.0],
+        [3.0],
+        [4.0],
+        [5.0],
+        [6.0],
+        [7.0],
+        [8.0],
+        [9.0],
+        [10.0],
+    ]);
+    let actual = Tensor::new([
+        [10.0],
+        [20.0],
+        [30.0],
+        [40.0],
+        [50.0],
+        [60.0],
+        [70.0],
+        [80.0],
+        [90.0],
+        [100.0],
+    ]);
 
     // let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
 
     model.train();
     for epoch in 0..1000 {
         let x = linear.forward(&input);
-        let x = drop.forward(&x);
+        // let x = drop.forward(&x);
         let output = linear_2.forward(&x);
 
         let loss = loss_fn.forward(&output, &actual);
