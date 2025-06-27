@@ -2,7 +2,14 @@ use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType, Tensor };
 
 // matmul
 pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
-    let output = a.value().matmul(&b.value());
+    let tensor_a = a.node.lock().unwrap();
+    let tensor_b = b.node.lock().unwrap();
+
+    // let output = if tensor_a.multithread {
+    // tensor_a.value.par_matmul(&tensor_b.value)
+    // } else {
+    let output = tensor_a.value.matmul(&tensor_b.value);
+    // };
 
     let tensor = Tensor::from_arrayy(output);
 

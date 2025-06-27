@@ -10,7 +10,7 @@ use crate::rotta_rs::{
 
 // broadcasting_tensor
 pub fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<usize>) -> Tensor {
-    let arr = broadcasting(&tensor_arr.value(), broadcast_shape).unwrap_or(tensor_arr.value());
+    let arr = broadcasting(&tensor_arr.value(), broadcast_shape);
 
     let tensor = Tensor::from_arrayy(arr);
     tensor.update_parent(vec![tensor_arr.node.clone()]);

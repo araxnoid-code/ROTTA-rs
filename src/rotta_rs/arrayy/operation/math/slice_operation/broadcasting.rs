@@ -31,7 +31,10 @@ pub fn broadcast_shape_slice(shape_a: &[usize], shape_b: &[usize]) -> Result<Vec
     Ok(broadcasted)
 }
 
-pub fn broadcasting_arr_slice(arr: (&[f64], &[usize]), broadcast_shape: &[usize]) -> Arrayy {
+pub fn broadcasting_arr_slice(
+    arr: (&[f64], &[usize]),
+    broadcast_shape: &[usize]
+) -> (Vec<f64>, Vec<usize>) {
     let (arr, shape) = arr;
 
     let shape_len = shape.len();
@@ -39,7 +42,7 @@ pub fn broadcasting_arr_slice(arr: (&[f64], &[usize]), broadcast_shape: &[usize]
     let distance = ((shape_len as f32) - (broadcast_shape_len as f32)).abs() as usize;
 
     if shape == broadcast_shape {
-        return Arrayy::from_vector(broadcast_shape.to_vec(), arr.to_vec());
+        return (arr.to_vec(), broadcast_shape.to_vec());
     }
 
     let mut vector: Vec<f64> = Vec::with_capacity(broadcast_shape.multiple_sum());
@@ -89,5 +92,5 @@ pub fn broadcasting_arr_slice(arr: (&[f64], &[usize]), broadcast_shape: &[usize]
         }
     }
 
-    Arrayy::from_vector(new_shape, vector)
+    (vector, new_shape)
 }

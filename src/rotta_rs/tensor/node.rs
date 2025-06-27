@@ -12,6 +12,7 @@ pub struct Node {
     // requires
     pub requires_grad: bool,
     pub auto_zero_grad: bool,
+    pub multithread: bool,
 }
 
 impl Node {
@@ -25,6 +26,7 @@ impl Node {
             label: None,
             requires_grad: true,
             auto_zero_grad: true,
+            multithread: true,
         };
 
         node
