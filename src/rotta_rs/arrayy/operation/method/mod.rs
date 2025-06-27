@@ -15,7 +15,17 @@ impl Arrayy {
     }
 
     pub fn matmul(&self, rhs: &Arrayy) -> Arrayy {
-        matmul_nd(self, rhs)
+        // matmul_nd(self, rhs)
+        let (vector, shape) = matmul_nd_slice(
+            (self.value.as_slice(), self.shape.as_slice()),
+            (rhs.value.as_slice(), rhs.shape.as_slice())
+        );
+
+        Arrayy::from_vector(shape, vector)
+    }
+
+    pub fn par_matmul(&self, rhs: &Arrayy) -> Arrayy {
+        par_matmul_arr(self, rhs)
     }
 
     pub fn permute(&self, order: &Vec<usize>) -> Arrayy {

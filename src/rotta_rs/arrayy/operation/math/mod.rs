@@ -15,3 +15,6 @@ pub use matmul::*;
 
 mod mul;
 pub use mul::*;
+
+mod slice_operation;
+pub use slice_operation::*;

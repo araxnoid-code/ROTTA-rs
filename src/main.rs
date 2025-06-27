@@ -1,93 +1,45 @@
 use std::{ sync::{ Arc, Mutex }, time::UNIX_EPOCH };
 
-use rand_distr::num_traits::float::FloatCore;
-
 use crate::rotta_rs::{
     add_arr,
-    add_multithread_arr,
-    dot,
-    matmul,
-    matmul_multithread_arr,
+    broadcast_shape_slice,
+    broadcasting,
+    broadcasting_arr_slice,
+    matmul_2d,
+    matmul_2d_slice,
     matmul_nd,
-    negative_indexing,
-    permute,
-    relu,
-    reshape_arr,
-    sigmoid,
-    slice_arr,
-    softmax,
-    softplus,
-    sum,
-    sum_arr,
-    sum_axis,
-    sum_axis_arr,
-    tanh,
-    ArrSlice,
+    matmul_nd_slice,
+    par_add_arr,
     Arrayy,
-    CrossEntropyLoss,
-    Module,
-    SSResidual,
-    Sgd,
-    Tensor,
-    WeightInitialization,
-    MAE,
-    MSE,
 };
 
 mod rotta_rs;
 
 fn main() {
-    let x = Arrayy::ones(vec![2048, 2048]);
-    let z = Arrayy::ones(vec![2048, 2048]);
+    let array = Arrayy::from_vector(vec![3, 1, 1, 1], vec![1.0, 2.0, 3.0]);
+    // println!("{}", array);
 
-    let mut avg = 0;
-    for _ in 0..10 {
-        let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+    let a = broadcasting_arr_slice((array.value.as_slice(), array.shape.as_slice()), &[3, 3, 3, 2]);
+    println!("{}", a);
 
-        add_arr(&x, &z);
+    // let data = 5012;
+    // // println!("{}", data);
+    // let x = Arrayy::ones(vec![data, data]);
+    // let z = Arrayy::ones(vec![data, data]);
 
-        let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+    // let mut avg = 0;
+    // for _ in 0..20 {
+    //     let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
 
-        println!("{}ms", tok - tik);
-        avg += tok - tik;
-    }
-    println!("avg normal {}ms", avg / 10);
+    //     // broadcasting(&x, vec![2, data, data]).unwrap();
+    //     broadcasting_arr_slice((x.value.as_slice(), x.shape.as_slice()), &[2, data, data]);
+    //     // add_arr(&x, &z);
+    //     // add_multithread_arr(&x, &z);
 
-    let mut avg = 0;
-    for _ in 0..10 {
-        let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+    //     let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
 
-        add_multithread_arr(&x, &z);
-
-        let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-
-        println!("{}ms", tok - tik);
-        avg += tok - tik;
-    }
-    println!("avg multi {}ms", avg / 10)
-
-    // let mut model = Module::init();
-    // let optimazer = Sgd::init(model.parameters(), 0.00001);
-    // let loss_fn = SSResidual::init();
-
-    // let linear = model.liniar_init(1, 1);
-    // let linear_2 = model.liniar_init(1, 1);
-
-    // let input = Tensor::new([[1.0], [2.0]]);
-    // let actual = Tensor::new([[1.0], [4.0]]);
-
-    // for epoch in 0..100 {
-    //     let x = linear.forward(&input);
-    //     let x = relu(&x);
-    //     let output = linear_2.forward(&x);
-
-    //     let loss = loss_fn.forward(&output, &actual);
-    //     println!("epoch:{epoch} | loss => {loss}");
-
-    //     optimazer.zero_grad();
-
-    //     let backward = loss.backward();
-
-    //     optimazer.optim(backward);
+    //     println!("{}ms", tok - tik);
+    //     avg += tok - tik;
     // }
+    // println!("avg multi {}ms", avg / 10)
 }
