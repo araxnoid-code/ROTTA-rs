@@ -43,11 +43,20 @@ pub fn broadcasting_arr_slice(arr: (&[f64], &[usize]), broadcast_shape: &[usize]
     }
 
     let mut vector: Vec<f64> = Vec::with_capacity(broadcast_shape.multiple_sum());
-    let mut new_shape = shape.to_vec();
+    let mut new_shape = if shape_len == broadcast_shape_len {
+        shape.to_vec()
+    } else {
+        let mut shape = shape.to_vec();
+        for _ in 0..distance {
+            shape.insert(0, 1);
+        }
+        shape
+    };
 
     for d in (0..broadcast_shape_len).rev() {
-        let a_idx = (d as i32) - (distance as i32);
-        let d_a = if a_idx >= 0 { new_shape[a_idx as usize] } else { 1 };
+        // let a_idx = (d as i32) - (distance as i32);
+        // let d_a = if a_idx >= 0 { new_shape[a_idx as usize] } else { 1 };
+        let d_a = new_shape[d];
         let d_b = broadcast_shape[d];
         let mut acumulate = Vec::new();
 
@@ -55,7 +64,7 @@ pub fn broadcasting_arr_slice(arr: (&[f64], &[usize]), broadcast_shape: &[usize]
             let length = (&new_shape[d..]).multiple_sum();
 
             let len_a = if vector.is_empty() { arr.len() } else { vector.len() };
-            println!("{}", len_a);
+
             let count = len_a / length;
 
             for i in 0..count {
@@ -80,5 +89,5 @@ pub fn broadcasting_arr_slice(arr: (&[f64], &[usize]), broadcast_shape: &[usize]
         }
     }
 
-    Arrayy::from_vector(broadcast_shape.to_vec(), vector)
+    Arrayy::from_vector(new_shape, vector)
 }

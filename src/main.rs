@@ -2,6 +2,7 @@ use std::{ sync::{ Arc, Mutex }, time::UNIX_EPOCH };
 
 use crate::rotta_rs::{
     add_arr,
+    broadcast_concat,
     broadcast_shape_slice,
     broadcasting,
     broadcasting_arr_slice,
@@ -16,11 +17,18 @@ use crate::rotta_rs::{
 mod rotta_rs;
 
 fn main() {
-    let array = Arrayy::from_vector(vec![3, 1, 1, 1], vec![1.0, 2.0, 3.0]);
-    // println!("{}", array);
+    let a = Arrayy::from_vector(vec![2, 3], vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+    let b = Arrayy::from_vector(vec![2, 1, 1, 1], vec![5.0, 6.0]);
 
-    let a = broadcasting_arr_slice((array.value.as_slice(), array.shape.as_slice()), &[3, 3, 3, 2]);
-    println!("{}", a);
+    let shape = broadcast_concat(&a, &b);
+
+    // println!("{:?}", shape);
+
+    let a = broadcasting(&a, shape.clone()).unwrap();
+    let b = broadcasting(&b, shape.clone()).unwrap();
+
+    // println!("{}", a);
+    // println!("{}", b);
 
     // let data = 5012;
     // // println!("{}", data);
