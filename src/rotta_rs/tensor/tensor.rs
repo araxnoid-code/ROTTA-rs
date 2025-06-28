@@ -45,6 +45,32 @@ impl Tensor {
         tensor
     }
 
+    pub fn arrayy_from_element(shape: Vec<usize>, element: f64) -> Tensor {
+        let array = Arrayy::arrayy_from_element(shape, element);
+
+        let node = Node::new(array);
+        let node = Arc::new(Mutex::new(node));
+
+        let tensor = Tensor {
+            node,
+        };
+
+        tensor
+    }
+
+    pub fn arrayy_from_shape_fn<T: FnMut() -> f64>(shape: Vec<usize>, f: T) -> Tensor {
+        let array = Arrayy::arrayy_from_shape_fn(shape, f);
+
+        let node = Node::new(array);
+        let node = Arc::new(Mutex::new(node));
+
+        let tensor = Tensor {
+            node,
+        };
+
+        tensor
+    }
+
     pub fn rand(shape: Vec<usize>) -> Tensor {
         Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || random::<f64>()))
     }
