@@ -37,3 +37,6 @@ pub use transpose::*;
 
 mod sign;
 pub use sign::*;
+
+mod powf;
+pub use powf::*;

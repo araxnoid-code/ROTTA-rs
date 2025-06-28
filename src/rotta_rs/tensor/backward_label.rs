@@ -22,6 +22,7 @@ pub enum BackwardLabel {
     // method
     Exp(NodeType, Arrayy),
     Powi(NodeType, i32),
+    Powf(NodeType, f64),
     Ln(NodeType),
     Abs(NodeType),
     Sign(NodeType),

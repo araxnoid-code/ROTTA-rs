@@ -13,6 +13,7 @@ use crate::rotta_rs::{
     d_matmul,
     d_mul,
     d_permute,
+    d_powf,
     d_powi,
     d_relu,
     d_sign,
@@ -80,6 +81,7 @@ impl Tensor {
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
                     BackwardLabel::Powi(x, powi) => d_powi(x, *powi, &grad),
+                    BackwardLabel::Powf(x, powf) => d_powf(x, *powf, &grad),
                     BackwardLabel::Ln(x) => d_ln(x, &grad),
                     BackwardLabel::Abs(x) => d_abs(x, &grad),
                     BackwardLabel::Sign(x) => d_sign(x),

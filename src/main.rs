@@ -40,7 +40,7 @@ fn main() {
 
     let mut model = Module::init();
 
-    let mut optimazer = AdaGrad::init(model.parameters(), 0.0001);
+    let mut optimazer = AdaGrad::init(model.parameters(), 0.01);
     let loss_fn = MSE::init();
 
     let linear = model.liniar_init(1, 256);
@@ -77,7 +77,7 @@ fn main() {
     model.train();
     for epoch in 0..1000 {
         let x = linear.forward(&input);
-        // let x = drop.forward(&x);
+        let x = drop.forward(&x);
         let output = linear_2.forward(&x);
 
         let loss = loss_fn.forward(&output, &actual);
