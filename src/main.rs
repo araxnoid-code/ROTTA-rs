@@ -13,6 +13,7 @@ use crate::rotta_rs::{
     matmul_nd_slice,
     par_add_arr,
     relu,
+    AdaGrad,
     Arrayy,
     Module,
     SSResidual,
@@ -39,7 +40,7 @@ fn main() {
 
     let mut model = Module::init();
 
-    let mut optimazer = SgdMomen::init(model.parameters(), 0.0000000001);
+    let mut optimazer = AdaGrad::init(model.parameters(), 0.0001);
     let loss_fn = MSE::init();
 
     let linear = model.liniar_init(1, 256);

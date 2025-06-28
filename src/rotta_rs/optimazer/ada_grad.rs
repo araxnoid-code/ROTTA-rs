@@ -2,22 +2,20 @@ use std::sync::{ Arc, Mutex };
 
 use crate::rotta_rs::{ Arrayy, Backward, NodeType };
 
-pub struct SgdMomen {
+pub struct AdaGrad {
     parameters: Arc<Mutex<Vec<NodeType>>>,
     lr: Arrayy,
-    v: Vec<Arrayy>,
-    g: f64,
+    g: Vec<Arrayy>,
     pub auto_zero_grad_execute: bool,
 }
 
-impl SgdMomen {
-    pub fn init(parameters: Arc<Mutex<Vec<NodeType>>>, lr: f64) -> SgdMomen {
+impl AdaGrad {
+    pub fn init(parameters: Arc<Mutex<Vec<NodeType>>>, lr: f64) -> AdaGrad {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
-        SgdMomen {
+        AdaGrad {
             parameters,
             lr,
-            v: vec![],
-            g: 0.9,
+            g: vec![],
             auto_zero_grad_execute: true,
         }
     }
@@ -33,30 +31,27 @@ impl SgdMomen {
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
             let mut node = node_type.lock().unwrap();
-
-            // v initialization
-            if let None = self.v.get(i) {
-                self.v.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
+            if let None = self.g.get(i) {
+                self.g.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
             }
 
-            // v = g * v + lr * grad(w)
-            // w = w -  v
-            let v = self.g * &self.v[i] + &self.lr * &node.grad;
-            let new = &node.value - &v;
-            node.update_value(new);
+            // ada grad
+            // g_n = g_n - 1 + g_n^2
+            // w_n + 1 = w_n - (lr/(g_n^0.5 + e).sqrt) * grad(w_n)
 
-            // update v
-            self.v[i] = v;
+            let eps = 1e-8;
+            let grad = &node.grad;
+            let g_n = &self.g[i] + grad.powi(2);
+            let new = &node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;
+
+            node.update_value(new);
+            // update g
+            self.g[i] = g_n;
         }
 
         // auto_grad_zero
         if self.auto_zero_grad_execute {
             backward.zero_grad();
         }
-    }
-
-    // update
-    pub fn update_hyperparameter(&mut self, g: f64) {
-        self.g = g;
     }
 }
