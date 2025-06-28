@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ ArrSlice, Arrayy, NodeType };
+use crate::rotta_rs::{ arrayy::ArrSlice, arrayy::Arrayy, NodeType };
 
 #[derive(Debug, Clone)]
 pub enum BackwardLabel {

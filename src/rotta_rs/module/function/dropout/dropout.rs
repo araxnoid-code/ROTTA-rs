@@ -3,7 +3,7 @@ use std::sync::{ Arc, Mutex };
 use rand::{ rngs::StdRng, Rng };
 use rand_distr::{ Bernoulli, Distribution };
 
-use crate::rotta_rs::{ Arrayy, Tensor, TrainEvalHandler };
+use crate::rotta_rs::{ arrayy::Arrayy, Tensor, TrainEvalHandler };
 
 pub struct Dropout {
     pub bernoulli: Bernoulli,

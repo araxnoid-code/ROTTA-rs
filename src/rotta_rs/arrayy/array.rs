@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::rotta_rs::{ negative_indexing, MultipleSum, RecFlatten, Tensor };
+use crate::rotta_rs::{ arrayy::{ negative_indexing, MultipleSum, RecFlatten }, Tensor };
 
 #[derive(Clone, Debug)]
 pub struct Arrayy {

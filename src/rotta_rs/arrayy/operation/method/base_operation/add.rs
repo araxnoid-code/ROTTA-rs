@@ -1,6 +1,6 @@
 use std::ops::Add;
 
-use crate::rotta_rs::{ add_arr, Arrayy };
+use crate::rotta_rs::{ arrayy::{ add_arr, Arrayy } };
 
 impl Add for Arrayy {
     type Output = Self;

@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ to_shape_arr, Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ arrayy::{ to_shape_arr, Arrayy }, BackwardLabel, NodeType, Tensor };
 
 pub fn to_shape(x: &Tensor, to_shape: Vec<usize>) -> Tensor {
     let arr = to_shape_arr(&x.value(), to_shape);

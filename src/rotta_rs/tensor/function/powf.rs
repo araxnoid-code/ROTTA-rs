@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn powf(x: &Tensor, n: f64) -> Tensor {
     let arrayy = x.value().powf(n);

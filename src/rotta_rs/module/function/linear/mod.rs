@@ -3,7 +3,7 @@ use std::sync::{ Arc, Mutex };
 
 pub use linear::*;
 
-use crate::rotta_rs::{ Arrayy, Module, Tensor, TrainEvalHandler, WeightInitialization };
+use crate::rotta_rs::{ arrayy::Arrayy, Module, Tensor, TrainEvalHandler, WeightInitialization };
 
 impl Module {
     pub fn liniar_init(&mut self, input: usize, output: usize) -> Linear {

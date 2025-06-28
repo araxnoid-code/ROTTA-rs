@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use crate::rotta_rs::*;
+use crate::rotta_rs::arrayy::*;
 
 // display
 impl Display for Arrayy {

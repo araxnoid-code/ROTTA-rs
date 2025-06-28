@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ broadcast_shape_slice, broadcasting_arr_slice, MultipleSum };
+use crate::rotta_rs::arrayy::*;
 
 pub fn div_arr_slice(
     arr_a: (&[f64], &[usize]),

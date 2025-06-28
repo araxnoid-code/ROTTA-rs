@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn exp(x: &Tensor) -> Tensor {
     let exp_arr = x.value().exp();

@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn permute(x: &Tensor, order: Vec<usize>) -> Tensor {
     let tensor = Tensor::from_arrayy(x.value().permute(&order));

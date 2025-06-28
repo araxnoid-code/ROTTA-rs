@@ -2,7 +2,10 @@ use std::{ sync::{ Arc, Mutex }, thread };
 
 use rayon::iter::{ IntoParallelIterator, IntoParallelRefIterator, ParallelIterator };
 
-use crate::rotta_rs::*;
+use crate::rotta_rs::{
+    arrayy::{ add_arr_slice, broadcast_shape_slice, broadcasting_arr_slice, Arrayy, MultipleSum },
+    *,
+};
 
 // function
 pub fn add_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {

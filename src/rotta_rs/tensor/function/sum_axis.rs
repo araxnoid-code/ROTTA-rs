@@ -2,8 +2,8 @@ use rand::seq::IndexedRandom;
 
 use crate::rotta_rs::{
     arrayy::sum_axis_arr,
-    to_shape_arr,
-    Arrayy,
+    arrayy::to_shape_arr,
+    arrayy::Arrayy,
     BackwardLabel,
     NodeType,
     Tensor,

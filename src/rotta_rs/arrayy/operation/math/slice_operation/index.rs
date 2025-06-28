@@ -1,4 +1,4 @@
-use crate::rotta_rs::MultipleSum;
+use crate::rotta_rs::arrayy::*;
 
 pub fn slice_index(slice: &[f64], shape: &[usize], index: &[usize]) -> f64 {
     // let index = negative_indexing(&self.shape, index).unwrap();

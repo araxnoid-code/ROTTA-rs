@@ -15,7 +15,7 @@ use crate::rotta_rs::{
     sum_axis_keep_dim,
     to_shape as to_shape_tensor,
     transpose,
-    ArrSlice,
+    arrayy::ArrSlice,
     Tensor,
 };
 

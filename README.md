@@ -1,60 +1,66 @@
-<div align=center>
+<div align="center">
 
-![image alt](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
+![ROTTA Logo](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
+
+# ROTTA-rs  
+**An AI framework built with the power and safety of Rust**
+
 </div>
 
-<div align=center>
+---
 
-# ROTTA-rs
-AI framework built on the rust programming language
-</div>
+## 📦 Version: `0.0.4`
 
-## version 0.0.3
-### New
-- negative indexing for sum_axis, slice, indexing, reshape.
-- transpose
-- reshape
-- to_shape
-- slice
-- permute
-- requires_grad
-- Mean Absolute Error
-- Mean Square Error
-- sign
-- abs
-- sum function
+### ✨ New Features
+- `Dropout`
+- `SGD + Momentum`
+- `AdaGrad`
+- `powf`
+- New method for creating `tensors`
 
-### Optimalization
-- optimizing operations with scalars
 
-### fix bug
-- fixed a bug in basic math in arrayy
-- fixed backward error in multiple tensor
+### 🚀 Optimizations
+- Optimized Basic Operations `add`, `sub`, `mul`, `div`, `matmul`
 
-you can see other versions via this [link](https://github.com/araxnoid-code/ROTTA-rs/tags)
+### 🛠️ Bug Fixes
+- Fixed bug on `Sum Square Residual`
+- Fixed a bug where tensors accumulated their gradients
 
-You can see what changes have occurred in the previous version at this [link](https://github.com/araxnoid-code/ROTTA-rs/blob/main/version.md)
+📌 Check all releases: [Tags](https://github.com/araxnoid-code/ROTTA-rs/tags)  
+📜 Full changelog: [version.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/version.md)
 
-## Install on your code
-for now ROTTA-rs is still not available on crates.io, to use ROTTA-rs you can access the zip file on this link and extract it into your rust project.
+---
 
-[ROTTA-rs.zip](https://github.com/araxnoid-code/ROTTA-rs/blob/main/rotta_rs_module)
+## ⚙️ Installation
 
-note: ROTTA-rs also uses external dependencies, don't forget to add them in Cargo.toml
+Currently, **ROTTA-rs** is not yet available on [crates.io](https://crates.io).  
+To use it:
 
-|   dependencies    | version | features |
-|   :-----------    | :------ | :---     |
-|   `rand`          | 0.9.1   | _        |
-|   `rand_distr`    | 0.5.1   | _        |
-|   `uuid`          | 1.17.0  | `v4`     |
+📁 Download: [ROTTA-rs.zip](https://github.com/araxnoid-code/ROTTA-rs/blob/main/rotta_rs_module)  
+📦 Extract into your Rust project.
 
-suggestion: for convenience you can extract it into the src folder along with the main.rs file then access the ROTTA-rs module using:
+Add dependencies in your `Cargo.toml`:
+
+```toml
+[dependencies]
+rand = "0.9.1"
+rand_distr = "0.5.1"
+rayon = "1.10.0"
+
+[dependencies.uuid]
+version = "1.17.0"
+# Lets you generate random UUIDs
+features = [
+    "v4",
+]
+```
+
 ```rust
 mod rotta_rs;
 ```
 
 
-## Simple AI Model
+## 🧠 Simple AI Model
 ```rust
 mod rotta_rs;
 
@@ -86,18 +92,18 @@ fn main() {
 }
 ```
 
-## GUIDE
-You can access this link to go to the guide page
 
-[GUIDE](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/guide.md)
+## 📚 GUIDE
+📘 Start learning:
+[🧭 GUIDE.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/guide.md)
 
 
-## Support Developer With Donations
-- Saweria
+## ❤️ Support the Developer
+If you find this project useful, you can support further development via:
 
-[https://saweria.co/araxnoid](https://saweria.co/araxnoid)
+[🔗 saweria](https://saweria.co/araxnoid)
 
-## follow me on social media to get the latest updates
+## 🌐 Connect with Me
 - youtube
 
 araxnoid
@@ -115,7 +121,7 @@ araxnoid
 
 araxnoid0@gmail.com
 
-## DEPEDENCIES
+## 📥 Dependencies
 - [rand](https://crates.io/crates/rand)
 - [rand_distr](https://crates.io/crates/rand_distr)
 - [uuid](https://crates.io/crates/uuid)

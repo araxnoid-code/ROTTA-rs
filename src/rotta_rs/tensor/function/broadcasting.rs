@@ -1,8 +1,8 @@
 use crate::rotta_rs::{
-    broadcasting,
-    to_shape_arr,
-    sum_axis_arr,
-    Arrayy,
+    arrayy::broadcasting,
+    arrayy::to_shape_arr,
+    arrayy::sum_axis_arr,
+    arrayy::Arrayy,
     BackwardLabel,
     NodeType,
     Tensor,

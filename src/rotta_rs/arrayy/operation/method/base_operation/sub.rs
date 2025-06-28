@@ -1,6 +1,6 @@
 use std::ops::Sub;
 
-use crate::rotta_rs::{ minus, Arrayy };
+use crate::rotta_rs::{ arrayy::{ add_arr, Arrayy, * } };
 
 impl Sub for Arrayy {
     type Output = Self;

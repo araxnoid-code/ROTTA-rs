@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ permute_arr, BackwardLabel, Tensor };
+use crate::rotta_rs::{ arrayy::permute_arr, BackwardLabel, Tensor };
 
 pub fn transpose(x: &Tensor, d: (i32, i32)) -> Tensor {
     let arr = x.value();

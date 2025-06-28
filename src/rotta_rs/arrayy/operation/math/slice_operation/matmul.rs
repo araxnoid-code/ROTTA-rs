@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ slice_index, MultipleSum };
+use crate::rotta_rs::arrayy::*;
 
 pub fn matmul_2d_slice(
     arr_a: (&[f64], &[usize]),

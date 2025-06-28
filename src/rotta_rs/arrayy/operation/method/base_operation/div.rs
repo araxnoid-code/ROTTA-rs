@@ -1,6 +1,6 @@
 use std::ops::Div;
 
-use crate::rotta_rs::{ divided_arr, Arrayy };
+use crate::rotta_rs::{ arrayy::{ add_arr, Arrayy, * } };
 
 impl Div for Arrayy {
     type Output = Self;

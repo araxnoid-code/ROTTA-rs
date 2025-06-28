@@ -1,8 +1,8 @@
-use std::{ fmt::Display, ops::Mul, sync::{ Arc, Mutex } };
+use std::{ fmt::Display, sync::{ Arc, Mutex } };
 
 use rand::random;
 
-use crate::rotta_rs::{ Arrayy, BackwardLabel, Node, NodeType, RecFlatten };
+use crate::rotta_rs::{ arrayy::Arrayy, BackwardLabel, Node, NodeType, arrayy::RecFlatten };
 
 #[derive(Debug, Clone)]
 pub struct Tensor {
@@ -130,11 +130,3 @@ impl Display for Tensor {
         f.write_str(&string)
     }
 }
-
-// impl Mul for Tensor {
-//     type Output = Self;
-//     fn mul(self, rhs: Self) -> Self::Output {
-//         let output = self.value() * rhs.value();
-//         Tensor::from_arrayy(output)
-//     }
-// }

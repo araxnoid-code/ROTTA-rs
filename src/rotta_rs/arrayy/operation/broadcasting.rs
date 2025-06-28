@@ -1,4 +1,4 @@
-use crate::rotta_rs::*;
+use crate::rotta_rs::{ arrayy::{ broadcast_shape_slice, * }, * };
 
 pub fn broadcast_concat(arr_a: &Arrayy, arr_b: &Arrayy) -> Vec<usize> {
     broadcast_shape_slice(&arr_a.shape, &arr_b.shape).unwrap()

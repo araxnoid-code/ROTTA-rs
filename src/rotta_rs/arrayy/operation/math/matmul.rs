@@ -1,7 +1,6 @@
-use std::{ sync::{ Arc, Mutex }, thread };
 use rayon::prelude::*;
 
-use crate::rotta_rs::*;
+use crate::rotta_rs::arrayy::*;
 
 // function
 pub fn matmul_2d(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {

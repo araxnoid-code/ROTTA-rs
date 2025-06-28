@@ -1,4 +1,4 @@
-use crate::rotta_rs::*;
+use crate::rotta_rs::arrayy::*;
 
 pub fn to_shape_arr(arr: &Arrayy, reshape: Vec<usize>) -> Arrayy {
     let arr_length = arr.value.len();

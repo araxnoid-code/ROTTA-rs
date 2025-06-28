@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, MultipleSum };
+use crate::rotta_rs::arrayy::*;
 
 pub fn reshape_arr(x: &Arrayy, reshape: Vec<i32>) -> Arrayy {
     let mut minus_index = None;

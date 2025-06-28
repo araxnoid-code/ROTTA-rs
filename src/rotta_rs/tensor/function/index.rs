@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::rotta_rs::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
 
 pub fn index(x: &Tensor, index: Vec<i32>) -> Tensor {
     let tensor = Tensor::from_arrayy(x.value().index(index.clone()));

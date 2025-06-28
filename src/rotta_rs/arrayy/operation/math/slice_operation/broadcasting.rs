@@ -1,4 +1,4 @@
-use crate::rotta_rs::{ Arrayy, MultipleSum };
+use crate::rotta_rs::arrayy::*;
 
 pub fn broadcast_shape_slice(shape_a: &[usize], shape_b: &[usize]) -> Result<Vec<usize>, String> {
     let mut shape_a = shape_a.to_vec();

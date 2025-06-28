@@ -1,3 +1,25 @@
+# version 0.0.3
+### New
+- negative indexing for sum_axis, slice, indexing, reshape.
+- transpose
+- reshape
+- to_shape
+- slice
+- permute
+- requires_grad
+- Mean Absolute Error
+- Mean Square Error
+- sign
+- abs
+- sum function
+
+### Optimalization
+- optimizing operations with scalars
+
+### fix bug
+- fixed a bug in basic math in arrayy
+- fixed backward error in multiple tensor
+
 # version 0.0.2
 ### New
 - Softplus

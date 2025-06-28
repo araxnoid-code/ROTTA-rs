@@ -1,4 +1,4 @@
-use crate::rotta_rs::Arrayy;
+use crate::rotta_rs::arrayy::*;
 
 pub fn abs_arr(x: &Arrayy) -> Arrayy {
     let vector = x.value

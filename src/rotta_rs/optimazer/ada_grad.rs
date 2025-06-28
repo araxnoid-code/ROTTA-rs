@@ -1,6 +1,6 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::rotta_rs::{ Arrayy, Backward, NodeType };
+use crate::rotta_rs::{ arrayy::Arrayy, Backward, NodeType };
 
 pub struct AdaGrad {
     parameters: Arc<Mutex<Vec<NodeType>>>,

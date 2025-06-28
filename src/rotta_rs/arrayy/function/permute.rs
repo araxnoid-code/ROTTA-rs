@@ -1,4 +1,4 @@
-use crate::rotta_rs::*;
+use crate::rotta_rs::arrayy::*;
 
 pub fn permute_arr(order: &Vec<usize>, arr: &Arrayy) -> Arrayy {
     let shape = arr.shape.clone();

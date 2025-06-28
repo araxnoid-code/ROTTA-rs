@@ -1,4 +1,4 @@
-use crate::rotta_rs::Arrayy;
+use crate::rotta_rs::arrayy::*;
 
 pub fn powi_arr(arr: &Arrayy, n: i32) -> Arrayy {
     let vector = arr.value

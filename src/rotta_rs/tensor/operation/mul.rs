@@ -1,11 +1,11 @@
 use std::ops::Mul;
 
 use crate::rotta_rs::{
-    broadcast_concat,
+    arrayy::broadcast_concat,
     broadcasting_tensor_non_panic,
-    Arrayy,
+    arrayy::Arrayy,
     BackwardLabel,
-    MultipleSum,
+    arrayy::MultipleSum,
     NodeType,
     Tensor,
 };
