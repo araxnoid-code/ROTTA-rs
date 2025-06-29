@@ -1,13 +1,18 @@
 [package]
 name = "rotta_rs"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2024"
 license = "Apache-2.0"
 description = "an AI framework with rust language"
 
+[lib]
+name = "rotta_rs"
+path = "src/lib.rs"
+
 [dependencies]
 rand = "0.9.1"
 rand_distr = "0.5.1"
+rayon = "1.10.0"
 
 [dependencies.uuid]
 version = "1.17.0"

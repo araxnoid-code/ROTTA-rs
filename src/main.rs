@@ -1,65 +1,9 @@
-use std::time::UNIX_EPOCH;
-
-use rand_distr::num_traits::float::FloatCore;
-
-use crate::rotta_rs::{
-    dot,
-    matmul,
-    negative_indexing,
-    permute,
-    relu,
-    reshape_arr,
-    sigmoid,
-    slice_arr,
-    softmax,
-    softplus,
-    sum,
-    sum_arr,
-    sum_axis,
-    sum_axis_arr,
-    tanh,
-    ArrSlice,
-    Arrayy,
-    CrossEntropyLoss,
-    Module,
-    SSResidual,
-    Sgd,
-    Tensor,
-    WeightInitialization,
-    MAE,
-    MSE,
-};
-
-mod rotta_rs;
+use rotta_rs::*;
 
 fn main() {
     let mut model = Module::init();
-    let optimazer = Sgd::init(model.parameters(), 0.00001);
-    let loss_fn = SSResidual::init();
 
-    let linear = model.liniar_init(1, 1024);
-    let linear_2 = model.liniar_init(1024, 1);
-
-    let input = Tensor::new([[1.0], [2.0]]);
-    let actual = Tensor::new([[1.0], [4.0]]);
-
-    let tik = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-
-    for epoch in 0..1000 {
-        let x = linear.forward(&input);
-        let x = relu(&x);
-        let output = linear_2.forward(&x);
-
-        let loss = loss_fn.forward(&output, &actual);
-        println!("epoch:{epoch} | loss => {loss}");
-
-        optimazer.zero_grad();
-
-        loss.backward();
-
-        optimazer.optim();
-    }
-    let tok = std::time::SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-
-    println!("{}", tok - tik)
+    // training phase
+    model.train();
+    model.eval();
 }
