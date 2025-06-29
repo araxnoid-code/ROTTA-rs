@@ -1,7 +1,9 @@
 [package]
 name = "rotta_rs"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2024"
+license = "Apache-2.0"
+description = "an AI framework with rust language"
 
 [lib]
 name = "rotta_rs"

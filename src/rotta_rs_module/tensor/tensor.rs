@@ -45,7 +45,7 @@ impl Tensor {
         tensor
     }
 
-    pub fn arrayy_from_element(shape: Vec<usize>, element: f64) -> Tensor {
+    pub fn from_element(shape: Vec<usize>, element: f64) -> Tensor {
         let array = Arrayy::arrayy_from_element(shape, element);
 
         let node = Node::new(array);
@@ -58,7 +58,7 @@ impl Tensor {
         tensor
     }
 
-    pub fn arrayy_from_shape_fn<T: FnMut() -> f64>(shape: Vec<usize>, f: T) -> Tensor {
+    pub fn from_shape_fn<T: FnMut() -> f64>(shape: Vec<usize>, f: T) -> Tensor {
         let array = Arrayy::arrayy_from_shape_fn(shape, f);
 
         let node = Node::new(array);

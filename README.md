@@ -3,8 +3,9 @@
 ![ROTTA Logo](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
 
 # ROTTA-rs  
-**An AI framework built with the power and safety of Rust**
+**An AI Framework In Rust 🦀**
 
+*🛠️ still in development stage 🛠️*
 </div>
 
 ---
@@ -36,29 +37,10 @@
 Currently, **ROTTA-rs** is not yet available on [crates.io](https://crates.io).  
 To use it:
 
-📁 Download: [ROTTA-rs.zip](https://github.com/araxnoid-code/ROTTA-rs/blob/main/rotta_rs_module)  
-📦 Extract into your Rust project.
-
-Add dependencies in your `Cargo.toml`:
-
 ```toml
 [dependencies]
-rand = "0.9.1"
-rand_distr = "0.5.1"
-rayon = "1.10.0"
-
-[dependencies.uuid]
-version = "1.17.0"
-# Lets you generate random UUIDs
-features = [
-    "v4",
-]
+rotta_rs = {git = "https://github.com/araxnoid-code/ROTTA-rs"}
 ```
-
-```rust
-mod rotta_rs;
-```
-
 
 ## 🧠 Simple AI Model
 ```rust
@@ -95,7 +77,7 @@ fn main() {
 
 
 ## 📚 GUIDE
-📘 Start learning:
+📘 Start learning: 
 [🧭 GUIDE.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/guide.md)
 
 
@@ -126,3 +108,4 @@ araxnoid0@gmail.com
 - [rand](https://crates.io/crates/rand)
 - [rand_distr](https://crates.io/crates/rand_distr)
 - [uuid](https://crates.io/crates/uuid)
+- [rayon](https://crates.io/crates/rayon)
