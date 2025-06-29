@@ -2,6 +2,8 @@
 name = "rotta_rs"
 version = "0.0.3"
 edition = "2024"
+license = "Apache-2.0"
+description = "an AI framework with rust language"
 
 [dependencies]
 rand = "0.9.1"
