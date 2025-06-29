@@ -17,6 +17,7 @@
 - `SGD + Momentum`
 - `AdaGrad`
 - `powf`
+- `train` and `val` method for [module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
 - New method for creating `tensors`
 
 
