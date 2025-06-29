@@ -3,7 +3,7 @@
 ![ROTTA Logo](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
 
 # ROTTA-rs  
-**An AI Framework In Rust 🦀**
+**An AI Library In Rust 🦀**
 
 *🛠️ still in development stage 🛠️*
 </div>
