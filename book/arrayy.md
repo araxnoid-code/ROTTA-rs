@@ -3,7 +3,7 @@
 # arrayy
 </div>
 
-a module that ROTTA-rs uses to create arrays.
+a module that ROTTA-rs uses to create arrayy.
 
 you can find the module folder in src/rotta_rs/arrayy in the ROTTA-rs directory, or use this link.
 
