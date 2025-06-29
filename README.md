@@ -45,7 +45,6 @@ rotta_rs = {git = "https://github.com/araxnoid-code/ROTTA-rs"}
 
 ## 🧠 Simple AI Model
 ```rust
-pub mod rotta_rs;
 use rotta_rs::*;
 
 fn main() {
