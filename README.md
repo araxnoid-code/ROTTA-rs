@@ -62,7 +62,8 @@ mod rotta_rs;
 
 ## 🧠 Simple AI Model
 ```rust
-mod rotta_rs;
+pub mod rotta_rs;
+use rotta_rs::*;
 
 fn main() {
     let mut model = Module::init();
@@ -85,9 +86,9 @@ fn main() {
 
         optimazer.zero_grad();
 
-        loss.backward();
+        let backward = loss.backward();
 
-        optimazer.optim();
+        optimazer.optim(backward);
     }
 }
 ```

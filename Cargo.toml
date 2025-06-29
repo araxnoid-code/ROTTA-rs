@@ -3,6 +3,10 @@ name = "rotta_rs"
 version = "0.0.3"
 edition = "2024"
 
+[lib]
+name = "rotta_rs"
+path = "src/lib.rs"
+
 [dependencies]
 rand = "0.9.1"
 rand_distr = "0.5.1"
