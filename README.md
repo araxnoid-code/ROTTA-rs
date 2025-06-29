@@ -81,7 +81,7 @@ fn main() {
 [🧭 GUIDE.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/guide.md)
 
 
-## ❤️ Support the Developer
+## 👍️ Support the Developer
 If you find this project useful, you can support further development via:
 
 [🔗 saweria](https://saweria.co/araxnoid)
