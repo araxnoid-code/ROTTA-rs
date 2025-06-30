@@ -24,7 +24,7 @@
 
 
 ## Module
-### [📦️ Loss Function](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
+### [📦️ Module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
 
 
 ## Optimazer
