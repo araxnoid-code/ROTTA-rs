@@ -1,31 +1,34 @@
 use std::{ collections::HashSet, sync::{ Arc, Mutex } };
 
-use crate::rotta_rs_module::{
-    d_abs,
-    d_add,
-    d_broadcasting_tensor,
-    d_cel,
-    d_divided,
-    d_dot,
-    d_exp,
-    d_index,
-    d_ln,
-    d_matmul,
-    d_mul,
-    d_permute,
-    d_powf,
-    d_powi,
-    d_relu,
-    d_sign,
-    d_slice,
-    d_ssresidual,
-    d_sub,
-    d_sum,
-    d_sum_axis,
-    d_to_shape,
-    BackwardLabel,
-    NodeType,
-    Tensor,
+use crate::{
+    d_concat,
+    rotta_rs_module::{
+        d_abs,
+        d_add,
+        d_broadcasting_tensor,
+        d_cel,
+        d_divided,
+        d_dot,
+        d_exp,
+        d_index,
+        d_ln,
+        d_matmul,
+        d_mul,
+        d_permute,
+        d_powf,
+        d_powi,
+        d_relu,
+        d_sign,
+        d_slice,
+        d_ssresidual,
+        d_sub,
+        d_sum,
+        d_sum_axis,
+        d_to_shape,
+        BackwardLabel,
+        NodeType,
+        Tensor,
+    },
 };
 
 pub struct Backward {
@@ -77,6 +80,7 @@ impl Tensor {
                     BackwardLabel::Permute(x, order) => d_permute(x, order.clone(), &grad),
                     BackwardLabel::Slice(x, range) => d_slice(x, range.clone(), &grad),
                     BackwardLabel::ToShape(x, to_shape) => d_to_shape(x, to_shape.clone(), &grad),
+                    BackwardLabel::Concat(nodes, dim) => d_concat(nodes.clone(), *dim, &grad),
 
                     // function
                     BackwardLabel::Exp(a, exp_value) => d_exp(a, exp_value, &grad),
@@ -94,8 +98,6 @@ impl Tensor {
                         d_ssresidual(prediction, actual, &grad),
                     BackwardLabel::CEL(prob_prediction, prob_actual) =>
                         d_cel(prob_prediction, prob_actual, &grad),
-
-                    _ => (),
                 }
             }
         }

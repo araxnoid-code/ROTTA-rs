@@ -25,6 +25,8 @@ use rotta_rs::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, * };
 // }
 
 fn main() {
+    // println!("{}", a.grad());
+
     // let mut model = Module::init();
     // let mut optimazer = RMSprop::init(model.parameters(), 0.001);
     // let loss_fn = SSResidual::init();
