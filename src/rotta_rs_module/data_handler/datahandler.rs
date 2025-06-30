@@ -55,10 +55,12 @@ impl DataHandler {
 }
 
 // iterator
-impl Iterator for DataHandler {
+impl<'a> Iterator for &'a mut DataHandler {
     type Item = (Tensor, Tensor);
     fn next(&mut self) -> Option<Self::Item> {
         if self.idx >= self.dataset.len() {
+            self.idx = 0;
+            self.idx = 0;
             return None;
         }
 
