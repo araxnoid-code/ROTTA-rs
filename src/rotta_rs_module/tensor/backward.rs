@@ -94,6 +94,8 @@ impl Tensor {
                         d_ssresidual(prediction, actual, &grad),
                     BackwardLabel::CEL(prob_prediction, prob_actual) =>
                         d_cel(prob_prediction, prob_actual, &grad),
+
+                    _ => (),
                 }
             }
         }

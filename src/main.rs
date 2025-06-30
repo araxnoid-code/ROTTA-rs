@@ -25,18 +25,6 @@ use rotta_rs::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, * };
 // }
 
 fn main() {
-    let a = Arrayy::new([
-        [
-            [1.0, 2.0],
-            [3.0, 4.0],
-        ],
-    ]);
-
-    let vector = vec![a.clone(), a.clone()];
-
-    let concat = concat_arr(vector, 3);
-    println!("{}", concat);
-
     // let mut model = Module::init();
     // let mut optimazer = RMSprop::init(model.parameters(), 0.001);
     // let loss_fn = SSResidual::init();

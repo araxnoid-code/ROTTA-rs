@@ -40,3 +40,6 @@ pub use sign::*;
 
 mod powf;
 pub use powf::*;
+
+mod concat;
+pub use concat::*;
