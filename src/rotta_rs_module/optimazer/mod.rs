@@ -9,3 +9,6 @@ pub use ada_grad::*;
 
 mod rmsprop;
 pub use rmsprop::*;
+
+mod adam;
+pub use adam::*;
