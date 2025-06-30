@@ -36,3 +36,6 @@ pub use negative_indexing::*;
 
 mod reshape;
 pub use reshape::*;
+
+mod concat;
+pub use concat::*;
