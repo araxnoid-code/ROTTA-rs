@@ -3,7 +3,8 @@ name = "rotta_rs"
 version = "0.0.4"
 edition = "2024"
 license = "Apache-2.0"
-description = "an AI framework with rust language"
+description = "an AI library with rust language"
+keywords = ["AI", "machine-learning", "deep-learning", "neural-network", "tensor"]
 
 [lib]
 name = "rotta_rs"
