@@ -21,7 +21,7 @@ impl Adam {
             lr,
             g: vec![],
             m: vec![],
-            i: 0,
+            i: 1,
             hyperparameter_1: 0.9,
             hyperparameter_2: 0.999,
             auto_zero_grad_execute: true,
@@ -66,10 +66,10 @@ impl Adam {
             let new = &node.value - (&self.lr / (gh_n.powf(0.5) + eps)) * mh_n;
             node.update_value(new);
 
-            self.i += 1;
             self.g[i] = g_n;
             self.m[i] = m_n;
         }
+        self.i += 1;
 
         // auto_grad_zero
         if self.auto_zero_grad_execute {
