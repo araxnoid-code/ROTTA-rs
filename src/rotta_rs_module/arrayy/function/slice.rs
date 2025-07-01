@@ -1,3 +1,5 @@
+use std::ops::Index;
+
 use crate::rotta_rs_module::arrayy::*;
 
 #[derive(Debug, Clone)]
@@ -5,6 +7,72 @@ pub struct ArrSlice(pub Option<i32>, pub Option<i32>);
 
 #[derive(Debug, Clone)]
 struct ArrRange(pub Option<usize>, pub Option<usize>);
+
+pub fn slice_arr_optim(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
+    let mut index = Vec::new();
+    let mut d = 0;
+    let mut shape = arr.shape.clone();
+
+    let mut result = vec![];
+    loop {
+        if d == slice.len() {
+            let i = d - 1;
+            //
+            let mut n = true;
+            for (i, range) in slice.iter().enumerate() {
+                let s = range.0.unwrap_or(0) as usize;
+                let e = range.1.unwrap_or(arr.shape[i] as i32) as usize;
+                if shape[i] != e - s {
+                    shape[i] = e - s;
+                }
+
+                if index[i] >= s && index[i] < e {
+                } else {
+                    n = false;
+                    break;
+                }
+            }
+
+            if n {
+                let slice = slice_indexs(&arr.value, &arr.shape, &index);
+                result.extend_from_slice(slice);
+            }
+
+            index[i] += 1;
+            if index[i] > arr.shape[i] - 1 {
+                index.pop();
+
+                if d == 1 {
+                    break;
+                }
+                d -= 2;
+
+                // break;
+            }
+        } else {
+            if let None = index.get(d) {
+                index.push(0);
+
+                d += 1;
+            } else {
+                index[d] += 1;
+
+                if index[d] > arr.shape[d] - 1 {
+                    if d == 0 {
+                        break;
+                    }
+
+                    index.pop();
+                    d -= 1;
+                } else {
+                    d += 1;
+                }
+            }
+        }
+    }
+
+    Arrayy::from_vector(shape, result)
+}
 
 pub fn slice_arr(arr: &Arrayy, slice: Vec<ArrSlice>) -> Arrayy {
     // slice_negative_indexing
