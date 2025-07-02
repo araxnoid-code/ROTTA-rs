@@ -1,7 +1,8 @@
 use std::{ ops::{ Range, RangeFrom, RangeFull }, time::SystemTime };
 
 use rotta_rs::{
-    arrayy::{ r, slice_arr_optim, ArrSlice, Arrayy },
+    arrayy::{ r, ArrSlice, Arrayy },
+    concat,
     relu,
     Adam,
     DataHandler,
@@ -36,28 +37,6 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    // let arr = Arrayy::zeros(vec![256, 256]);
-    // let tick = std::time::SystemTime
-    //     ::now()
-    //     .duration_since(SystemTime::UNIX_EPOCH)
-    //     .unwrap()
-    //     .as_millis();
-
-    // // arr.slice(vec![ArrSlice(None, None), ArrSlice(None, None)]);
-
-    // let tock = std::time::SystemTime
-    //     ::now()
-    //     .duration_since(SystemTime::UNIX_EPOCH)
-    //     .unwrap()
-    //     .as_millis();
-
-    // println!("{}ms", tock - tick)
-
-    // slice_arr_optim(
-    //     &arr,
-    //     vec![ArrSlice(Some(0), Some(2)), ArrSlice(Some(1), Some(2)), ArrSlice(Some(2), Some(3))]
-    // );
-
     // let mut model = Module::init();
     // let mut optimazer = Adam::init(model.parameters(), 0.001);
     // let loss_fn = SSResidual::init();
