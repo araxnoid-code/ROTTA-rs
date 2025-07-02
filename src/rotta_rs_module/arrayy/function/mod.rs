@@ -39,3 +39,6 @@ pub use reshape::*;
 
 mod concat;
 pub use concat::*;
+
+mod slice_range;
+pub use slice_range::*;

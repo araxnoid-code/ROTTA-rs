@@ -1,7 +1,7 @@
-use std::{ ops::RangeFull, time::SystemTime };
+use std::{ ops::{ Range, RangeFrom, RangeFull }, time::SystemTime };
 
 use rotta_rs::{
-    arrayy::{ slice_arr_optim, ArrSlice, Arrayy },
+    arrayy::{ r, slice_arr_optim, ArrSlice, Arrayy },
     relu,
     Adam,
     DataHandler,
@@ -35,33 +35,15 @@ impl Dataset for MyDataset {
     }
 }
 
-//
-struct SliceRange {}
-//
-
 fn main() {
+    // let arr = Arrayy::zeros(vec![256, 256]);
     // let tick = std::time::SystemTime
     //     ::now()
     //     .duration_since(SystemTime::UNIX_EPOCH)
     //     .unwrap()
     //     .as_millis();
 
-    // let arr = Arrayy::new([
-    //     [1.0, 2.0, 3.0],
-    //     [4.0, 5.0, 6.0],
-    // ]);
-
-    let a = 10..10;
-
-    // let arr = Arrayy::arange(vec![3, 3, 2]);
-    // println!("{}\n ///////", arr);
-    // println!(
-    //     "{}",
-    //     slice_arr_optim(
-    //         &arr,
-    //         vec![ArrSlice(Some(1), None), ArrSlice(Some(1), Some(3)), ArrSlice(Some(1), Some(2))]
-    //     )
-    // );
+    // // arr.slice(vec![ArrSlice(None, None), ArrSlice(None, None)]);
 
     // let tock = std::time::SystemTime
     //     ::now()
@@ -70,13 +52,6 @@ fn main() {
     //     .as_millis();
 
     // println!("{}ms", tock - tick)
-
-    // let arr = Arrayy::from_vector(
-    //     vec![2, 2, 3],
-    //     vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0]
-    // );
-
-    // println!("{}", arr);
 
     // slice_arr_optim(
     //     &arr,
