@@ -45,7 +45,6 @@ pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
             })
             .collect::<Vec<ArrSlice>>();
 
-        let grad = grad.slice(slice);
-        node.add_grad(grad);
+        node.add_grad(grad.slice(slice));
     }
 }

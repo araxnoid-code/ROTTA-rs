@@ -37,20 +37,6 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    // let mut model = Module::init();
-    // let mut optimazer = Adam::init(model.parameters(), 0.001);
-    // let loss_fn = SSResidual::init();
-
-    // let linear = model.liniar_init(1, 256);
-    // let linear_2 = model.liniar_init(256, 1);
-
-    // let dataset = MyDataset::init(
-    //     vec![Tensor::new([[1.0], [2.0]]), Tensor::new([[3.0], [4.0]])],
-    //     vec![Tensor::new([[10.0], [20.0]]), Tensor::new([[30.0], [40.0]])]
-    // );
-    // let mut datahandler = DataHandler::init(dataset);
-    // datahandler.shuffle();
-
     // for epoch in 0..1000 {
     //     let mut avg = Tensor::new([0.0]);
     //     for (input, actual) in &mut datahandler {
