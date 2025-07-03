@@ -21,6 +21,7 @@ pub fn sub_arr_slice(
         (vector, shape_a.to_vec())
     } else if shape_a.multiple_sum() == 1 || shape_b.multiple_sum() == 1 {
         // skalar
+        let broadcasting_shape = broadcast_shape_slice(shape_a, shape_b).unwrap();
         if shape_a.multiple_sum() == 1 {
             let skalar = arr_a[0];
 
@@ -29,7 +30,7 @@ pub fn sub_arr_slice(
                 .map(|v| skalar - *v)
                 .collect::<Vec<f64>>();
 
-            (vector, shape_b.to_vec())
+            (vector, broadcasting_shape)
         } else {
             let skalar = arr_b[0];
 
@@ -38,7 +39,7 @@ pub fn sub_arr_slice(
                 .map(|v| *v - skalar)
                 .collect::<Vec<f64>>();
 
-            (vector, shape_a.to_vec())
+            (vector, broadcasting_shape)
         }
     } else {
         // broadcasting

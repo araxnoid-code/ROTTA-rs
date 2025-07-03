@@ -61,11 +61,11 @@ impl Tensor {
         index(self, idx)
     }
 
-    pub fn sum_axis(&self, d: i32) -> Tensor {
+    pub fn sum_axis(&self, d: &[i32]) -> Tensor {
         sum_axis(self, d)
     }
 
-    pub fn sum_axis_keep_dim(&self, d: i32) -> Tensor {
+    pub fn sum_axis_keep_dim(&self, d: &[i32]) -> Tensor {
         sum_axis_keep_dim(self, d)
     }
 
@@ -105,11 +105,11 @@ impl Tensor {
         mean(self)
     }
 
-    pub fn mean_axis(&self, d: i32) -> Tensor {
+    pub fn mean_axis(&self, d: &[i32]) -> Tensor {
         mean_axis(self, d)
     }
 
-    pub fn mean_axis_keep_dim(&self, d: i32) -> Tensor {
+    pub fn mean_axis_keep_dim(&self, d: &[i32]) -> Tensor {
         mean_axis_keep_dim(self, d)
     }
 }

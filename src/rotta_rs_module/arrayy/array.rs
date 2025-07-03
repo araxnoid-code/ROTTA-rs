@@ -71,7 +71,7 @@ impl Arrayy {
         Arrayy::from_vector(shape, vector)
     }
 
-    pub fn arange(shape: Vec<usize>) -> Arrayy {
+    pub fn arange(shape: &[usize]) -> Arrayy {
         let len = shape.multiple_sum();
         let mut vector = Vec::with_capacity(len);
 
@@ -79,7 +79,7 @@ impl Arrayy {
             vector.push(i as f64);
         }
 
-        Arrayy::from_vector(shape, vector)
+        Arrayy::from_vector(shape.to_vec(), vector)
     }
 
     // get

@@ -1,7 +1,7 @@
 use std::{ ops::{ Range, RangeFrom, RangeFull }, time::SystemTime };
 
 use rotta_rs::{
-    arrayy::{ mean_arr, r, ArrSlice, Arrayy },
+    arrayy::{ broadcasting, mean_arr, r, ArrSlice, Arrayy },
     concat,
     relu,
     Adam,
@@ -37,9 +37,9 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    let tensor = Tensor::arange(vec![2, 2, 3]);
+    let a = Tensor::arange(&[3, 2, 4]);
+    println!("{}", a);
 
-    println!("{}", tensor);
-
-    // println!("{}", tensor.sum_axis(-1))
+    let mean = a.mean_axis_keep_dim(&[0, 1, 2]);
+    println!("{}", mean);
 }

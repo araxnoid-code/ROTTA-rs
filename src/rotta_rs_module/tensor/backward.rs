@@ -75,7 +75,7 @@ impl Tensor {
                     BackwardLabel::Index(x, index) => d_index(x, index.clone(), &grad),
                     BackwardLabel::Broadcasting(tensor_arr, broad_arr) =>
                         d_broadcasting_tensor(tensor_arr, broad_arr.clone(), grad),
-                    BackwardLabel::SumAxis(x, d, keep_dim) => d_sum_axis(x, *d, *keep_dim, &grad),
+                    BackwardLabel::SumAxis(x, d, keep_dim) => d_sum_axis(x, d, *keep_dim, &grad),
                     BackwardLabel::Sum(x) => d_sum(x, &grad),
                     BackwardLabel::Permute(x, order) => d_permute(x, order.clone(), &grad),
                     BackwardLabel::Slice(x, range) => d_slice(x, range.clone(), &grad),
