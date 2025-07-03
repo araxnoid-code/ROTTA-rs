@@ -1,7 +1,7 @@
 use std::{ ops::{ Range, RangeFrom, RangeFull }, time::SystemTime };
 
 use rotta_rs::{
-    arrayy::{ r, ArrSlice, Arrayy },
+    arrayy::{ mean_arr, r, ArrSlice, Arrayy },
     concat,
     relu,
     Adam,
@@ -37,23 +37,9 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    // for epoch in 0..1000 {
-    //     let mut avg = Tensor::new([0.0]);
-    //     for (input, actual) in &mut datahandler {
-    //         let x = linear.forward(&input);
-    //         let x = relu(&x);
-    //         let output = linear_2.forward(&x);
+    let tensor = Tensor::arange(vec![2, 2, 3]);
 
-    //         let loss = loss_fn.forward(&output, &actual);
-    //         avg = &avg + &loss;
+    println!("{}", tensor);
 
-    //         optimazer.zero_grad();
-
-    //         let backward = loss.backward();
-
-    //         optimazer.optim(backward);
-    //     }
-    //     let loss = &avg / (datahandler.len() as f64);
-    //     println!("epoch:{epoch} | loss => {loss}");
-    // }
+    // println!("{}", tensor.sum_axis(-1))
 }

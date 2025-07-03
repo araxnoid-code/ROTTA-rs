@@ -75,6 +75,10 @@ impl Tensor {
         Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || random::<f64>()))
     }
 
+    pub fn arange(shape: Vec<usize>) -> Tensor {
+        Tensor::from_arrayy(Arrayy::arange(shape))
+    }
+
     // get
     // value
     pub fn value(&self) -> Arrayy {

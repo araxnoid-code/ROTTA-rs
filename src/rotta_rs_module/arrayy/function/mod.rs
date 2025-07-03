@@ -42,3 +42,9 @@ pub use concat::*;
 
 mod slice_range;
 pub use slice_range::*;
+
+mod mean;
+pub use mean::*;
+
+mod mean_axis;
+pub use mean_axis::*;

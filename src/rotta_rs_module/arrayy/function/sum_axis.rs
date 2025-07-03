@@ -44,3 +44,25 @@ pub fn sum_axis_arr(arr: &Arrayy, d: i32) -> Arrayy {
     shape.remove(d);
     Arrayy::from_vector(shape, vec.concat())
 }
+
+pub fn sum_axis_arr_optim(arr: &Arrayy, d: &[i32]) {
+    let shape = &arr.shape;
+
+    let d = d
+        .into_iter()
+        .enumerate()
+        .map(|(i, d)| {
+            if *d >= 0 { *d as usize } else { ((shape.len() as i32) + d) as usize }
+        })
+        .collect::<Vec<usize>>();
+}
+
+pub fn sum_axis_keep_dim_arr(arr: &Arrayy, d: i32) -> Arrayy {
+    let mut out = sum_axis_arr(arr, d);
+
+    let shape = &arr.shape;
+    let d = if d >= 0 { d as usize } else { ((shape.len() as i32) + d) as usize };
+    out.shape.insert(d, 1);
+
+    out
+}

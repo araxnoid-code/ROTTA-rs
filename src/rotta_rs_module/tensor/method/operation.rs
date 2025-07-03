@@ -1,22 +1,27 @@
-use crate::rotta_rs_module::{
-    abs,
-    exp,
-    index,
-    index_replace,
-    ln,
-    permute,
-    powi,
-    reshape,
-    sign,
-    slice,
-    slice_replace,
-    sum,
-    sum_axis,
-    sum_axis_keep_dim,
-    to_shape as to_shape_tensor,
-    transpose,
-    arrayy::ArrSlice,
-    Tensor,
+use crate::{
+    mean,
+    mean_axis,
+    mean_axis_keep_dim,
+    rotta_rs_module::{
+        abs,
+        arrayy::ArrSlice,
+        exp,
+        index,
+        index_replace,
+        ln,
+        permute,
+        powi,
+        reshape,
+        sign,
+        slice,
+        slice_replace,
+        sum,
+        sum_axis,
+        sum_axis_keep_dim,
+        to_shape as to_shape_tensor,
+        transpose,
+        Tensor,
+    },
 };
 
 impl Tensor {
@@ -94,5 +99,17 @@ impl Tensor {
 
     pub fn sign(&self) -> Tensor {
         sign(self)
+    }
+
+    pub fn mean(&self) -> Tensor {
+        mean(self)
+    }
+
+    pub fn mean_axis(&self, d: i32) -> Tensor {
+        mean_axis(self, d)
+    }
+
+    pub fn mean_axis_keep_dim(&self, d: i32) -> Tensor {
+        mean_axis_keep_dim(self, d)
     }
 }
