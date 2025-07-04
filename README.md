@@ -35,12 +35,12 @@
 
 ## ⚙️ Installation
 
-Currently, **ROTTA-rs** is not yet available on [crates.io](https://crates.io).  
+[ROTTA-rs](https://crates.io/crates/rotta_rs) can be installed directly through [crates.io](https://crates.io).
 To use it:
 
 ```toml
 [dependencies]
-rotta_rs = {git = "https://github.com/araxnoid-code/ROTTA-rs"}
+rotta_rs = "0.0.4"
 ```
 
 ## 🧠 Simple AI Model
