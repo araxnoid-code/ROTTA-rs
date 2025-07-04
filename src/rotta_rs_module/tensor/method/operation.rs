@@ -2,6 +2,7 @@ use crate::{
     mean,
     mean_axis,
     mean_axis_keep_dim,
+    powf,
     rotta_rs_module::{
         abs,
         arrayy::ArrSlice,
@@ -43,6 +44,10 @@ impl Tensor {
 
     pub fn powi(&self, n: i32) -> Tensor {
         powi(self, n)
+    }
+
+    pub fn powf(&self, n: f64) -> Tensor {
+        powf(self, n)
     }
 
     pub fn sum(&self) -> Tensor {

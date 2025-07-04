@@ -37,8 +37,17 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    let a = Tensor::arange(&[2, 2, 4]);
-    // println!("{}", a);
+    let a = Tensor::arange(&[10, 2, 1, 3]);
 
-    let mean = a.sum_axis_keep_dim(&[0]);
+    let mut axis = vec![];
+    a.shape()
+        .into_iter()
+        .enumerate()
+        .for_each(|(i, _)| {
+            if i != 1 {
+                axis.push(i);
+            }
+        });
+
+    println!("{:?}", axis);
 }
