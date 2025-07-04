@@ -37,9 +37,8 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    let a = Tensor::arange(&[3, 2, 4]);
-    println!("{}", a);
+    let a = Tensor::arange(&[2, 2, 4]);
+    // println!("{}", a);
 
-    let mean = a.mean_axis_keep_dim(&[0, 1, 2]);
-    println!("{}", mean);
+    let mean = a.sum_axis_keep_dim(&[0]);
 }

@@ -104,8 +104,6 @@ pub fn sum_axis_keep_dim_arr(arr: &Arrayy, dims: &[i32]) -> Arrayy {
             let slice = if value.is_empty() {
                 &arr.value[start..stop]
             } else {
-                // dbg!(&value);
-
                 &value[start..stop]
             };
 
