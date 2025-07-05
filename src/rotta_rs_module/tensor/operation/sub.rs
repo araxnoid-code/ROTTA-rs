@@ -75,8 +75,8 @@ pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
         } else {
             grad.clone()
         };
-
         b.add_grad(-1.0 * d_b);
+        // println!("{}", b.grad);
     }
 }
 

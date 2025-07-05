@@ -49,6 +49,7 @@ pub fn d_sum_axis(x: &NodeType, d: &[i32], keep_dim: bool, grad: &Arrayy) {
             x.add_grad(d);
         } else {
             let ones = Arrayy::ones(x.value.shape.clone());
+            // println!("{}", grad);
             let d = ones * grad;
             x.add_grad(d);
         }

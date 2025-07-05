@@ -67,6 +67,7 @@ pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
             let da = (1.0 / &b.value) * grad;
             da
         };
+
         a.add_grad(da);
     }
 

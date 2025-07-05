@@ -61,6 +61,19 @@ impl Tensor {
             let node = node_arc.lock().unwrap();
             let grad = node.grad.clone();
 
+            // println!("===============");
+            // if let Some(label) = &node.label {
+            //     match label {
+            //         BackwardLabel::Broadcasting(_, _) => (),
+            //         _ => {
+            //             println!("{}", grad);
+            //             println!("{:?}", label);
+            //         }
+            //     }
+            // }
+
+            // println!("===============");
+
             if let Some(label) = &node.label {
                 match label {
                     // opearation
