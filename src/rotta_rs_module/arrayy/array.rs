@@ -123,6 +123,8 @@ impl Arrayy {
             count += 1;
         }
 
+        // println!("slicing => {}..{}", out, out + slicing);
+
         self.value[out..out + slicing].copy_from_slice(&value.value[..]);
     }
 

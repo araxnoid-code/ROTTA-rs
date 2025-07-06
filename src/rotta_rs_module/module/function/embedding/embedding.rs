@@ -18,8 +18,10 @@ impl Embedding {
         let mut shape = x.shape();
         shape.push(self.hidden);
         let concat = concat(map, 0);
-        concat.node.lock().unwrap().value.shape = shape;
 
-        concat
+        concat.to_shape(shape)
+        // concat.node.lock().unwrap().value.shape = shape;
+
+        // concat
     }
 }
