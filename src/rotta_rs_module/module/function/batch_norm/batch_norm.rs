@@ -5,7 +5,7 @@ use crate::{ Tensor, TrainEvalHandler };
 pub struct BatchNorm {
     pub gamma: Tensor,
     pub beta: Tensor,
-
+    pub eps: f64,
     pub alpha: f64,
     pub r_mean: Tensor,
     pub r_variant: Tensor,
@@ -34,7 +34,7 @@ impl BatchNorm {
             let mean = x.mean_axis_keep_dim(&axis);
             let variant = (x - &mean).powi(2).mean_axis_keep_dim(&axis);
 
-            let eps = 1e-8;
+            let eps = self.eps;
             let norm = &(x - &mean) / &(&variant + eps).powf(0.5);
 
             // update running value

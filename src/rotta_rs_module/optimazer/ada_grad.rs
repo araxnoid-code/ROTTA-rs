@@ -4,8 +4,9 @@ use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
 
 pub struct AdaGrad {
     parameters: Arc<Mutex<Vec<NodeType>>>,
-    lr: Arrayy,
-    g: Vec<Arrayy>,
+    pub lr: Arrayy,
+    pub g: Vec<Arrayy>,
+    pub eps: f64,
     pub auto_zero_grad_execute: bool,
 }
 
@@ -16,6 +17,7 @@ impl AdaGrad {
             parameters,
             lr,
             g: vec![],
+            eps: 1e-8,
             auto_zero_grad_execute: true,
         }
     }
@@ -39,7 +41,7 @@ impl AdaGrad {
             // g_n = g_n - 1 + g_n^2
             // w_n + 1 = w_n - (lr/(g_n^0.5 + e).sqrt) * grad(w_n)
 
-            let eps = 1e-8;
+            let eps = self.eps;
             let grad = &node.grad;
             let g_n = &self.g[i] + grad.powi(2);
             let new = &node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;

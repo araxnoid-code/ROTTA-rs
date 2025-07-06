@@ -4,9 +4,10 @@ use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
 
 pub struct RMSprop {
     parameters: Arc<Mutex<Vec<NodeType>>>,
-    lr: Arrayy,
+    pub lr: Arrayy,
     g: Vec<Arrayy>,
-    hyperparameter: f64,
+    pub eps: f64,
+    pub hyperparameter: f64,
     pub auto_zero_grad_execute: bool,
 }
 
@@ -17,6 +18,7 @@ impl RMSprop {
             parameters,
             lr,
             g: vec![],
+            eps: 1e-8,
             hyperparameter: 0.9,
             auto_zero_grad_execute: true,
         }
@@ -40,7 +42,7 @@ impl RMSprop {
             // g_n = g_n-1 * hyperparameter + (1 - hyperparameter) * grad(w_n)^2
             // w_n + 1 = w_n - (lr/((g_n)^0.5 + e)) * grad(w_n)
 
-            let eps = 1e-8;
+            let eps = self.eps;
             let grad = &node.grad;
             let g_n = &self.g[i] * self.hyperparameter + (1.0 - self.hyperparameter) * grad.powi(2);
             let new = &node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;

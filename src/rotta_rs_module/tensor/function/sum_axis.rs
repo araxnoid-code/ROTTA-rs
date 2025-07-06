@@ -13,7 +13,15 @@ pub fn sum_axis(x: &Tensor, d: &[i32]) -> Tensor {
     let tensor = Tensor::from_arrayy(sum_axis_arr(&array, d));
     tensor.update_parent(vec![x.node.clone()]);
     tensor.node.lock().unwrap().label = Some(
-        BackwardLabel::SumAxis(x.node.clone(), d.to_vec(), false)
+        BackwardLabel::SumAxis(
+            x.node.clone(),
+            {
+                let mut vec = d.to_vec();
+                vec.sort();
+                vec
+            },
+            false
+        )
     );
 
     tensor

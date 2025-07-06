@@ -4,12 +4,13 @@ use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
 
 pub struct Adam {
     parameters: Arc<Mutex<Vec<NodeType>>>,
-    lr: Arrayy,
+    pub lr: Arrayy,
     g: Vec<Arrayy>,
     m: Vec<Arrayy>,
     i: i32,
-    hyperparameter_1: f64,
-    hyperparameter_2: f64,
+    pub eps: f64,
+    pub hyperparameter_1: f64,
+    pub hyperparameter_2: f64,
     pub auto_zero_grad_execute: bool,
 }
 
@@ -22,6 +23,7 @@ impl Adam {
             g: vec![],
             m: vec![],
             i: 1,
+            eps: 1e-8,
             hyperparameter_1: 0.9,
             hyperparameter_2: 0.999,
             auto_zero_grad_execute: true,
@@ -53,7 +55,7 @@ impl Adam {
 
             // w_n+1 = w_n - 1/(gh_n^0.5 + e) * mh_n
 
-            let eps = 1e-8;
+            let eps = self.eps;
             let grad = &node.grad;
             let m_n = self.hyperparameter_1 * &self.m[i] + (1.0 - &self.hyperparameter_1) * grad;
             let g_n =

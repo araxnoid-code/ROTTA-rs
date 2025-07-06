@@ -32,7 +32,7 @@ impl Module {
         let batch_norm = BatchNorm {
             beta: beta,
             gamma: gamma,
-
+            eps: 1e-8,
             alpha: 0.1,
             r_mean,
             r_variant,

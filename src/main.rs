@@ -69,17 +69,18 @@ fn main() {
 
     //
     let linear_a = model.liniar_init(2, 64);
-    let mut batch_norm = model.batch_norm_init(64, 2);
+    let mut batch_norm = model.layer_norm_init(&[64]);
+
     let linear_b = model.liniar_init(64, 2);
     //
 
-    for epoch in 0..100 {
+    for epoch in 0..500 {
         let x = linear_a.forward(&input);
-        let x = relu(&x);
+        let x = sigmoid(&x);
+        // let x = relu(&x);
         let x = batch_norm.forward(&x);
         let x = linear_b.forward(&x);
-        let logits = sigmoid(&x);
-        let pred = softmax(&logits, -1);
+        let pred = softmax(&x, -1);
 
         let loss = loss_fn.forward(&pred, &label);
         println!("train epoch:{epoch} | loss => {}", loss);
