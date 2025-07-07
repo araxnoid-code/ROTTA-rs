@@ -1,12 +1,14 @@
 use std::{ ops::{ Range, RangeFrom, RangeFull }, time::SystemTime };
 
 use rotta_rs::{
-    arrayy::{ broadcasting, mean_arr, r, ArrSlice, Arrayy },
+    arrayy::{ broadcasting, matmul_2d_slice, mean_arr, r, ArrSlice, Arrayy },
     concat,
+    matmul,
     relu,
     sigmoid,
     softmax,
     Adam,
+    BatchNorm,
     CrossEntropyLoss,
     DataHandler,
     Dataset,
@@ -14,6 +16,7 @@ use rotta_rs::{
     SSResidual,
     SgdMomen,
     Tensor,
+    MAE,
 };
 
 struct MyDataset {
@@ -41,43 +44,54 @@ impl Dataset for MyDataset {
 }
 
 fn main() {
-    // text: "halo(0) saya(1) manusia(2) dari(3) bumi(4) yang(5) paling(6) gokil(7)"
-
-    let input = Tensor::new([
-        [0.0, 2.0],
-        [1.0, 3.0],
-        [4.0, 6.0],
-        [5.0, 7.0],
-    ]);
-
-    let label = Tensor::new([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+    let input = Tensor::arange(&[250, 1]);
+    let label = &Tensor::arange(&[250, 1]) * 10.0;
 
     let mut model = Module::init();
-    let mut optimazer = Adam::init(model.parameters(), 0.01);
-    let loss_fn = CrossEntropyLoss::init();
-    let embedding = model.embedding_init(8, 16);
+    model.update_initialization(rotta_rs::WeightInitialization::He);
 
-    let linear = model.liniar_init(32, 8);
+    let linear_a = model.liniar_init(1, 1024);
+    let mut batch_norm_a = model.batch_norm_init(1024, 2);
+    // let mut droput = model.dropout_init(0.3);
+    let linear_b = model.liniar_init(1024, 1024);
+    let mut batch_norm_b = model.batch_norm_init(1024, 2);
+    let linear_c = model.liniar_init(1024, 1);
 
-    let embedded = embedding.forward(&input);
+    let loss_fn = MAE::init();
+    let mut optimazer = Adam::init(model.parameters(), 0.001);
 
+    println!("learning starting");
+    let tick = std::time::SystemTime
+        ::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
     for epoch in 0..100 {
-        let mut avg = Tensor::new([0.0]);
-        for batch in 0..4 {
-            let input = embedded.index(vec![batch]).reshape(vec![1, -1]);
+        let x = linear_a.forward(&input);
+        let x = relu(&x);
+        let x = batch_norm_a.forward(&x);
 
-            let logits = linear.forward(&input);
-            let pred = softmax(&logits, -1);
+        let x = linear_b.forward(&x);
+        let x = relu(&x);
+        // let x = batch_norm_b.forward(&x);
+        // let x = droput.forward(&x);
 
-            let loss = loss_fn.forward(&pred, &label);
-            avg = &avg + &loss;
+        let x = linear_c.forward(&x);
 
-            optimazer.zero_grad();
+        let loss = loss_fn.forward(&x, &label);
+        println!("epoch:{epoch} | loss => {}", loss);
 
-            let backward = loss.backward();
+        optimazer.zero_grad();
 
-            optimazer.optim(backward);
-        }
-        println!("epoch:{epoch} | loss avg:{}", &avg / 4.0);
+        let backward = loss.backward();
+
+        optimazer.optim(backward);
     }
+    let tock = std::time::SystemTime
+        ::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
+
+    println!("{}ms", tock - tick)
 }
