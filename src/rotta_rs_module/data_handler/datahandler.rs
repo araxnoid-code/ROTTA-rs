@@ -1,4 +1,4 @@
-use rand::{ rng, rngs::StdRng, seq::SliceRandom, thread_rng, Rng, SeedableRng };
+use rand::{ rngs::StdRng, seq::SliceRandom, SeedableRng };
 
 use crate::{ arrayy::ArrSlice, Dataset, Tensor };
 

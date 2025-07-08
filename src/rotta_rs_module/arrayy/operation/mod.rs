@@ -5,4 +5,5 @@ mod math;
 pub use math::*;
 
 mod method;
+#[allow(unused)]
 pub use method::*;

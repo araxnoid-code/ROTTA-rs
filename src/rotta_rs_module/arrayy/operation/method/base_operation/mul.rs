@@ -1,6 +1,6 @@
 use std::ops::Mul;
 
-use crate::rotta_rs_module::{ arrayy::{ add_arr, Arrayy, * } };
+use crate::rotta_rs_module::{ arrayy::{ Arrayy, * } };
 
 impl Mul for Arrayy {
     type Output = Self;

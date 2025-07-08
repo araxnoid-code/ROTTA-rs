@@ -1,4 +1,4 @@
-use crate::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, Backward, BackwardLabel, NodeType, Tensor };
+use crate::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, BackwardLabel, NodeType, Tensor };
 
 pub fn concat(tensors: Vec<&Tensor>, dim: usize) -> Tensor {
     let mut check_shape = None;

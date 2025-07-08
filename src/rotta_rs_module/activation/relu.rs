@@ -1,8 +1,10 @@
 use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
 
+#[allow(dead_code)]
 pub fn relu(x: &Tensor) -> Tensor {
     // f(x) = if x >= 0 x, if x < 0 0
     let value = x.value();
+
     let output = value.map(|x| {
         if *x >= 0.0 { *x } else { 0.0 }
     });
@@ -14,6 +16,7 @@ pub fn relu(x: &Tensor) -> Tensor {
     tensor
 }
 
+#[allow(dead_code)]
 pub fn d_relu(x: &NodeType, grad: &Arrayy) {
     let mut x_lock = x.lock().unwrap();
 

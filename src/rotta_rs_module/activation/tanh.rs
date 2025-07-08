@@ -1,5 +1,6 @@
 use crate::rotta_rs_module::{ exp, Tensor };
 
+#[allow(dead_code)]
 pub fn tanh(x: &Tensor) -> Tensor {
     // (e^x - e^-x)/(e^x + e^-x)
     let z_1 = &exp(x) - &exp(&(-1.0 * x));

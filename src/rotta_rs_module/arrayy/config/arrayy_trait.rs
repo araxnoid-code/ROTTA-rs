@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 pub trait MultipleSum {
     fn multiple_sum(&self) -> usize;
 }
