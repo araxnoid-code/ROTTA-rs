@@ -1,3 +1,21 @@
+# 📦 Version: `0.0.4`
+
+### ✨ New Features
+- `Dropout`
+- `SGD + Momentum`
+- `AdaGrad`
+- `powf`
+- `train` and `val` method for [module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
+- New method for creating `tensors`
+
+
+### 🚀 Optimizations
+- Optimized Basic Operations `add`, `sub`, `mul`, `div`, `matmul`
+
+### 🛠️ Bug Fixes
+- Fixed bug on `Sum Square Residual`
+- Fixed a bug where tensors accumulated their gradients
+
 # version 0.0.3
 ### New
 - negative indexing for sum_axis, slice, indexing, reshape.

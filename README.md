@@ -10,23 +10,26 @@
 
 ---
 
-## 📦 Version: `0.0.4`
+## 📦 Version: `0.0.5`
 
 ### ✨ New Features
-- `Dropout`
-- `SGD + Momentum`
-- `AdaGrad`
-- `powf`
-- `train` and `val` method for [module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
-- New method for creating `tensors`
+- `Layer Norm`
+- `Batch Norm`
+- `concat method for tensor`
+- `RMSProp`
+- `Adam`
+- `new method for slicing`
+- `mean`
+- `mean axis` & `mean axis keep dim`
+- `new method for sum and sum axis`
+- `Dataset` & `DataHandler`
 
 
 ### 🚀 Optimizations
-- Optimized Basic Operations `add`, `sub`, `mul`, `div`, `matmul`
+- implemented SIMD for matmul
 
 ### 🛠️ Bug Fixes
-- Fixed bug on `Sum Square Residual`
-- Fixed a bug where tensors accumulated their gradients
+- Broacasting error while skalar operation
 
 📌 Check all releases: [Tags](https://github.com/araxnoid-code/ROTTA-rs/tags)  
 📜 Full changelog: [version.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/version.md)
