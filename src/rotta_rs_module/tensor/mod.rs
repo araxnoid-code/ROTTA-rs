@@ -14,6 +14,7 @@ mod backward_label;
 pub use backward_label::*;
 
 mod method;
+#[allow(unused)]
 pub use method::*;
 
 mod function;

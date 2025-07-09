@@ -1,4 +1,39 @@
 use crate::rotta_rs_module::arrayy::*;
+use matrixmultiply::dgemm;
+
+// pub fn matmul_2d_slice(
+//     arr_a: (&[f64], &[usize]),
+//     arr_b: (&[f64], &[usize])
+// ) -> (Vec<f64>, Vec<usize>) {
+//     let (arr_a, shape_a) = arr_a;
+//     let (arr_b, shape_b) = arr_b;
+
+//     if shape_a.len() != 2 || shape_b.len() != 2 {
+//         panic!("error can't matmul");
+//     }
+
+//     let m = shape_a[shape_a.len() - 2];
+//     let o = shape_b.last().unwrap();
+//     let n = shape_a.last().unwrap();
+
+//     let shape = vec![m, *o];
+//     let mut vector = Vec::with_capacity(shape.multiple_sum());
+
+//     for row in 0..m {
+//         for coll in 0..*o {
+//             let mut sum = 0.0;
+//             for i in 0..*n {
+//                 sum =
+//                     sum +
+//                     slice_index(arr_a, shape_a, [row, i].as_slice()) *
+//                         slice_index(arr_b, shape_b, [i, coll].as_slice());
+//             }
+//             vector.push(sum);
+//         }
+//     }
+
+//     (vector, shape)
+// }
 
 pub fn matmul_2d_slice(
     arr_a: (&[f64], &[usize]),
@@ -11,27 +46,32 @@ pub fn matmul_2d_slice(
         panic!("error can't matmul");
     }
 
-    let m = shape_a[shape_a.len() - 2];
-    let o = shape_b.last().unwrap();
-    let n = shape_a.last().unwrap();
+    let m = *shape_a.first().unwrap();
+    let k = *shape_a.last().unwrap();
+    let n = *shape_b.last().unwrap();
 
-    let shape = vec![m, *o];
-    let mut vector = Vec::with_capacity(shape.multiple_sum());
+    let mut c = vec![0.0;m * n];
 
-    for row in 0..m {
-        for coll in 0..*o {
-            let mut sum = 0.0;
-            for i in 0..*n {
-                sum =
-                    sum +
-                    slice_index(arr_a, shape_a, [row, i].as_slice()) *
-                        slice_index(arr_b, shape_b, [i, coll].as_slice());
-            }
-            vector.push(sum);
-        }
+    unsafe {
+        dgemm(
+            m,
+            k,
+            n,
+            1.0,
+            arr_a.as_ptr(),
+            k as isize,
+            1,
+            arr_b.as_ptr(),
+            n as isize,
+            1,
+            0.0,
+            c.as_mut_ptr(),
+            n as isize,
+            1
+        );
     }
 
-    (vector, shape)
+    (c, vec![m, n])
 }
 
 pub fn matmul_nd_slice(

@@ -1,9 +1,9 @@
 use std::sync::{ Arc, Mutex };
 
-use rand::{ rngs::StdRng, Rng };
+use rand::rngs::StdRng;
 use rand_distr::{ Bernoulli, Distribution };
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, Tensor, TrainEvalHandler };
+use crate::rotta_rs_module::{ arrayy::Arrayy, Tensor };
 
 pub struct Dropout {
     pub bernoulli: Bernoulli,

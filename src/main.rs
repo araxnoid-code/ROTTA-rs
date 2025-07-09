@@ -1,5 +1,3 @@
-use rotta_rs::*;
-
 fn main() {
     // let mut model = Module::init();
     // let optimazer = Sgd::init(model.parameters(), 0.00001);
@@ -25,4 +23,5 @@ fn main() {
 
     //     optimazer.optim(backward);
     // }
+
 }

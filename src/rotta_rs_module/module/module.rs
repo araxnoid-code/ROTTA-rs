@@ -2,7 +2,7 @@ use std::sync::{ Arc, Mutex };
 
 use rand::{ rngs::StdRng, SeedableRng };
 
-use crate::rotta_rs_module::{ NodeType, TrainEvalHandler, WeightInitialization };
+use crate::rotta_rs_module::{ NodeType, WeightInitialization };
 
 pub struct Module {
     pub parameters: Arc<Mutex<Vec<NodeType>>>,

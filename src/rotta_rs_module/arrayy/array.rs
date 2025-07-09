@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::rotta_rs_module::{ arrayy::{ negative_indexing, MultipleSum, RecFlatten }, Tensor };
+use crate::rotta_rs_module::{ arrayy::{ negative_indexing, MultipleSum, RecFlatten } };
 
 #[derive(Clone, Debug)]
 pub struct Arrayy {
@@ -71,6 +71,16 @@ impl Arrayy {
         Arrayy::from_vector(shape, vector)
     }
 
+    pub fn arange(start: usize, stop: usize, step: usize) -> Arrayy {
+        let mut vector = Vec::new();
+
+        for i in (start..stop).step_by(step) {
+            vector.push(i as f64);
+        }
+
+        Arrayy::from_vector(vec![vector.len()], vector)
+    }
+
     // get
     pub fn index(&self, index: Vec<i32>) -> Arrayy {
         let shape = self.shape.clone();
@@ -111,6 +121,8 @@ impl Arrayy {
 
             count += 1;
         }
+
+        // println!("slicing => {}..{}", out, out + slicing);
 
         self.value[out..out + slicing].copy_from_slice(&value.value[..]);
     }

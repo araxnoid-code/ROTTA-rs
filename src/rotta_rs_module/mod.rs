@@ -16,4 +16,9 @@ pub use optimazer::*;
 mod activation;
 pub use activation::*;
 
+mod data_handler;
+pub use data_handler::*;
+
+mod _unsafe;
+
 pub mod arrayy;

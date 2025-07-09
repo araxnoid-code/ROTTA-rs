@@ -40,3 +40,12 @@ pub use sign::*;
 
 mod powf;
 pub use powf::*;
+
+mod concat;
+pub use concat::*;
+
+mod mean;
+pub use mean::*;
+
+mod mean_axis;
+pub use mean_axis::*;

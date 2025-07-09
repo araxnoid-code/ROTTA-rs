@@ -9,13 +9,13 @@ impl Module {
     pub fn dropout_init(&mut self, p: f64) -> Dropout {
         let bernouli = Bernoulli::new(p).unwrap();
 
-        let train_status = Arc::new(Mutex::new(false));
-        self.eval_handlers.push(train_status.clone());
+        let eval_status = Arc::new(Mutex::new(false));
+        self.eval_handlers.push(eval_status.clone());
         Dropout {
             bernoulli: bernouli,
             p,
             rng: self.rng.clone(),
-            eval: train_status.clone(),
+            eval: eval_status.clone(),
         }
     }
 }

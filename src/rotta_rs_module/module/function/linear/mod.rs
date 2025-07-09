@@ -1,15 +1,8 @@
 mod linear;
-use std::sync::{ Arc, Mutex };
 
 pub use linear::*;
 
-use crate::rotta_rs_module::{
-    arrayy::Arrayy,
-    Module,
-    Tensor,
-    TrainEvalHandler,
-    WeightInitialization,
-};
+use crate::rotta_rs_module::{ arrayy::Arrayy, Module, Tensor, WeightInitialization };
 
 impl Module {
     pub fn liniar_init(&mut self, input: usize, output: usize) -> Linear {

@@ -85,4 +85,24 @@ impl Arrayy {
     pub fn reshape(&self, reshape: Vec<i32>) -> Arrayy {
         reshape_arr(self, reshape)
     }
+
+    pub fn sum_axis(&self, d: &[i32]) -> Arrayy {
+        sum_axis_arr(self, d)
+    }
+
+    pub fn sum_axis_keep_dim(&self, d: &[i32]) -> Arrayy {
+        sum_axis_keep_dim_arr(self, d)
+    }
+
+    pub fn mean(&self) -> Arrayy {
+        mean_arr(self)
+    }
+
+    pub fn mean_axis(&self, d: &[i32]) -> Arrayy {
+        mean_axis_arr(self, d)
+    }
+
+    pub fn mean_axis_keep_dim(&self, d: &[i32]) -> Arrayy {
+        mean_axis_keep_dim_arr(self, d)
+    }
 }

@@ -1,6 +1,6 @@
 use std::ops::Div;
 
-use crate::rotta_rs_module::{ arrayy::{ add_arr, Arrayy, * } };
+use crate::rotta_rs_module::{ arrayy::{ Arrayy, * } };
 
 impl Div for Arrayy {
     type Output = Self;

@@ -13,11 +13,12 @@ pub enum BackwardLabel {
     // mutation
     Index(NodeType, Vec<i32>),
     Broadcasting(NodeType, Arrayy),
-    SumAxis(NodeType, i32, bool), // keep_dim
+    SumAxis(NodeType, Vec<i32>, bool), // keep_dim
     Sum(NodeType),
     Permute(NodeType, Vec<usize>),
     Slice(NodeType, Vec<ArrSlice>),
     ToShape(NodeType, Vec<usize>),
+    Concat(Vec<NodeType>, usize),
 
     // method
     Exp(NodeType, Arrayy),
