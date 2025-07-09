@@ -13,16 +13,16 @@
 ## 📦 Version: `0.0.5`
 
 ### ✨ New Features
-- `Layer Norm`
-- `Batch Norm`
+- `arange` method for create tensor
 - `concat method for tensor`
 - `RMSProp`
 - `Adam`
 - `new method for slicing`
-- `mean`
-- `mean axis` & `mean axis keep dim`
 - `new method for sum and sum axis`
+- `mean` & `mean axis` & `mean axis keep dim`
 - `Dataset` & `DataHandler`
+- `Layer Norm`
+- `Batch Norm`
 
 
 ### 🚀 Optimizations

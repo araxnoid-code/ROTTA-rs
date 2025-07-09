@@ -1,9 +1,9 @@
 [package]
 name = "rotta_rs"
-version = "0.0.4"
+version = "0.0.5"
 edition = "2024"
 license = "Apache-2.0"
-description = "an AI library with rust language"
+description = "a Deep Learning library with rust language"
 keywords = ["AI", "machine-learning", "deep-learning", "neural-network", "tensor"]
 
 [lib]
