@@ -14,9 +14,6 @@ pub struct LayerNorm {
 impl LayerNorm {
     pub fn forward(&mut self, x: &Tensor) -> Tensor {
         let shape = x.shape();
-        if shape.len() <= 1 {
-            panic!("error, BatchNorm input must have minimum have 2dimension");
-        }
 
         // [N,C,W,H]
         let mut axis = vec![];

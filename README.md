@@ -15,7 +15,7 @@
 ### ✨ New Features
 - `arange` method for create tensor
 ```rust
-    let tensor = Tensor::arange(0, 10, 2);
+    let tensor = Tensor::arange(0, 10, 2); // (start, stop, step)
     println!("{}", tensor) // [0.0, 2.0, 4.0, 6.0, 8.0]
 ```
 

@@ -1,26 +1,12 @@
-use rotta_rs::{ arrayy::{ r, ArrSlice }, concat, Tensor };
+use rotta_rs::*;
 
 fn main() {
-    let tensor_a = Tensor::arange(0, 12, 1).reshape(vec![-1, 3]);
-    println!("{}", tensor_a);
-    // [
-    //  [0.0, 1.0, 2.0]
-    //  [3.0, 4.0, 5.0]
-    //  [6.0, 7.0, 8.0]
-    //  [9.0, 10.0, 11.0]
-    // ]
+    let mut model = Module::init();
+    let mut layer_norm = model.layer_norm_init(&[3]);
 
-    // before 0.0.5
-    // let sum = tensor_a.sum_axis(0); // in version 0.0.5, it can no longer be done
+    let input = Tensor::rand(vec![1, 3]);
+    println!("{}", input);
 
-    // 0.0.5
-    let slicing = tensor_a.sum_axis(&[0]);
-    println!("{}", slicing);
-    // [18.0, 22.0, 26.0]
-
-    let slicing = tensor_a.sum_axis_keep_dim(&[0, 1]);
-    println!("{}", slicing);
-    // [
-    //  [66.0]
-    // ]
+    let x = layer_norm.forward(&input);
+    println!("{}", x)
 }

@@ -6,6 +6,7 @@ pub fn broadcast_concat(arr_a: &Arrayy, arr_b: &Arrayy) -> Vec<usize> {
 
 pub fn broadcasting(arr: &Arrayy, broadcast_shape: Vec<usize>) -> Arrayy {
     let (vector, shape) = broadcasting_arr_slice((&arr.value, &arr.shape), &broadcast_shape);
+    println!("{:?}, {:?}", vector, shape);
     Arrayy::from_vector(shape, vector)
 }
 
