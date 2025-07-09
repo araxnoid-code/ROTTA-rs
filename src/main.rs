@@ -1,80 +1,85 @@
-// use std::{ time::SystemTime };
+struct MyDataset {
+    input: Vec<Tensor>,
+    label: Vec<Tensor>,
+}
 
-// use rotta_rs::{ Dataset, Tensor };
+impl MyDataset {
+    pub fn init(input: Vec<Tensor>, label: Vec<Tensor>) -> MyDataset {
+        for input in &input {
+            input.set_requires_grad(false);
+        }
 
-// struct MyDataset {
-//     input: Vec<Tensor>,
-//     label: Vec<Tensor>,
-// }
+        for label in &label {
+            label.set_requires_grad(false);
+        }
 
-// impl MyDataset {
-//     pub fn init(input: Vec<Tensor>, label: Vec<Tensor>) -> MyDataset {
-//         MyDataset {
-//             input,
-//             label,
-//         }
-//     }
-// }
+        MyDataset {
+            input,
+            label,
+        }
+    }
+}
 
-// impl Dataset for MyDataset {
-//     fn get(&self, idx: usize) -> (Tensor, Tensor) {
-//         (self.input[idx].clone(), self.label[idx].clone())
-//     }
+impl Dataset for MyDataset {
+    fn get(&self, idx: usize) -> (Tensor, Tensor) {
+        (self.input[idx].clone(), self.label[idx].clone())
+    }
 
-//     fn len(&self) -> usize {
-//         self.input.len()
-//     }
-// }
+    fn len(&self) -> usize {
+        self.input.len()
+    }
+}
+
+use rotta_rs::{ arrayy::r, * };
 
 fn main() {
-    // let input = Tensor::arange(&[250, 1]);
-    // let label = &Tensor::arange(&[250, 1]) * 10.0;
+    let input = Tensor::arange(0, 250, 1).reshape(vec![250, 1]);
+    let label = (&Tensor::arange(0, 250, 1) * 10.0).reshape(vec![250, 1]);
 
-    // let mut model = Module::init();
-    // model.update_initialization(rotta_rs::WeightInitialization::He);
+    let dataset = MyDataset::init(
+        vec![input.slice(vec![r(..125)]), input.slice(vec![r(125..)])],
+        vec![label.slice(vec![r(..125)]), label.slice(vec![r(125..)])]
+    );
+    let mut datahandler = DataHandler::init(dataset);
+    datahandler.shuffle();
+    datahandler.batch(64);
 
-    // let linear_a = model.liniar_init(1, 1024);
-    // let mut batch_norm_a = model.batch_norm_init(1024, 2);
-    // // let mut droput = model.dropout_init(0.3);
-    // let linear_b = model.liniar_init(1024, 1024);
-    // let mut batch_norm_b = model.batch_norm_init(1024, 2);
-    // let linear_c = model.liniar_init(1024, 1);
+    let mut model = Module::init();
+    model.update_initialization(rotta_rs::WeightInitialization::He);
 
-    // let loss_fn = MAE::init();
-    // let mut optimazer = Adam::init(model.parameters(), 0.001);
+    let linear_a = model.liniar_init(1, 1024);
+    let mut batch_norm_a = model.batch_norm_init(1024, 2);
+    // let mut droput = model.dropout_init(0.3);
+    let linear_b = model.liniar_init(1024, 1024);
+    let mut batch_norm_b = model.batch_norm_init(1024, 2);
+    let linear_c = model.liniar_init(1024, 1);
 
-    // println!("learning starting");
-    // let tick = std::time::SystemTime
-    //     ::now()
-    //     .duration_since(SystemTime::UNIX_EPOCH)
-    //     .unwrap()
-    //     .as_millis();
-    // for epoch in 0..100 {
-    //     let x = linear_a.forward(&input);
-    //     let x = relu(&x);
-    //     let x = batch_norm_a.forward(&x);
+    let loss_fn = MAE::init();
+    let mut optimazer = Adam::init(model.parameters(), 0.5);
 
-    //     let x = linear_b.forward(&x);
-    //     let x = relu(&x);
-    //     // let x = batch_norm_b.forward(&x);
-    //     // let x = droput.forward(&x);
+    for epoch in 0..100 {
+        let mut avg = 0.0;
+        let mut iteration = 0.0;
+        for (input, label) in &mut datahandler {
+            let x = linear_a.forward(&input);
+            let x = batch_norm_a.forward(&x);
 
-    //     let x = linear_c.forward(&x);
+            let x = linear_b.forward(&x);
+            let x = batch_norm_b.forward(&x);
 
-    //     let loss = loss_fn.forward(&x, &label);
-    //     println!("epoch:{epoch} | loss => {}", loss);
+            let x = linear_c.forward(&x);
 
-    //     optimazer.zero_grad();
+            let loss = loss_fn.forward(&x, &label);
+            // println!("epoch:{epoch} | loss => {}", loss);
+            avg += loss.value().value[0];
 
-    //     let backward = loss.backward();
+            optimazer.zero_grad();
 
-    //     optimazer.optim(backward);
-    // }
-    // let tock = std::time::SystemTime
-    //     ::now()
-    //     .duration_since(SystemTime::UNIX_EPOCH)
-    //     .unwrap()
-    //     .as_millis();
+            let backward = loss.backward();
 
-    // println!("{}ms", tock - tick)
+            optimazer.optim(backward);
+            iteration += 1.0;
+        }
+        println!("epoch:{epoch} | loss => {}", &avg / iteration);
+    }
 }

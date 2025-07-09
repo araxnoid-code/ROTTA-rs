@@ -71,15 +71,14 @@ impl Arrayy {
         Arrayy::from_vector(shape, vector)
     }
 
-    pub fn arange(shape: &[usize]) -> Arrayy {
-        let len = shape.multiple_sum();
-        let mut vector = Vec::with_capacity(len);
+    pub fn arange(start: usize, stop: usize, step: usize) -> Arrayy {
+        let mut vector = Vec::new();
 
-        for i in 0..len {
+        for i in (start..stop).step_by(step) {
             vector.push(i as f64);
         }
 
-        Arrayy::from_vector(shape.to_vec(), vector)
+        Arrayy::from_vector(vec![vector.len()], vector)
     }
 
     // get
