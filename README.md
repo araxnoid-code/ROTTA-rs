@@ -14,15 +14,107 @@
 
 ### ✨ New Features
 - `arange` method for create tensor
-- `concat method for tensor`
-- `RMSProp`
-- `Adam`
+```rust
+    let tensor = Tensor::arange(0, 10, 2);
+    println!("{}", tensor) // [0.0, 2.0, 4.0, 6.0, 8.0]
+```
+
+- `concat method for combining tensors in vectors`
+```rust
+fn main() {
+    let tensor_a = Tensor::new([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+    let tensor_b = Tensor::new([[6.0, 7.0, 8.0, 9.0, 10.0]]);
+    let vector = vec![&tensor_a, &tensor_b];
+
+    let tensor = concat(vector, 0);
+    println!("{}", tensor);     // [
+                                //  [1.0, 2.0, 3.0, 4.0, 5.0]
+                                //  [6.0, 7.0, 8.0, 9.0, 10.0]
+                                // ]    
+}
+```
+
 - `new method for slicing`
-- `new method for sum and sum axis`
+```rust
+fn main() {
+    let tensor_a = Tensor::arange(0, 12, 1).reshape(vec![-1, 3]);
+    println!("{}", tensor_a);
+    // [
+    //  [0.0, 1.0, 2.0]
+    //  [3.0, 4.0, 5.0]
+    //  [6.0, 7.0, 8.0]
+    //  [9.0, 10.0, 11.0]
+    // ]
+
+    // before 0.0.5
+    let slicing = tensor_a.slice(vec![ArrSlice(Some(0), Some(2)), ArrSlice(Some(1), None)]);
+    println!("{}", slicing);
+    // [
+    //  [1.0, 2.0]
+    //  [4.0, 5.0]
+    // ]
+
+    // 0.0.5
+    let slicing = tensor_a.slice(vec![r(0..2), r(1..)]);
+    println!("{}", slicing)
+    // [
+    //  [1.0, 2.0]
+    //  [4.0, 5.0]
+    // ]
+}
+```
+
+- `new method for sum axis and sum axis keep dim`
+```rust
+fn main() {
+    let tensor_a = Tensor::arange(0, 12, 1).reshape(vec![-1, 3]);
+    println!("{}", tensor_a);
+    // [
+    //  [0.0, 1.0, 2.0]
+    //  [3.0, 4.0, 5.0]
+    //  [6.0, 7.0, 8.0]
+    //  [9.0, 10.0, 11.0]
+    // ]
+
+    // before 0.0.5
+    // let sum = tensor_a.sum_axis(0); // in version 0.0.5, it can no longer be done
+
+    // 0.0.5
+    let slicing = tensor_a.sum_axis(&[0]);
+    println!("{}", slicing);
+    // [18.0, 22.0, 26.0]
+
+    let slicing = tensor_a.sum_axis_keep_dim(&[0, 1]);
+    println!("{}", slicing);
+    // [
+    //  [66.0]
+    // ]
+}
+```
+
 - `mean` & `mean axis` & `mean axis keep dim`
-- `Dataset` & `DataHandler`
+
+see more details in guide.md [tensor section](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/1_tensor.md)
+
+- `RMSProp`
+
+see more details in guide.md [Optimazer section](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimazer.md)
+
+- `Adam`
+
+see more details in guide.md [Optimazer section](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimazer.md)
+
 - `Layer Norm`
+
+see more details in guide.md [Module section](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
+
 - `Batch Norm`
+
+see more details in guide.md [Module section](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
+
+- `Dataset` & `DataHandler`
+
+see more details in guide.md [Dataset and DataHandler section](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/7_Dataset_and_DataHandler.md)
 
 
 ### 🚀 Optimizations
