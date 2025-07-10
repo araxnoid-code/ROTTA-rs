@@ -1,4 +1,4 @@
-use rotta_rs::{ arrayy::{ broadcasting_arr_test, Arrayy }, * };
+use rotta_rs::*;
 
 struct MyDataset {
     input: Vec<Tensor>,
@@ -30,4 +30,13 @@ fn main() {
 
     let input_2 = Tensor::new([[11.0, 12.0, 13.0, 14.0, 15.0]]);
     let label_2 = Tensor::new([[12.0, 13.0, 14.0, 15.0, 16.0]]);
+
+    let dataset = MyDataset::init(vec![input_1, input_2], vec![label_1, label_2]);
+    let mut datahandler = DataHandler::init(dataset);
+    datahandler.batch(32); // set how many batches will be issued
+    datahandler.shuffle(); // randomize the order of the dataset
+
+    for (input, label) in &mut datahandler {
+        // perform deep learning operations here
+    }
 }
