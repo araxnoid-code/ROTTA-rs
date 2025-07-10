@@ -136,7 +136,7 @@ To use it:
 
 ```toml
 [dependencies]
-rotta_rs = "0.0.4"
+rotta_rs = "0.0.5"
 ```
 
 ## 🧠 Simple AI Model
