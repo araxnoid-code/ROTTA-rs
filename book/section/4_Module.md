@@ -204,5 +204,9 @@ fn main() {
     //   ...
     //  ]
     // ]
+
+    // enable & disable learnable
+    layer_norm.enable_learnable(); // default
+    layer_norm.disable_learnable();
 }
 ```
