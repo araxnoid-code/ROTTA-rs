@@ -1,25 +1,33 @@
 use rotta_rs::{ arrayy::{ broadcasting_arr_test, Arrayy }, * };
 
+struct MyDataset {
+    input: Vec<Tensor>,
+    label: Vec<Tensor>,
+}
+
+impl MyDataset {
+    pub fn init(input: Vec<Tensor>, label: Vec<Tensor>) -> MyDataset {
+        MyDataset {
+            input,
+            label,
+        }
+    }
+}
+
+impl Dataset for MyDataset {
+    fn get(&self, idx: usize) -> (Tensor, Tensor) {
+        (self.input[idx].clone(), self.label[idx].clone())
+    }
+
+    fn len(&self) -> usize {
+        self.input.len()
+    }
+}
+
 fn main() {
-    // shape [N, C]
-    let input = Tensor::rand(vec![4, 3]);
-    println!("{}", input);
+    let input_1 = Tensor::new([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+    let label_1 = Tensor::new([[2.0, 3.0, 4.0, 5.0, 6.0]]);
 
-    let mut model = Module::init();
-    // model.layer_norm_init(channel features, dimension of input)
-    let mut layer_norm = model.batch_norm_init(3, 2);
-
-    let x = layer_norm.forward(&input);
-    println!("{}", x);
-
-    // shape [N, C, H, W]
-    let input = Tensor::rand(vec![4, 5, 5, 3]);
-    println!("{}", input);
-
-    let mut model = Module::init();
-    // model.layer_norm_init(channel features, input dimension)
-    let mut layer_norm = model.batch_norm_init(5, 4);
-
-    let x = layer_norm.forward(&input);
-    println!("{}", x)
+    let input_2 = Tensor::new([[11.0, 12.0, 13.0, 14.0, 15.0]]);
+    let label_2 = Tensor::new([[12.0, 13.0, 14.0, 15.0, 16.0]]);
 }
