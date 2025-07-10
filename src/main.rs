@@ -1,42 +1,65 @@
 use rotta_rs::*;
 
-struct MyDataset {
-    input: Vec<Tensor>,
-    label: Vec<Tensor>,
-}
-
-impl MyDataset {
-    pub fn init(input: Vec<Tensor>, label: Vec<Tensor>) -> MyDataset {
-        MyDataset {
-            input,
-            label,
-        }
-    }
-}
-
-impl Dataset for MyDataset {
-    fn get(&self, idx: usize) -> (Tensor, Tensor) {
-        (self.input[idx].clone(), self.label[idx].clone())
-    }
-
-    fn len(&self) -> usize {
-        self.input.len()
-    }
-}
-
 fn main() {
-    let input_1 = Tensor::new([[1.0, 2.0, 3.0, 4.0, 5.0]]);
-    let label_1 = Tensor::new([[2.0, 3.0, 4.0, 5.0, 6.0]]);
+    // shape [N, C]
+    let input = Tensor::rand(vec![4, 3]);
+    println!("{}", input);
+    // [
+    //  [0.27915410797778306, 0.687663313413999, 0.07613583039765615]
+    //  [0.7021005531023465, 0.9162028784314272, 0.025782995740667558]
+    //  [0.061904664145641775, 0.8716712494130606, 0.6913401190715669]
+    //  [0.850197252067536, 0.532785768919453, 0.8443179891588507]
+    // ]
 
-    let input_2 = Tensor::new([[11.0, 12.0, 13.0, 14.0, 15.0]]);
-    let label_2 = Tensor::new([[12.0, 13.0, 14.0, 15.0, 16.0]]);
+    let mut model = Module::init();
+    // model.layer_norm_init([C])
+    let mut layer_norm = model.layer_norm_init(&[3]);
 
-    let dataset = MyDataset::init(vec![input_1, input_2], vec![label_1, label_2]);
-    let mut datahandler = DataHandler::init(dataset);
-    datahandler.batch(32); // set how many batches will be issued
-    datahandler.shuffle(); // randomize the order of the dataset
+    let x = layer_norm.forward(&input);
+    println!("{}", x);
+    // [
+    //  [-0.2693444156052575, 1.3369991007076736, -1.0676546851024162]
+    //  [0.4060001436632176, 0.9701890895357663, -1.376189233198984]
+    //  [-1.382041040730688, 0.9507738587706503, 0.43126718196003766]
+    //  [0.7268411085257209, -1.414027911860354, 0.6871868033346348]
+    // ]
 
-    for (input, label) in &mut datahandler {
-        // perform deep learning operations here
-    }
+    // shape [N, C, H, W]
+    let input = Tensor::rand(vec![4, 3, 5, 3]);
+    println!("{}", input);
+    // [
+    //  [
+    //   [
+    //    [0.10809007732401366, 0.7239885456083965, 0.7865357050103905]
+    //    [0.5188113038428019, 0.02123492865878185, 0.7642409577112972]
+    //    [0.24701245204105693, 0.1983279039599467, 0.1462213439416118]
+    //    [0.002647079178351275, 0.45989042875353336, 0.5287350101045764]
+    //    [0.27693985343666416, 0.16741881390091773, 0.8149889018886429]
+    //   ]
+    //   ...
+    //  ]
+    // ]
+
+    let mut model = Module::init();
+    // model.layer_norm_init([C, H, W])
+    let mut layer_norm = model.layer_norm_init(&[3, 5, 3]);
+
+    let x = layer_norm.forward(&input);
+    println!("{}", x);
+    // [
+    //  [
+    //   [
+    //    [-1.1929170089128815, 0.7692268391534215, 0.9684910529068765]
+    //    [0.11556834928089157, -1.4696221874483777, 0.8974639217971595]
+    //    [-0.7503348351511742, -0.905435215217602, -1.0714375215208956]
+    //    [-1.52883979616951, -0.07214316249008668, 0.14718352644766916]
+    //    [-0.6549914148296812, -1.0039061224072066, 1.0591379177513331]
+    //   ]
+    //   ...
+    //  ]
+    // ]
+
+    // enable & disable learnable
+    layer_norm.enable_learnable(); // default
+    layer_norm.disable_learnable();
 }

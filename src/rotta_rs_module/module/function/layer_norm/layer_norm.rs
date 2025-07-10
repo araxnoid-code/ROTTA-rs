@@ -39,6 +39,14 @@ impl LayerNorm {
         }
     }
 
+    pub fn disable_learnable(&mut self) {
+        self.learnable = false;
+    }
+
+    pub fn enable_learnable(&mut self) {
+        self.learnable = true;
+    }
+
     pub fn eval_status(&self) -> bool {
         *self.eval.lock().unwrap()
     }
