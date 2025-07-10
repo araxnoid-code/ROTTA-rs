@@ -6,8 +6,51 @@ pub fn broadcast_concat(arr_a: &Arrayy, arr_b: &Arrayy) -> Vec<usize> {
 
 pub fn broadcasting(arr: &Arrayy, broadcast_shape: Vec<usize>) -> Arrayy {
     let (vector, shape) = broadcasting_arr_slice((&arr.value, &arr.shape), &broadcast_shape);
-    println!("{:?}, {:?}", vector, shape);
+
     Arrayy::from_vector(shape, vector)
+}
+
+pub fn broadcasting_arr_test(arr: &Arrayy, broadcast_shape: Vec<usize>) {
+    let value = &arr.value;
+    let shape = if broadcast_shape.len() > arr.shape.len() {
+        let distance = broadcast_shape.len() - arr.shape.len();
+        let mut n_shape = vec![1;distance];
+        n_shape.extend_from_slice(&arr.shape);
+        n_shape
+    } else if broadcast_shape.len() == arr.shape.len() {
+        arr.shape.clone()
+    } else {
+        panic!("error, shape {:?} cant be broadcasting to {:?}", arr.shape, broadcast_shape)
+    };
+
+    let mut broadcasting_dimension = vec![];
+    shape
+        .iter()
+        .enumerate()
+        .for_each(|(idx, d)| {
+            if d == &1 {
+                // if broadcast_shape[idx] != 1 {
+                broadcasting_dimension.push(idx);
+                // }
+            }
+        });
+
+    let mut output = vec![];
+    for d_target in &broadcasting_dimension {
+        let length = (&broadcast_shape[broadcasting_dimension[0] + 1..]).multiple_sum();
+        let loping_count = (&broadcast_shape[..broadcasting_dimension[0]]).multiple_sum();
+
+        for i in 0..loping_count {
+            let start = i * length;
+            let stop = start + length;
+
+            let slice = &value[start..stop];
+
+            for _ in 0..broadcast_shape[*d_target] {
+                output.extend_from_slice(slice);
+            }
+        }
+    }
 }
 
 // pub fn matmul_broadcasting(

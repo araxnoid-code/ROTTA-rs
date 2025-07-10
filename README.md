@@ -121,7 +121,8 @@ see more details in guide.md [Dataset and DataHandler section](https://github.co
 - implemented SIMD for matmul
 
 ### 🛠️ Bug Fixes
-- Broacasting error while skalar operation
+- Broadcast error during scalar operation
+- Broadcast error when [x] will be broadcast to [1, x]
 
 📌 Check all releases: [Tags](https://github.com/araxnoid-code/ROTTA-rs/tags)  
 📜 Full changelog: [version.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/version.md)

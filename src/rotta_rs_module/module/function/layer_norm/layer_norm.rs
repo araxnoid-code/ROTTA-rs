@@ -15,7 +15,6 @@ impl LayerNorm {
     pub fn forward(&mut self, x: &Tensor) -> Tensor {
         let shape = x.shape();
 
-        // [N,C,W,H]
         let mut axis = vec![];
         shape
             .into_iter()

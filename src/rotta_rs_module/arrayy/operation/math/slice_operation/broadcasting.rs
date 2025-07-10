@@ -41,7 +41,7 @@ pub fn broadcasting_arr_slice(
     let broadcast_shape_len = broadcast_shape.len();
     let distance = ((shape_len as f32) - (broadcast_shape_len as f32)).abs() as usize;
 
-    if shape == broadcast_shape {
+    if shape == broadcast_shape || shape.multiple_sum() == broadcast_shape.multiple_sum() {
         return (arr.to_vec(), broadcast_shape.to_vec());
     }
 
