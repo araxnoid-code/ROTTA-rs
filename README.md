@@ -171,6 +171,11 @@ fn main() {
 }
 ```
 
+## 🏫 Learn
+Those who want to learn how to create AI can access [📔 learn.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/learn.md) (currently only available in Indonesian)
+
+[📔 learn.md](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/learn.md) 
+
 
 ## 📚 GUIDE
 📘 Start learning: 
