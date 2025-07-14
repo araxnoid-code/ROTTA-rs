@@ -10,6 +10,10 @@ hal yang harus diperhatikan:
 rotta_rs = "0.0.5"
 ```
 
+## tujuan
+Kita akan membuat sebuah model AI untuk memprediksi data linear, kasus nyatanya seperti adalah model AI untuk memprediksi harga rumah berdasarkan jumlah kamar dan furnitur.
+namun saat ini kita akan membuat model sederhana untuk memprediksi data linear biasa saja.
+
 ## dasar
 Ayo awali dengan data sederhana
 ```rust
