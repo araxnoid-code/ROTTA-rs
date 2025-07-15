@@ -22,3 +22,4 @@ pub use data_handler::*;
 mod _unsafe;
 
 pub mod arrayy;
+pub use arrayy::{ ArrSlice, r };
