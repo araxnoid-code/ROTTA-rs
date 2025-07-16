@@ -70,11 +70,11 @@ impl Arrayy {
         sign_arr(self)
     }
 
-    pub fn slice(&self, range: Vec<ArrSlice>) -> Arrayy {
+    pub fn slice(&self, range: &[ArrSlice]) -> Arrayy {
         slice_arr(self, range)
     }
 
-    pub fn slice_replace(&mut self, range: Vec<ArrSlice>, replace: &Arrayy) {
+    pub fn slice_replace(&mut self, range: &[ArrSlice], replace: &Arrayy) {
         slice_replace_arr(self, range, replace);
     }
 

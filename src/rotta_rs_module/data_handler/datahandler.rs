@@ -81,8 +81,8 @@ impl<'a> Iterator for &'a mut DataHandler {
             self.batch_ = 0;
         }
 
-        let input = sample.0.slice(vec![ArrSlice(Some(start), length)]);
-        let label = sample.1.slice(vec![ArrSlice(Some(start), length)]);
+        let input = sample.0.slice(&[ArrSlice(Some(start), length)]);
+        let label = sample.1.slice(&[ArrSlice(Some(start), length)]);
 
         Some((input, label))
     }

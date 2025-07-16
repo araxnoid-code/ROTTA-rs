@@ -86,11 +86,11 @@ impl Tensor {
         permute(self, order)
     }
 
-    pub fn slice(&self, range: Vec<ArrSlice>) -> Tensor {
+    pub fn slice(&self, range: &[ArrSlice]) -> Tensor {
         slice(self, range)
     }
 
-    pub fn slice_replace(&self, range: Vec<ArrSlice>, replace: &Tensor) {
+    pub fn slice_replace(&self, range: &[ArrSlice], replace: &Tensor) {
         slice_replace(self, range, replace);
     }
 

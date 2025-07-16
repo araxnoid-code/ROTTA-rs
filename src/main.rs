@@ -1,10 +1,7 @@
 use core::slice;
 use std::time::SystemTime;
 
-use rotta_rs::{
-    arrayy::{ slice_arr, slice_arr_unsafe, slice_replace_arr, slice_replace_arr_unsafe, Arrayy },
-    *,
-};
+use rotta_rs::{ arrayy::{ slice_arr, slice_replace_arr, Arrayy }, * };
 
 fn main() {
     let mut array = Arrayy::ones(vec![256, 256, 512]);
@@ -19,8 +16,7 @@ fn main() {
         .unwrap()
         .as_millis();
 
-    slice_replace_arr_unsafe(&mut array, &slicing, &replace);
-    // slice_replace_arr(&mut array, slicing, &replace);
+    slice_replace_arr(&mut array, &slicing, &replace);
 
     let tock = std::time::SystemTime
         ::now()
