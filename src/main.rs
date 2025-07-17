@@ -1,43 +1,10 @@
-struct MyDataset {
-    input: Vec<Tensor>,
-    label: Vec<Tensor>,
-}
-
-impl MyDataset {
-    pub fn init(input: Vec<Tensor>, label: Vec<Tensor>) -> MyDataset {
-        for input in &input {
-            input.set_requires_grad(false);
-        }
-
-        for label in &label {
-            label.set_requires_grad(false);
-        }
-
-        MyDataset {
-            input,
-            label,
-        }
-    }
-}
-
-impl Dataset for MyDataset {
-    fn get(&self, idx: usize) -> (Tensor, Tensor) {
-        (self.input[idx].clone(), self.label[idx].clone())
-    }
-
-    fn len(&self) -> usize {
-        self.input.len()
-    }
-}
-
-use std::time::SystemTime;
-
-use rotta_rs::{ arrayy::r, * };
+use rotta_rs::Tensor;
 
 fn main() {
-    let tensor = Tensor::arange(0..10)
+    let tensor = Tensor::arange(0..20)
         .step(2)
         .map(|x| { x * 2.0 })
+        .to_shape(vec![2, 5])
         .collect();
     println!("{}", tensor);
 }
