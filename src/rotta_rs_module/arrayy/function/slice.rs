@@ -5,9 +5,8 @@ use crate::rotta_rs_module::arrayy::*;
 #[derive(Debug, Clone)]
 pub struct ArrSlice(pub Option<i32>, pub Option<i32>);
 
-#[derive(Debug, Clone)]
-struct ArrRange(pub Option<usize>, pub Option<usize>);
-
+// #[derive(Debug, Clone)]
+// struct ArrRange(pub Option<usize>, pub Option<usize>);
 pub fn slice_arr(arr: &Arrayy, slice: &[ArrSlice]) -> Arrayy {
     let arr_shape = &arr.shape;
     let ranges = slice

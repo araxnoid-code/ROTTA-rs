@@ -1,7 +1,7 @@
 use crate::rotta_rs_module::{ arrayy::{ ArrSlice, Arrayy }, BackwardLabel, NodeType, Tensor };
 
 pub fn slice(x: &Tensor, range: &[ArrSlice]) -> Tensor {
-    let tensor = Tensor::from_arrayy(x.value().slice(range.clone()));
+    let tensor = Tensor::from_arrayy(x.value().slice(range));
     tensor.update_parent(vec![x.node.clone()]);
     tensor.update_label(Some(BackwardLabel::Slice(x.node.clone(), range.to_vec())));
 
