@@ -1,4 +1,4 @@
-use std::{ collections::HashSet, sync::{ Arc, Mutex } };
+use std::{ collections::HashSet, sync::{ Arc, Mutex }, collections::VecDeque };
 
 use crate::{
     d_concat,
@@ -32,7 +32,7 @@ use crate::{
 };
 
 pub struct Backward {
-    map: Arc<Mutex<Vec<NodeType>>>,
+    map: Arc<Mutex<VecDeque<NodeType>>>,
 }
 
 impl Backward {
@@ -51,28 +51,31 @@ impl Tensor {
         let node = self.node.clone();
         node.lock().as_mut().unwrap().ones_grad();
 
-        let mut graph: Vec<NodeType> = vec![];
+        //
+        let mut q = vec![node.clone()];
         let mut visited: HashSet<u128> = HashSet::new();
+        let mut graph = VecDeque::new();
 
-        build(node, &mut graph, &mut visited);
+        while q.len() > 0 {
+            let _node = q.pop().unwrap();
+            let node = _node.lock().unwrap();
+            if let None = visited.get(&node.id) {
+                visited.insert(node.id);
+
+                for parent in &node.parent {
+                    q.push(parent.clone());
+                }
+
+                graph.push_front(_node.clone());
+            }
+        }
+
+        //
 
         for idx in (0..graph.len()).rev() {
             let node_arc = graph[idx].clone();
             let node = node_arc.lock().unwrap();
             let grad = node.grad.clone();
-
-            // println!("===============");
-            // if let Some(label) = &node.label {
-            //     match label {
-            //         BackwardLabel::Broadcasting(_, _) => (),
-            //         _ => {
-            //             println!("{}", grad);
-            //             println!("{:?}", label);
-            //         }
-            //     }
-            // }
-
-            // println!("===============");
 
             if let Some(label) = &node.label {
                 match label {
