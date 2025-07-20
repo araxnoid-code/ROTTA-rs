@@ -1,7 +1,14 @@
 use crate::arrayy::{ Arrayy, MultipleSum };
 
-pub fn concat_arr(arrayys: Vec<Arrayy>, dim: usize) -> Arrayy {
+pub fn concat_arr(arrayys: Vec<Arrayy>, dim: i32) -> Arrayy {
     let mut shape = arrayys.get(0).unwrap().shape.clone();
+
+    let dim = if dim >= 0 {
+        dim as usize
+    } else {
+        ((arrayys[0].shape.len() as i32) + dim) as usize
+    };
+
     if dim >= shape.len() {
         panic!("can't concat cause dim:{dim} out of arrayy dimension:{}", shape.len());
     }

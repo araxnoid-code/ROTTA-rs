@@ -1,8 +1,15 @@
 use crate::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, BackwardLabel, NodeType, Tensor };
 
-pub fn concat(tensors: Vec<&Tensor>, dim: usize) -> Tensor {
+pub fn concat(tensors: Vec<&Tensor>, dim: i32) -> Tensor {
     let mut check_shape = None;
     let mut nodes = Vec::new();
+
+    let dim = if dim >= 0 {
+        dim as usize
+    } else {
+        ((tensors[0].shape().len() as i32) + dim) as usize
+    };
+
     let arrayys = tensors
         .into_iter()
         .map(|tensor| {
@@ -19,7 +26,7 @@ pub fn concat(tensors: Vec<&Tensor>, dim: usize) -> Tensor {
         })
         .collect::<Vec<Arrayy>>();
 
-    let tensor = Tensor::from_arrayy(concat_arr(arrayys, dim));
+    let tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
     tensor.update_parent_label(nodes.clone(), Some(BackwardLabel::Concat(nodes, dim)));
     tensor
 }

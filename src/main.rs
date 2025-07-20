@@ -32,72 +32,35 @@ impl Dataset for MyDataset {
 
 use std::time::SystemTime;
 
-use rotta_rs::{ arrayy::r, * };
+use rotta_rs::{ arrayy::{ concat_arr, r, Arrayy }, * };
 
 fn main() {
-    let input = Tensor::arange(0..250)
-        .to_shape(vec![250, 1])
-        .collect();
-    let label = (&Tensor::arange(0..250).collect() * 10.0).reshape(vec![250, 1]);
-
-    let dataset = MyDataset::init(
-        vec![input.slice(&[r(..125)]), input.slice(&[r(125..)])],
-        vec![label.slice(&[r(..125)]), label.slice(&[r(125..)])]
-    );
-    let mut datahandler = DataHandler::init(dataset);
-    datahandler.shuffle();
-    datahandler.batch(64);
+    let data_a = Tensor::rand(vec![1, 2]);
 
     let mut model = Module::init();
-    model.update_initialization(rotta_rs::WeightInitialization::He);
 
-    let linear_a = model.liniar_init(1, 1024);
-    let mut batch_norm_a = model.batch_norm_init(1024, 2);
-    // let mut droput = model.dropout_init(0.3);
-    let linear_b = model.liniar_init(1024, 1024);
-    let mut batch_norm_b = model.batch_norm_init(1024, 2);
-    let linear_c = model.liniar_init(1024, 1);
+    let lstm = model.lstm_init(2);
+    // println!("{}", lstm.w_o.grad());
 
-    let loss_fn = MAE::init();
-    let mut optimazer = Adam::init(model.parameters(), 0.5);
+    let out = lstm.forward(&data_a, None);
+    out.hidden.backward();
 
-    let tick = std::time::SystemTime
-        ::now()
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .unwrap()
-        .as_millis();
+    // println!("{}", lstm.b_o.grad())
 
-    for epoch in 0..100 {
-        // let mut avg = 0.0;
-        // let mut iteration = 0.0;
-        // for (input, label) in &mut datahandler {
-        let x = linear_a.forward(&input);
-        let x = batch_norm_a.forward(&x);
+    for params in model.parameters().lock().unwrap().iter() {
+        let node = &params.lock().unwrap().grad;
 
-        let x = linear_b.forward(&x);
-        let x = batch_norm_b.forward(&x);
-
-        let x = linear_c.forward(&x);
-
-        let loss = loss_fn.forward(&x, &label);
-        println!("epoch:{epoch} | loss => {}", loss);
-        // avg += loss.value().value[0];
-
-        optimazer.zero_grad();
-
-        let backward = loss.backward();
-
-        optimazer.optim(backward);
-        // iteration += 1.0;
-        // }
-        // println!("epoch:{epoch} | loss => {}", &avg / iteration);
+        println!("{}", node);
     }
 
-    let tock = std::time::SystemTime
-        ::now()
-        .duration_since(SystemTime::UNIX_EPOCH)
-        .unwrap()
-        .as_millis();
+    // let data_a = Arrayy::new([
+    //     [1.0, 2.0, 3.0],
+    //     [4.0, 5.0, 6.0],
+    // ]);
+    // let data_b = Arrayy::new([
+    //     [7.0, 8.0, 9.0],
+    //     [10.0, 11.0, 12.0],
+    // ]);
 
-    println!("{}ms", tock - tick)
+    // println!("{}", concat_arr(vec![data_a, data_b], -1))
 }

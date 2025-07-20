@@ -82,6 +82,10 @@ impl Tensor {
         TensorRange::init(range)
     }
 
+    pub fn zeros(shape: Vec<usize>) -> Tensor {
+        Tensor::from_arrayy(Arrayy::zeros(shape))
+    }
+
     // get
     // value
     pub fn value(&self) -> Arrayy {
