@@ -35,32 +35,31 @@ use std::time::SystemTime;
 use rotta_rs::{ arrayy::{ concat_arr, r, Arrayy }, * };
 
 fn main() {
-    let data_a = Tensor::rand(vec![1, 2]);
+    let token = Tensor::new([0.0, 1.0, 2.0, 3.0, 4.0]);
 
     let mut model = Module::init();
+    let lstm = model.lstm_init(16);
+    let embbeding = model.embedding_init(5, 16);
+    let linear = model.liniar_init(16, 5);
 
-    let lstm = model.lstm_init(2);
-    // println!("{}", lstm.w_o.grad());
+    // embedding
+    let embedded = embbeding.forward(&Tensor::new([0.0, 3.0, 4.0]));
 
-    let out = lstm.forward(&data_a, None);
-    out.hidden.backward();
+    // lstm
 
-    // println!("{}", lstm.b_o.grad())
+    let mut cell_hidden: Option<LSTMCellHidden> = None;
+    for i in 0..3 {
+        let word = embedded.index(vec![i]).reshape(vec![1, -1]);
 
-    for params in model.parameters().lock().unwrap().iter() {
-        let node = &params.lock().unwrap().grad;
-
-        println!("{}", node);
+        let out = lstm.forward(&word, cell_hidden);
+        cell_hidden = Some(out);
     }
 
-    // let data_a = Arrayy::new([
-    //     [1.0, 2.0, 3.0],
-    //     [4.0, 5.0, 6.0],
-    // ]);
-    // let data_b = Arrayy::new([
-    //     [7.0, 8.0, 9.0],
-    //     [10.0, 11.0, 12.0],
-    // ]);
+    let hidden = cell_hidden.unwrap().hidden;
+    let linear = linear.forward(&hidden);
+    let prob = softmax(&linear, -1);
+    println!("{}", lstm.w_f.grad());
+    prob.backward();
 
-    // println!("{}", concat_arr(vec![data_a, data_b], -1))
+    println!("{}", lstm.w_f.grad())
 }

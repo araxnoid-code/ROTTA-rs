@@ -14,6 +14,7 @@ pub struct Lstm {
     pub b_o: Tensor,
 }
 
+#[derive(Debug)]
 pub struct LSTMCellHidden {
     pub cell: Tensor,
     pub hidden: Tensor,
