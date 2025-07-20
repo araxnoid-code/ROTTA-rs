@@ -1,0 +1,4 @@
+title   :   Dataset for chatbot
+desc    :   Simple questions and answers
+owner   :   Georgy Silkin
+link:   :   https://www.kaggle.com/datasets/grafstor/simple-dialogs-for-chatbot

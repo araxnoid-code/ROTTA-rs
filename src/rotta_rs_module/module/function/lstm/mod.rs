@@ -7,18 +7,6 @@ use crate::{ Module, Tensor };
 
 impl Module {
     pub fn lstm_init(&mut self, hidden: usize) -> Lstm {
-        //     // forget parameters
-        // pub w_f: Tensor,
-        // pub b_f: Tensor,
-        // // input parameters
-        // pub w_i: Tensor,
-        // pub b_i: Tensor,
-        // pub w_c: Tensor,
-        // pub b_c: Tensor,
-        // // output parameters
-        // pub w_o: Tensor,
-        // pub b_o: Tensor,
-
         let uniform = Uniform::new(
             -(1.0 / (hidden as f64)).sqrt(),
             (1.0 / (hidden as f64)).sqrt()
