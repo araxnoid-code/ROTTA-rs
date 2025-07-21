@@ -32,7 +32,7 @@ use crate::{
 };
 
 pub struct Backward {
-    map: Arc<Mutex<Vec<NodeType>>>,
+    pub map: Arc<Mutex<Vec<NodeType>>>,
 }
 
 impl Backward {
