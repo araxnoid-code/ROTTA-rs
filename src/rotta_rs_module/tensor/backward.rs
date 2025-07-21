@@ -52,30 +52,30 @@ impl Tensor {
         node.lock().as_mut().unwrap().ones_grad();
 
         //
-        let mut q = vec![node.clone()];
-        let mut visited: HashSet<u128> = HashSet::new();
-        let mut graph = vec![];
+        // let mut q = vec![node.clone()];
+        // let mut visited: HashSet<u128> = HashSet::new();
+        // let mut graph = vec![];
 
-        while q.len() > 0 {
-            let _node = q.pop().unwrap();
-            let node = _node.lock().unwrap();
-            if let None = visited.get(&node.id) {
-                visited.insert(node.id);
+        // while q.len() > 0 {
+        //     let _node = q.pop().unwrap();
+        //     let node = _node.lock().unwrap();
+        //     if let None = visited.get(&node.id) {
+        //         visited.insert(node.id);
 
-                for parent in &node.parent {
-                    q.push(parent.clone());
-                }
+        //         for parent in &node.parent {
+        //             q.push(parent.clone());
+        //         }
 
-                graph.push(_node.clone());
-            }
-        }
-        graph.reverse();
+        //         graph.push(_node.clone());
+        //     }
+        // }
+        // graph.reverse();
         //
 
-        // let mut graph: Vec<NodeType> = vec![];
-        // let mut visited: HashSet<u128> = HashSet::new();
+        let mut graph: Vec<NodeType> = vec![];
+        let mut visited: HashSet<u128> = HashSet::new();
 
-        // build(node, &mut graph, &mut visited);
+        build(node, &mut graph, &mut visited);
 
         for idx in (0..graph.len()).rev() {
             let node_arc = graph[idx].clone();

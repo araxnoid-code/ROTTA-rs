@@ -32,6 +32,10 @@ pub fn concat(tensors: Vec<&Tensor>, dim: i32) -> Tensor {
 }
 
 pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
+    // for i in &nodes {
+    //     println!("{}", i.lock().unwrap().value);
+    // }
+
     for (i, node) in nodes.iter().enumerate() {
         let mut node = node.lock().unwrap();
         let shape = &node.value.shape;

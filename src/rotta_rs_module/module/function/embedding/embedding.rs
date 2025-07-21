@@ -1,9 +1,10 @@
-use crate::{ concat, Tensor };
+use crate::{ concat, r, ConcatTensors, Tensor };
 
 pub struct Embedding {
     pub num_vocab: usize,
     pub hidden: usize,
-    pub embedding_list: Vec<Tensor>,
+    // pub embedding_list: Vec<Tensor>,
+    pub parameter: Tensor,
 }
 
 impl Embedding {
@@ -12,12 +13,12 @@ impl Embedding {
         let mut map = vec![];
 
         for token in tokens {
-            map.push(&self.embedding_list[token as usize]);
+            map.push(self.parameter.slice(&[r(token as i32..(token as i32) + 1)]));
         }
 
         let mut shape = x.shape();
         shape.push(self.hidden);
-        let concat = concat(map, 0);
+        let concat = map.concat_tensor(0);
 
         concat.to_shape(shape)
     }

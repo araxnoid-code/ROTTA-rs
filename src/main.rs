@@ -67,7 +67,7 @@ fn main() {
     let mut tokenizer = Tokenizer::init();
     tokenizer.set_up_from_slicing(&slicing);
 
-    let length = 10;
+    let length = 15;
 
     let mut ask_tensors = vec![];
     let mut ans_tensors = vec![];
@@ -91,7 +91,7 @@ fn main() {
 
     let mut model = Module::init();
     model.update_initialization(rotta_rs::WeightInitialization::Glorot);
-    let hidden = 16;
+    let hidden = 32;
     // encoder
     let embedding_encoder = model.embedding_init(tokenizer.count, hidden);
     let lstm_encoder = model.lstm_init(hidden);
@@ -105,9 +105,10 @@ fn main() {
     let loss_fn = CrossEntropyLoss::init();
 
     // optimazer
-    let mut optimazer = Adam::init(model.parameters(), 0.1);
+    let mut optimazer = Adam::init(model.parameters(), 0.01);
 
-    for epoch in 0..100 {
+    for epoch in 0..30 {
+        // break;
         let mut avg = 0.0;
         for i in 0..ask_tensors.len() {
             let input = &ask_tensors[i];
@@ -162,5 +163,89 @@ fn main() {
         }
 
         println!("epoch:{epoch} | loss => {}", avg / (ask_tensors.len() as f64));
+    }
+
+    // testing
+    for i in 0..ask_tensors.len() {
+        let input = &ask_tensors[i];
+        let label = &ans_tensors[i];
+
+        // encoder
+        let encoder_cell_hidden = (|| {
+            let embedded = embedding_encoder.forward(&input.reshape(vec![length as i32]));
+
+            let mut cell_hidden = None;
+            for i in 0..length {
+                let x = embedded.index(vec![i as i32]).reshape(vec![1, -1]);
+                let out = lstm_encoder.forward(&x, cell_hidden);
+                cell_hidden = Some(out);
+            }
+
+            cell_hidden
+        })();
+        //
+
+        // decoder
+        let decoder = (|context_vector: Option<rotta_rs::LSTMCellHidden>| {
+            let mut x = Tensor::new([0.0]);
+            let mut output = vec![];
+
+            let mut cell_hidden = context_vector;
+            for _ in 0..length {
+                let embedded = embedding_decoder.forward(&x);
+                let out = lstm_decoder.forward(&embedded, cell_hidden);
+
+                let linear = linear_decoder.forward(&out.hidden);
+                x = linear.argmax(-1);
+
+                output.push(linear);
+
+                cell_hidden = Some(out);
+            }
+
+            output.concat_tensor(0)
+        })(encoder_cell_hidden);
+
+        let prob = softmax(&decoder, -1);
+        let max = prob.argmax(-1);
+
+        // label
+        let mut ask = String::new();
+        for index in input.value().value {
+            let mut word = tokenizer.index2word
+                .get(&(index as usize))
+                .unwrap()
+                .clone();
+            word.push(' ');
+            ask.push_str(&word);
+        }
+
+        // label
+        let mut actual = String::new();
+        for index in label.value().value {
+            let mut word = tokenizer.index2word
+                .get(&(index as usize))
+                .unwrap()
+                .clone();
+            word.push(' ');
+            actual.push_str(&word);
+        }
+
+        // prediction
+        let mut output = String::new();
+        for index in max.value().value {
+            let mut word = tokenizer.index2word
+                .get(&(index as usize))
+                .unwrap()
+                .clone();
+            word.push(' ');
+            output.push_str(&word);
+        }
+
+        println!("=====================");
+        println!("ask:\n{}", ask);
+        println!("actual:\n{}", actual);
+        println!("prediction:\n{}", output);
+        println!("=====================");
     }
 }
