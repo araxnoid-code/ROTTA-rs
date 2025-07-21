@@ -1,4 +1,6 @@
 use crate::{
+    argmax,
+    argmin,
     mean,
     mean_axis,
     mean_axis_keep_dim,
@@ -116,5 +118,13 @@ impl Tensor {
 
     pub fn mean_axis_keep_dim(&self, d: &[i32]) -> Tensor {
         mean_axis_keep_dim(self, d)
+    }
+
+    pub fn argmax(&self, dim: i32) -> Tensor {
+        argmax(self, dim)
+    }
+
+    pub fn argmin(&self, dim: i32) -> Tensor {
+        argmin(self, dim)
     }
 }

@@ -105,4 +105,12 @@ impl Arrayy {
     pub fn mean_axis_keep_dim(&self, d: &[i32]) -> Arrayy {
         mean_axis_keep_dim_arr(self, d)
     }
+
+    pub fn argmax(&self, dim: i32) -> Arrayy {
+        argmax_arr(self, dim)
+    }
+
+    pub fn argmin(&self, dim: i32) -> Arrayy {
+        argmin_arr(self, dim)
+    }
 }

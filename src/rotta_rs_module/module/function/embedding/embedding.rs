@@ -20,8 +20,5 @@ impl Embedding {
         let concat = concat(map, 0);
 
         concat.to_shape(shape)
-        // concat.node.lock().unwrap().value.shape = shape;
-
-        // concat
     }
 }

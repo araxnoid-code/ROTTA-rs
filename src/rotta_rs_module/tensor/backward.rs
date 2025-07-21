@@ -75,7 +75,7 @@ impl Tensor {
         // let mut graph: Vec<NodeType> = vec![];
         // let mut visited: HashSet<u128> = HashSet::new();
 
-        build(node, &mut graph, &mut visited);
+        // build(node, &mut graph, &mut visited);
 
         for idx in (0..graph.len()).rev() {
             let node_arc = graph[idx].clone();
