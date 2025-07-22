@@ -1,6 +1,7 @@
 use std::sync::{ Arc, Mutex };
 
-use rand::{ rngs::StdRng, SeedableRng };
+use rand::SeedableRng;
+use rand_chacha::ChaCha8Rng;
 
 use crate::rotta_rs_module::{ NodeType, WeightInitialization };
 
@@ -10,7 +11,7 @@ pub struct Module {
     pub eval_handlers: Vec<Arc<Mutex<bool>>>,
 
     // rng
-    pub rng: StdRng,
+    pub rng: ChaCha8Rng,
 }
 
 impl Module {
@@ -22,7 +23,7 @@ impl Module {
             eval_handlers: vec![],
 
             // rng
-            rng: StdRng::seed_from_u64(42),
+            rng: ChaCha8Rng::seed_from_u64(42),
         }
     }
 
@@ -46,7 +47,7 @@ impl Module {
 
     // update seed
     pub fn update_seed(&mut self, seed: u64) {
-        self.rng = StdRng::seed_from_u64(seed);
+        self.rng = ChaCha8Rng::seed_from_u64(seed);
     }
 
     pub fn update_initialization(&mut self, initialization: WeightInitialization) {
