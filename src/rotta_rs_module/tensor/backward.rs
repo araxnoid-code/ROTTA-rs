@@ -1,4 +1,4 @@
-use std::{ collections::HashSet, sync::{ Arc, Mutex } };
+use std::{ collections::{ HashSet, VecDeque }, sync::{ Arc, Mutex } };
 
 use crate::{
     d_concat,
@@ -52,21 +52,24 @@ impl Tensor {
         node.lock().as_mut().unwrap().ones_grad();
 
         //
-        // let mut q = vec![node.clone()];
+        // let mut q = VecDeque::new();
+        // q.push_front(node.clone());
         // let mut visited: HashSet<u128> = HashSet::new();
         // let mut graph = vec![];
 
         // while q.len() > 0 {
-        //     let _node = q.pop().unwrap();
+        //     let _node = q.pop_back().unwrap();
         //     let node = _node.lock().unwrap();
-        //     if let None = visited.get(&node.id) {
-        //         visited.insert(node.id);
+        //     if node.requires_grad {
+        //         if let None = visited.get(&node.id) {
+        //             visited.insert(node.id);
 
-        //         for parent in &node.parent {
-        //             q.push(parent.clone());
+        //             for parent in &node.parent {
+        //                 q.push_back(parent.clone());
+        //             }
+
+        //             graph.push(_node.clone());
         //         }
-
-        //         graph.push(_node.clone());
         //     }
         // }
         // graph.reverse();
@@ -74,7 +77,6 @@ impl Tensor {
 
         let mut graph: Vec<NodeType> = vec![];
         let mut visited: HashSet<u128> = HashSet::new();
-
         build(node, &mut graph, &mut visited);
 
         for idx in (0..graph.len()).rev() {
@@ -137,10 +139,10 @@ pub fn build(node_arc: NodeType, graph: &mut Vec<NodeType>, vitited: &mut HashSe
         if let None = vitited.get(&node.id) {
             vitited.insert(node.id);
 
-            let parents = node.parent.clone();
+            let parents = &node.parent;
 
             for parent in parents {
-                build(parent, graph, vitited);
+                build(parent.clone(), graph, vitited);
             }
 
             graph.push(node_arc.clone());

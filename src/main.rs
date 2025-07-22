@@ -58,7 +58,7 @@ fn main() {
 
     let slicing = buffer
         .split('\n')
-        .collect::<Vec<&str>>()[..5]
+        .collect::<Vec<&str>>()[..25]
         .to_vec()
         .iter()
         .map(|&slice| { slice.split('\t').collect::<Vec<&str>>() })
@@ -91,13 +91,16 @@ fn main() {
 
     let mut model = Module::init();
     model.update_initialization(rotta_rs::WeightInitialization::Glorot);
-    let hidden = 32;
+    let hidden = 64;
     // encoder
     let embedding_encoder = model.embedding_init(tokenizer.count, hidden);
+    let mut layer_norm_encoder = model.layer_norm_init(&[hidden]);
     let lstm_encoder = model.lstm_init(hidden);
     //
     // decoder
     let embedding_decoder = model.embedding_init(tokenizer.count, hidden);
+    let mut layer_norm_deocder = model.layer_norm_init(&[hidden]);
+    let mut layer_norm_deocder_2 = model.layer_norm_init(&[hidden]);
     let lstm_decoder = model.lstm_init(hidden);
     let linear_decoder = model.liniar_init(hidden, tokenizer.count);
 
@@ -117,6 +120,7 @@ fn main() {
             // encoder
             let encoder_cell_hidden = (|| {
                 let embedded = embedding_encoder.forward(&input.reshape(vec![length as i32]));
+                let embedded = layer_norm_encoder.forward(&embedded);
 
                 let mut cell_hidden = None;
                 for i in 0..length {
@@ -137,6 +141,7 @@ fn main() {
                 let mut cell_hidden = context_vector;
                 for _ in 0..length {
                     let embedded = embedding_decoder.forward(&x);
+                    let embedded = layer_norm_deocder.forward(&embedded);
                     let out = lstm_decoder.forward(&embedded, cell_hidden);
 
                     let linear = linear_decoder.forward(&out.hidden);
@@ -173,6 +178,7 @@ fn main() {
         // encoder
         let encoder_cell_hidden = (|| {
             let embedded = embedding_encoder.forward(&input.reshape(vec![length as i32]));
+            let embedded = layer_norm_encoder.forward(&embedded);
 
             let mut cell_hidden = None;
             for i in 0..length {
@@ -193,6 +199,7 @@ fn main() {
             let mut cell_hidden = context_vector;
             for _ in 0..length {
                 let embedded = embedding_decoder.forward(&x);
+                let embedded = layer_norm_deocder.forward(&embedded);
                 let out = lstm_decoder.forward(&embedded, cell_hidden);
 
                 let linear = linear_decoder.forward(&out.hidden);
