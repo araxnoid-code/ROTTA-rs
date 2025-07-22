@@ -1,3 +1,4 @@
+// use the model
 use std::{ collections::HashMap, fs::File, io::Read };
 
 use rotta_rs::{
