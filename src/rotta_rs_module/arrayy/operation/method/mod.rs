@@ -113,4 +113,16 @@ impl Arrayy {
     pub fn argmin(&self, dim: i32) -> Arrayy {
         argmin_arr(self, dim)
     }
+
+    pub fn sin(&self) -> Arrayy {
+        sin_arr(self)
+    }
+
+    pub fn cos(&self) -> Arrayy {
+        cos_arr(self)
+    }
+
+    pub fn tan(&self) -> Arrayy {
+        tan_arr(self)
+    }
 }

@@ -55,3 +55,6 @@ pub use argmax::*;
 
 mod argmin;
 pub use argmin::*;
+
+pub mod sin_cos_tan;
+pub use sin_cos_tan::*;

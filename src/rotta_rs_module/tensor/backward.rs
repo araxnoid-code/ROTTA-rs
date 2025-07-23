@@ -1,35 +1,6 @@
 use std::{ collections::HashSet, sync::{ Arc, Mutex } };
 
-use crate::{
-    d_concat,
-    rotta_rs_module::{
-        d_abs,
-        d_add,
-        d_broadcasting_tensor,
-        d_cel,
-        d_divided,
-        d_dot,
-        d_exp,
-        d_index,
-        d_ln,
-        d_matmul,
-        d_mul,
-        d_permute,
-        d_powf,
-        d_powi,
-        d_relu,
-        d_sign,
-        d_slice,
-        d_ssresidual,
-        d_sub,
-        d_sum,
-        d_sum_axis,
-        d_to_shape,
-        BackwardLabel,
-        NodeType,
-        Tensor,
-    },
-};
+use crate::{ d_concat, rotta_rs_module::*, sin_cos_tan::{ d_cos, d_sin, d_tan } };
 
 pub struct Backward {
     pub map: Arc<Mutex<Vec<NodeType>>>,
@@ -112,6 +83,9 @@ impl Tensor {
                     BackwardLabel::Ln(x) => d_ln(x, &grad),
                     BackwardLabel::Abs(x) => d_abs(x, &grad),
                     BackwardLabel::Sign(x) => d_sign(x),
+                    BackwardLabel::Sin(x) => d_sin(x, &grad),
+                    BackwardLabel::Cos(x) => d_cos(x, &grad),
+                    BackwardLabel::Tan(x) => d_tan(x, &grad),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),
