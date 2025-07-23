@@ -40,32 +40,32 @@ impl MySeq2SeqModel {
         let embedded = self.embedding_encoder.forward(&x.reshape(vec![self.length as i32]));
         let embedded = self.layer_norm_encoder.forward(&embedded);
 
-        let mut cell_hidden = None;
+        let mut _hidden = None;
         for i in 0..self.length {
             let x = embedded.index(vec![i as i32]).reshape(vec![1, -1]);
-            let out = self.gru_encoder.forward(&x, cell_hidden);
-            cell_hidden = Some(out);
+            let out = self.gru_encoder.forward(&x, _hidden);
+            _hidden = Some(out);
         }
 
-        cell_hidden
+        _hidden
     }
 
     pub fn decoder(&mut self, context_vector: Option<Tensor>) -> Tensor {
         let mut x = Tensor::new([0.0]);
         let mut output = vec![];
 
-        let mut cell_hidden = context_vector;
+        let mut _hidden = context_vector;
         for _ in 0..self.length {
             let embedded = self.embedding_decoder.forward(&x);
             let embedded = self.layer_norm_decoder.forward(&embedded);
-            let out = self.gru_decoder.forward(&embedded, cell_hidden);
+            let out = self.gru_decoder.forward(&embedded, _hidden);
 
             let linear = self.linear_decoder.forward(&out);
             x = linear.argmax(-1);
 
             output.push(linear);
 
-            cell_hidden = Some(out);
+            _hidden = Some(out);
         }
 
         output.concat_tensor(0)
