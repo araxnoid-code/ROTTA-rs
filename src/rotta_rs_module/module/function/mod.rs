@@ -15,3 +15,6 @@ pub use embedding::*;
 
 mod lstm;
 pub use lstm::*;
+
+mod gru;
+pub use gru::*;

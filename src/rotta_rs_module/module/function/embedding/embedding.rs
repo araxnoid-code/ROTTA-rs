@@ -1,4 +1,4 @@
-use crate::{ concat, r, ConcatTensors, Tensor };
+use crate::{ r, ConcatTensors, Tensor };
 
 pub struct Embedding {
     pub num_vocab: usize,

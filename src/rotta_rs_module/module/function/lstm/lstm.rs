@@ -25,7 +25,10 @@ impl Lstm {
         let (cell, hidden) = if let Some(cell_hidden) = lstm_cell_hidden {
             (cell_hidden.cell, cell_hidden.hidden)
         } else {
-            (Tensor::zeros(x.shape()), Tensor::zeros(x.shape()))
+            let tensors = (Tensor::zeros(x.shape()), Tensor::zeros(x.shape()));
+            tensors.0.set_requires_grad(false);
+            tensors.1.set_requires_grad(false);
+            tensors
         };
 
         let concat = concat(vec![&hidden, x], -1);
