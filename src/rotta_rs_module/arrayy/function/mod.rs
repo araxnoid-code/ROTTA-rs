@@ -57,3 +57,6 @@ pub use argmin::*;
 
 mod sin_cos_tan;
 pub use sin_cos_tan::*;
+
+mod flatten;
+pub use flatten::*;

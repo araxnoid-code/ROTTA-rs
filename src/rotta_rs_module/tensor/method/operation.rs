@@ -1,6 +1,7 @@
 use crate::{
     argmax,
     argmin,
+    arrayy::flatten,
     mean,
     mean_axis,
     mean_axis_keep_dim,
@@ -126,5 +127,9 @@ impl Tensor {
 
     pub fn argmin(&self, dim: i32) -> Tensor {
         argmin(self, dim)
+    }
+
+    pub fn flatten(&self) -> Tensor {
+        flatten(self)
     }
 }

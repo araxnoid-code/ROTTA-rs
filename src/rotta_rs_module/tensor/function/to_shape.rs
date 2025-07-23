@@ -10,8 +10,7 @@ pub fn to_shape(x: &Tensor, to_shape: Vec<usize>) -> Tensor {
 }
 
 pub fn reshape(x: &Tensor, reshape: Vec<i32>) -> Tensor {
-    let arr = x.value().reshape(reshape);
-    let tensor = Tensor::from_arrayy(arr);
+    let tensor = Tensor::from_arrayy(x.value().reshape(reshape));
     tensor.update_parent(vec![x.node.clone()]);
     tensor.update_label(Some(BackwardLabel::ToShape(x.node.clone(), x.shape())));
 
