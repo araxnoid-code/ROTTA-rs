@@ -2,7 +2,9 @@
 use std::{ collections::HashMap, fs::File, io::Read };
 
 use rotta_rs::{
+    matmul,
     softmax,
+    tanh,
     Adam,
     ConcatTensors,
     CrossEntropyLoss,
@@ -64,8 +66,14 @@ pub struct MySeq2SeqModel {
     // decoder
     embedding_decoder: Embedding,
     layer_norm_decoder: LayerNorm,
+    linear_hidden: Linear,
     gru_decoder: Gru,
     linear_decoder: Linear,
+
+    // attn
+    w_o: Linear,
+    w_h: Linear,
+    w_v: Linear,
 }
 
 impl MySeq2SeqModel {
@@ -82,8 +90,14 @@ impl MySeq2SeqModel {
             // decoder
             embedding_decoder: model.embedding_init(vocab_num, hidden),
             layer_norm_decoder: model.layer_norm_init(&[hidden]),
-            gru_decoder: model.gru_init(hidden),
-            linear_decoder: model.liniar_init(hidden, vocab_num),
+            linear_hidden: model.liniar_init(hidden, hidden + hidden),
+            gru_decoder: model.gru_init(hidden + hidden),
+            linear_decoder: model.liniar_init(hidden + hidden, vocab_num),
+
+            // attn
+            w_o: model.liniar_init(hidden, hidden),
+            w_h: model.liniar_init(hidden + hidden, hidden),
+            w_v: model.liniar_init(hidden, 1),
 
             // model
             _model: model,
@@ -91,42 +105,61 @@ impl MySeq2SeqModel {
         }
     }
 
-    pub fn encoder(&mut self, x: &Tensor) -> Option<Tensor> {
+    pub fn encoder(&mut self, x: &Tensor) -> (Option<Tensor>, Tensor) {
         let embedded = self.embedding_encoder.forward(&x.reshape(vec![self.length as i32]));
         let embedded = self.layer_norm_encoder.forward(&embedded);
+        let mut encoder_ouputs = Vec::new();
 
         let mut _hidden = None;
         for i in 0..self.length {
             let x = embedded.index(vec![i as i32]).reshape(vec![1, -1]);
             let out = self.gru_encoder.forward(&x, _hidden);
+            encoder_ouputs.push(out.clone());
+
             _hidden = Some(out);
         }
 
-        _hidden
+        (_hidden, encoder_ouputs.concat_tensor(0))
     }
 
-    pub fn decoder(&mut self, context_vector: Option<Tensor>) -> Tensor {
+    pub fn attention(&self, encoder_outputs: &Tensor, hidden: &Tensor) -> Tensor {
+        let score = self.w_v.forward(
+            &tanh(&(&self.w_o.forward(encoder_outputs) + &self.w_h.forward(hidden)))
+        );
+
+        let attn_weight = softmax(&score.reshape(vec![1, -1]), -1);
+        let context_vector = matmul(&attn_weight, encoder_outputs);
+
+        context_vector
+    }
+
+    pub fn decoder(&mut self, _context_vector: Option<Tensor>, encoder_outputs: &Tensor) -> Tensor {
         let mut x = Tensor::new([0.0]);
         let mut output = vec![];
 
-        let mut _hidden = context_vector;
+        let mut _hidden = encoder_outputs.index(vec![-1]).reshape(vec![1, -1]);
+        let mut _hidden = self.linear_hidden.forward(&_hidden);
         for _ in 0..self.length {
+            let context_vector = self.attention(encoder_outputs, &_hidden);
             let embedded = self.embedding_decoder.forward(&x);
-            let embedded = self.layer_norm_decoder.forward(&embedded);
-            let out = self.gru_decoder.forward(&embedded, _hidden);
+            let norm = self.layer_norm_decoder.forward(&embedded);
+            let gru_input = vec![norm, context_vector].concat_tensor(-1);
+
+            let out = self.gru_decoder.forward(&gru_input, Some(_hidden));
 
             let linear = self.linear_decoder.forward(&out);
             x = linear.argmax(-1);
 
             output.push(linear);
 
-            _hidden = Some(out);
+            _hidden = out;
         }
 
         output.concat_tensor(0)
     }
 }
 
+#[allow(unused)]
 fn main() {
     let mut buffer = String::new();
     let _read = File::open("./dataset/nlp/Dataset for chatbot_Georgy Silkin/dialogs.txt")
@@ -176,17 +209,16 @@ fn main() {
     let mut optimazer = Adam::init(seq2seq_model._model.parameters(), 0.01);
 
     for epoch in 0..30 {
-        // break;
         let mut avg = 0.0;
         for i in 0..ask_tensors.len() {
             let input = &ask_tensors[i];
             let label = &ans_tensors[i];
 
             // encoder
-            let context_vector = seq2seq_model.encoder(input);
+            let (context_vector, encoder_outputs) = seq2seq_model.encoder(input);
 
             // decoder
-            let decoder = seq2seq_model.decoder(context_vector);
+            let decoder = seq2seq_model.decoder(context_vector, &encoder_outputs);
 
             let prediction = softmax(&decoder, -1);
             let actual = label.reshape(vec![-1]);
@@ -203,16 +235,16 @@ fn main() {
         println!("epoch:{epoch} | loss => {}", avg / (ask_tensors.len() as f64));
     }
 
-    // testing
+    // // testing
     for i in 0..ask_tensors.len() {
         let input = &ask_tensors[i];
         let label = &ans_tensors[i];
 
         // encoder
-        let context_vector = seq2seq_model.encoder(input);
+        let (context_vector, encoder_outputs) = seq2seq_model.encoder(input);
 
         // decoder
-        let decoder = seq2seq_model.decoder(context_vector);
+        let decoder = seq2seq_model.decoder(context_vector, &encoder_outputs);
 
         let prob = softmax(&decoder, -1);
         let max = prob.argmax(-1);
