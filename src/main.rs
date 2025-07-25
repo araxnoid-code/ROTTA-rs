@@ -237,6 +237,7 @@ fn main() {
 
     // // testing
     for i in 0..ask_tensors.len() {
+        break;
         let input = &ask_tensors[i];
         let label = &ans_tensors[i];
 
