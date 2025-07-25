@@ -32,6 +32,8 @@ impl Module {
 
         // linear cfg
         let linear_cfg = Linear {
+            input,
+            output,
             weight: tensor_weight,
             bias: tensor_bias,
         };

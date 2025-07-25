@@ -31,6 +31,16 @@ impl Lstm {
             tensors
         };
 
+        let h_s = hidden.shape();
+        let i_s = x.shape();
+        if h_s != i_s {
+            panic!(
+                "GRU ERROR: hidden and input not same, hidden shape:{:?} input shape:{:?}",
+                h_s,
+                i_s
+            );
+        }
+
         let concat = concat(vec![&hidden, x], -1);
 
         let f = sigmoid(&(&matmul(&concat, &self.w_f) + &self.b_f));

@@ -22,6 +22,16 @@ impl Gru {
             tensor
         };
 
+        let h_s = hidden.shape();
+        let i_s = x.shape();
+        if h_s != i_s {
+            panic!(
+                "GRU ERROR: hidden and input not same, hidden shape:{:?} input shape:{:?}",
+                h_s,
+                i_s
+            );
+        }
+
         let concat = vec![x, &hidden].concat_tensor(-1);
 
         let r = sigmoid(&(&matmul(&concat, &self.w_r) + &self.b_r));

@@ -15,6 +15,14 @@ impl LayerNorm {
     pub fn forward(&mut self, x: &Tensor) -> Tensor {
         let shape = x.shape();
 
+        if shape[1..] != self.gamma.shape() {
+            println!(
+                "LAYER NORM ERROR: input shape does not match gamma, input shape:{:?} gamma shape:{:?}",
+                shape,
+                self.gamma.shape()
+            );
+        }
+
         let mut axis = vec![];
         shape
             .into_iter()
