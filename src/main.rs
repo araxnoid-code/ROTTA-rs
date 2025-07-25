@@ -167,7 +167,7 @@ fn main() {
 
     let slicing = buffer
         .split('\n')
-        .collect::<Vec<&str>>()[..5]
+        .collect::<Vec<&str>>()[..25]
         .to_vec()
         .iter()
         .map(|&slice| { slice.split('\t').collect::<Vec<&str>>() })
@@ -205,7 +205,7 @@ fn main() {
     let loss_fn = CrossEntropyLoss::init();
 
     // optimazer
-    let mut optimazer = Adam::init(seq2seq_model._model.parameters(), 0.01);
+    let mut optimazer = Adam::init(seq2seq_model._model.parameters(), 0.001);
 
     for epoch in 0..30 {
         let mut avg = 0.0;
@@ -236,7 +236,6 @@ fn main() {
 
     // // testing
     for i in 0..ask_tensors.len() {
-        break;
         let input = &ask_tensors[i];
         let label = &ans_tensors[i];
 
