@@ -199,7 +199,7 @@ fn main() {
         ans_tensors.push(ans_tensor);
     }
 
-    let hidden = 64;
+    let hidden = 128;
     let mut seq2seq_model = MySeq2SeqModel::init(tokenizer.count, hidden, length);
 
     // loss
