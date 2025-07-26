@@ -2,6 +2,7 @@ use crate::{
     argmax,
     argmin,
     arrayy::flatten,
+    cos,
     mean,
     mean_axis,
     mean_axis_keep_dim,
@@ -26,6 +27,8 @@ use crate::{
         transpose,
         Tensor,
     },
+    sin,
+    tan,
 };
 
 impl Tensor {
@@ -131,5 +134,17 @@ impl Tensor {
 
     pub fn flatten(&self) -> Tensor {
         flatten(self)
+    }
+
+    pub fn sin(&self) -> Tensor {
+        sin(self)
+    }
+
+    pub fn cos(&self) -> Tensor {
+        cos(self)
+    }
+
+    pub fn tan(&self) -> Tensor {
+        tan(self)
     }
 }

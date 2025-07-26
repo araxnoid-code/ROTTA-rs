@@ -1,3 +1,4 @@
+// experimental model
 // use the model
 use std::{ collections::HashMap, fs::File, io::Read };
 
@@ -7,9 +8,10 @@ use rotta_rs::{
     ConcatTensors,
     CrossEntropyLoss,
     Embedding,
-    Gru,
+    LSTMCellHidden,
     LayerNorm,
     Linear,
+    Lstm,
     Module,
     Tensor,
 };
@@ -59,12 +61,12 @@ pub struct MySeq2SeqModel {
     // encoder
     embedding_encoder: Embedding,
     layer_norm_encoder: LayerNorm,
-    gru_encoder: Gru,
+    lstm_encoder: Lstm,
 
     // decoder
     embedding_decoder: Embedding,
     layer_norm_decoder: LayerNorm,
-    gru_decoder: Gru,
+    lstm_decoder: Lstm,
     linear_decoder: Linear,
 }
 
@@ -77,12 +79,12 @@ impl MySeq2SeqModel {
             // encoder
             embedding_encoder: model.embedding_init(vocab_num, hidden),
             layer_norm_encoder: model.layer_norm_init(&[hidden]),
-            gru_encoder: model.gru_init(hidden),
+            lstm_encoder: model.lstm_init(hidden),
 
             // decoder
             embedding_decoder: model.embedding_init(vocab_num, hidden),
             layer_norm_decoder: model.layer_norm_init(&[hidden]),
-            gru_decoder: model.gru_init(hidden),
+            lstm_decoder: model.lstm_init(hidden),
             linear_decoder: model.liniar_init(hidden, vocab_num),
 
             // model
@@ -91,36 +93,36 @@ impl MySeq2SeqModel {
         }
     }
 
-    pub fn encoder(&mut self, x: &Tensor) -> Option<Tensor> {
+    pub fn encoder(&mut self, x: &Tensor) -> Option<rotta_rs::LSTMCellHidden> {
         let embedded = self.embedding_encoder.forward(&x.reshape(vec![self.length as i32]));
         let embedded = self.layer_norm_encoder.forward(&embedded);
 
-        let mut _hidden = None;
+        let mut cell_hidden = None;
         for i in 0..self.length {
             let x = embedded.index(vec![i as i32]).reshape(vec![1, -1]);
-            let out = self.gru_encoder.forward(&x, _hidden);
-            _hidden = Some(out);
+            let out = self.lstm_encoder.forward(&x, cell_hidden);
+            cell_hidden = Some(out);
         }
 
-        _hidden
+        cell_hidden
     }
 
-    pub fn decoder(&mut self, context_vector: Option<Tensor>) -> Tensor {
+    pub fn decoder(&mut self, context_vector: Option<LSTMCellHidden>) -> Tensor {
         let mut x = Tensor::new([0.0]);
         let mut output = vec![];
 
-        let mut _hidden = context_vector;
+        let mut cell_hidden = context_vector;
         for _ in 0..self.length {
             let embedded = self.embedding_decoder.forward(&x);
             let embedded = self.layer_norm_decoder.forward(&embedded);
-            let out = self.gru_decoder.forward(&embedded, _hidden);
+            let out = self.lstm_decoder.forward(&embedded, cell_hidden);
 
-            let linear = self.linear_decoder.forward(&out);
+            let linear = self.linear_decoder.forward(&out.hidden);
             x = linear.argmax(-1);
 
             output.push(linear);
 
-            _hidden = Some(out);
+            cell_hidden = Some(out);
         }
 
         output.concat_tensor(0)

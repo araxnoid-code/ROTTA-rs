@@ -210,3 +210,65 @@ fn main() {
     layer_norm.disable_learnable();
 }
 ```
+
+- lstm
+```rust
+fn main() {
+    let mut model = Module::init();
+    let lstm = model.lstm_init(6);
+
+    let tensor = Tensor::arange(0..6)
+        .to_shape(vec![1, 6])
+        .collect();
+    println!("{}", tensor);
+    // [
+    //  [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+    // ]
+
+    let cell_hidden = lstm.forward(&tensor, None); //(&Tensor, Option<LSTMCellHidden>)
+    println!("cell:\n{}", cell_hidden.cell);
+    // cell:
+    // [
+    //  [-0.35452980609595336, -0.5292895572406782, 0.7244741335616286, -0.4735260362646916, -0.9515427099660342, -0.2374937433097324]
+    // ]
+
+    println!("hidden:\n{}", cell_hidden.hidden)
+    // hidden:
+    // [
+    //  [-0.23028978337822023, -0.0435225356725021, 0.36147911006385536, -0.09738843166346652, -0.705630337819917, -0.051854840060327305]
+    // ]
+}
+```
+
+```rust
+fn main() {
+    LSTMCellHidden {
+        cell: Tensor::new([[0.0]]),
+        hidden: Tensor::new([[0.0]]),
+    };
+}
+```
+
+- gru
+```rust
+fn main() {
+    let mut model = Module::init();
+    let lstm = model.gru_init(6);
+
+    let tensor = Tensor::arange(0..6)
+        .to_shape(vec![1, 6])
+        .collect();
+    println!("{}", tensor);
+    // [
+    //  [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+    // ]
+
+
+    let hidden = lstm.forward(&tensor, None); // (&Tensor, Option<Tensor>)
+    println!("hidden:\n{}", hidden);
+    // hidden:
+    // [
+    //  [0.2838769389632212, 0.30500443468104915, 0.03277033032455531, -0.4399917698902819, -0.9237180542375861, 0.3168019973639146]
+    // ]
+}
+```

@@ -27,8 +27,12 @@ fn main() {
     // from_shape_fn(shape, FnMut -> f64)
     let tensor = Tensor::from_shape_fn(vec![2, 3], || { 1.0 });
 
-    // arange(start, stop, step)
-    let tensor = Tensor::arange(0, 10, 2);
+    // arange(range)
+    let tensor = Tensor::arange(0..24)
+        .step(2)
+        .to_shape(vec![3, 4])
+        .map(|x| x * 2.0)
+        .collect();
 }
 ```
 
@@ -346,14 +350,32 @@ fn main() {
 fn main() {
     let tensor_a = Tensor::new([[1.0, 2.0, 3.0, 4.0, 5.0]]);
     let tensor_b = Tensor::new([[6.0, 7.0, 8.0, 9.0, 10.0]]);
-    let vector = vec![&tensor_a, &tensor_b];
 
+    let vector = vec![&tensor_a, &tensor_b];
     let tensor = concat(vector, 0);
-    println!("{}", tensor);     // [
-                                //  [1.0, 2.0, 3.0, 4.0, 5.0]
-                                //  [6.0, 7.0, 8.0, 9.0, 10.0]
-                                // ]    
+    println!("{}", tensor);
+    // [
+    //  [1.0, 2.0, 3.0, 4.0, 5.0]
+    //  [6.0, 7.0, 8.0, 9.0, 10.0]
+    // ]
+
+    // or
+    let tensor = vec![&tensor_a, &tensor_b].concat_tensor(0);
+    println!("{}", tensor);
+    // [
+    //  [1.0, 2.0, 3.0, 4.0, 5.0]
+    //  [6.0, 7.0, 8.0, 9.0, 10.0]
+    // ]
+
+    // or
+    let tensor = vec![tensor_a, tensor_b].concat_tensor(0);
+    println!("{}", tensor);
+    // [
+    //  [1.0, 2.0, 3.0, 4.0, 5.0]
+    //  [6.0, 7.0, 8.0, 9.0, 10.0]
+    // ]
 }
+```
 
 - permute
 ```rust
@@ -580,6 +602,67 @@ fn main() {
 }
 ```
 
+- argmax
+```rust
+fn main() {
+    let tensor = Tensor::rand(vec![3, 4]);
+    println!("{}", tensor);
+    // [
+    //  [0.490653500989335, 0.9084708072918432, 0.5516854111601106, 0.38535295859939467]
+    //  [0.5510768003422782, 0.04506790076914613, 0.36501508148354644, 0.48345186596013223]
+    //  [0.05192318702409915, 0.03138051383420948, 0.5086337769325273, 0.021017655640771404]
+    // ]
+
+    let max = tensor.argmax(0);
+    println!("{}", max);
+    // [1.0, 0.0, 0.0, 1.0]
+
+    let max = tensor.argmax(1);
+    println!("{}", max)
+    // [1.0, 0.0, 2.0]
+}
+```
+
+- argmin
+```rust
+fn main() {
+    let tensor = Tensor::rand(vec![3, 4]);
+    println!("{}", tensor);
+    // [
+    //  [0.8611219295171262, 0.9410276855253755, 0.9133598099213944, 0.22062707185602048]
+    //  [0.47193516661684776, 0.7818072906711374, 0.8048492003479746, 0.9925399063075784]
+    //  [0.3559389967244023, 0.3472829046036767, 0.7791381493184755, 0.8910867638091713]
+    // ]
+
+    let max = tensor.argmin(0);
+    println!("{}", max);
+    // [2.0, 2.0, 2.0, 0.0]
+
+    let max = tensor.argmin(1);
+    println!("{}", max)
+    // [3.0, 0.0, 1.0]
+}
+```
+
+- flatten
+```rust
+fn main() {
+    let tensor = Tensor::arange(0..12)
+        .to_shape(vec![3, 4])
+        .collect();
+    println!("{}", tensor);
+    // [
+    //  [0.0, 1.0, 2.0, 3.0]
+    //  [4.0, 5.0, 6.0, 7.0]
+    //  [8.0, 9.0, 10.0, 11.0]
+    // ]
+
+    let flat = tensor.flatten();
+    println!("{}", flat);
+    // [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]
+}
+```
+
 - other functions
 ```rust
 fn main() {
@@ -594,5 +677,8 @@ fn main() {
     let natural_log = tensor.ln();
     let exp = tensor.exp();
     let sign = tensor.sign();
+    let sin = tensor.sin();
+    let cos = tensor.cos();
+    let tan = tensor.tan();
 }
 ```

@@ -1,3 +1,4 @@
+// experimental model
 pub struct MySeq2SeqModel {
     _model: Module,
     length: usize,

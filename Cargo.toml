@@ -1,6 +1,6 @@
 [package]
 name = "rotta_rs"
-version = "0.0.5"
+version = "0.0.6"
 edition = "2024"
 license = "Apache-2.0"
 description = "a Deep Learning library with rust language"
@@ -15,12 +15,7 @@ rand = "0.9.1"
 rand_distr = "0.5.1"
 rayon = "1.10.0"
 matrixmultiply = "0.3.10"
-wide = "0.7.33"
 rand_chacha = "0.9.0"
-
-
-
-
 
 [dependencies.uuid]
 version = "1.17.0"
