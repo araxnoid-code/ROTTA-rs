@@ -1,4 +1,8 @@
 use crate::{
+    argmax,
+    argmin,
+    arrayy::flatten,
+    cos,
     mean,
     mean_axis,
     mean_axis_keep_dim,
@@ -23,6 +27,8 @@ use crate::{
         transpose,
         Tensor,
     },
+    sin,
+    tan,
 };
 
 impl Tensor {
@@ -86,11 +92,11 @@ impl Tensor {
         permute(self, order)
     }
 
-    pub fn slice(&self, range: Vec<ArrSlice>) -> Tensor {
+    pub fn slice(&self, range: &[ArrSlice]) -> Tensor {
         slice(self, range)
     }
 
-    pub fn slice_replace(&self, range: Vec<ArrSlice>, replace: &Tensor) {
+    pub fn slice_replace(&self, range: &[ArrSlice], replace: &Tensor) {
         slice_replace(self, range, replace);
     }
 
@@ -116,5 +122,29 @@ impl Tensor {
 
     pub fn mean_axis_keep_dim(&self, d: &[i32]) -> Tensor {
         mean_axis_keep_dim(self, d)
+    }
+
+    pub fn argmax(&self, dim: i32) -> Tensor {
+        argmax(self, dim)
+    }
+
+    pub fn argmin(&self, dim: i32) -> Tensor {
+        argmin(self, dim)
+    }
+
+    pub fn flatten(&self) -> Tensor {
+        flatten(self)
+    }
+
+    pub fn sin(&self) -> Tensor {
+        sin(self)
+    }
+
+    pub fn cos(&self) -> Tensor {
+        cos(self)
+    }
+
+    pub fn tan(&self) -> Tensor {
+        tan(self)
     }
 }

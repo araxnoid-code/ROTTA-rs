@@ -12,3 +12,9 @@ pub use layer_norm::*;
 
 mod embedding;
 pub use embedding::*;
+
+mod lstm;
+pub use lstm::*;
+
+mod gru;
+pub use gru::*;

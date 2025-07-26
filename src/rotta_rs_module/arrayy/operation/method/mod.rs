@@ -70,11 +70,11 @@ impl Arrayy {
         sign_arr(self)
     }
 
-    pub fn slice(&self, range: Vec<ArrSlice>) -> Arrayy {
+    pub fn slice(&self, range: &[ArrSlice]) -> Arrayy {
         slice_arr(self, range)
     }
 
-    pub fn slice_replace(&mut self, range: Vec<ArrSlice>, replace: &Arrayy) {
+    pub fn slice_replace(&mut self, range: &[ArrSlice], replace: &Arrayy) {
         slice_replace_arr(self, range, replace);
     }
 
@@ -104,5 +104,25 @@ impl Arrayy {
 
     pub fn mean_axis_keep_dim(&self, d: &[i32]) -> Arrayy {
         mean_axis_keep_dim_arr(self, d)
+    }
+
+    pub fn argmax(&self, dim: i32) -> Arrayy {
+        argmax_arr(self, dim)
+    }
+
+    pub fn argmin(&self, dim: i32) -> Arrayy {
+        argmin_arr(self, dim)
+    }
+
+    pub fn sin(&self) -> Arrayy {
+        sin_arr(self)
+    }
+
+    pub fn cos(&self) -> Arrayy {
+        cos_arr(self)
+    }
+
+    pub fn tan(&self) -> Arrayy {
+        tan_arr(self)
     }
 }

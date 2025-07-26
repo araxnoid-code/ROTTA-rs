@@ -12,12 +12,18 @@ pub fn add_arr_slice(
 
         let vector = arr_a
             .iter()
-            .enumerate()
-            .map(|(i, a)| {
-                // add
-                a + arr_b[i]
-            })
+            .zip(arr_b.iter())
+            .map(|(a, b)| { a + b })
             .collect::<Vec<f64>>();
+
+        // let vector = arr_a
+        //     .iter()
+        //     .enumerate()
+        //     .map(|(i, a)| {
+        //         // add
+        //         a + arr_b[i]
+        //     })
+        //     .collect::<Vec<f64>>();
         (vector, shape_a.to_vec())
     } else if shape_a.multiple_sum() == 1 || shape_b.multiple_sum() == 1 {
         // skalar

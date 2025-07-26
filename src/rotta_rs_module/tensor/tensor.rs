@@ -1,8 +1,11 @@
-use std::{ fmt::Display, sync::{ Arc, Mutex } };
+use std::{ fmt::Display, ops::Range, sync::{ Arc, Mutex } };
 
 use rand::random;
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Node, NodeType, arrayy::RecFlatten };
+use crate::{
+    rotta_rs_module::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, Node, NodeType },
+    TensorRange,
+};
 
 #[derive(Debug, Clone)]
 pub struct Tensor {
@@ -75,8 +78,12 @@ impl Tensor {
         Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || random::<f64>()))
     }
 
-    pub fn arange(start: usize, stop: usize, step: usize) -> Tensor {
-        Tensor::from_arrayy(Arrayy::arange(start, stop, step))
+    pub fn arange(range: Range<usize>) -> TensorRange {
+        TensorRange::init(range)
+    }
+
+    pub fn zeros(shape: Vec<usize>) -> Tensor {
+        Tensor::from_arrayy(Arrayy::zeros(shape))
     }
 
     // get

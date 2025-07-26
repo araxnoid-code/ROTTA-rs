@@ -27,6 +27,9 @@ pub enum BackwardLabel {
     Ln(NodeType),
     Abs(NodeType),
     Sign(NodeType),
+    Sin(NodeType),
+    Cos(NodeType),
+    Tan(NodeType),
 
     // activation
     Relu(NodeType),

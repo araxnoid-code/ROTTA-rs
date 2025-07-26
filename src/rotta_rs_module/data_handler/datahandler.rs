@@ -1,9 +1,10 @@
-use rand::{ rngs::StdRng, seq::SliceRandom, SeedableRng };
+use rand::{ seq::SliceRandom, SeedableRng };
+use rand_chacha::ChaCha8Rng;
 
 use crate::{ arrayy::ArrSlice, Dataset, Tensor };
 
 pub struct DataHandler {
-    rng: StdRng,
+    rng: ChaCha8Rng,
     idx: usize,
     batch: usize,
     dataset: Vec<(Tensor, Tensor)>,
@@ -21,7 +22,7 @@ impl DataHandler {
         }
 
         DataHandler {
-            rng: StdRng::seed_from_u64(42),
+            rng: ChaCha8Rng::seed_from_u64(42),
             idx: 0,
             batch: 128,
             dataset: combine,
@@ -46,7 +47,7 @@ impl DataHandler {
 
     // update
     pub fn set_seed(&mut self, seed: u64) {
-        self.rng = StdRng::seed_from_u64(seed);
+        self.rng = ChaCha8Rng::seed_from_u64(seed);
     }
 
     pub fn batch(&mut self, batch: usize) {
@@ -81,8 +82,8 @@ impl<'a> Iterator for &'a mut DataHandler {
             self.batch_ = 0;
         }
 
-        let input = sample.0.slice(vec![ArrSlice(Some(start), length)]);
-        let label = sample.1.slice(vec![ArrSlice(Some(start), length)]);
+        let input = sample.0.slice(&[ArrSlice(Some(start), length)]);
+        let label = sample.1.slice(&[ArrSlice(Some(start), length)]);
 
         Some((input, label))
     }

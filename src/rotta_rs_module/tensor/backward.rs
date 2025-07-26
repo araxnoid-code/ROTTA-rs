@@ -1,38 +1,9 @@
 use std::{ collections::HashSet, sync::{ Arc, Mutex } };
 
-use crate::{
-    d_concat,
-    rotta_rs_module::{
-        d_abs,
-        d_add,
-        d_broadcasting_tensor,
-        d_cel,
-        d_divided,
-        d_dot,
-        d_exp,
-        d_index,
-        d_ln,
-        d_matmul,
-        d_mul,
-        d_permute,
-        d_powf,
-        d_powi,
-        d_relu,
-        d_sign,
-        d_slice,
-        d_ssresidual,
-        d_sub,
-        d_sum,
-        d_sum_axis,
-        d_to_shape,
-        BackwardLabel,
-        NodeType,
-        Tensor,
-    },
-};
+use crate::{ d_concat, rotta_rs_module::*, sin_cos_tan::{ d_cos, d_sin, d_tan } };
 
 pub struct Backward {
-    map: Arc<Mutex<Vec<NodeType>>>,
+    pub map: Arc<Mutex<Vec<NodeType>>>,
 }
 
 impl Backward {
@@ -51,28 +22,38 @@ impl Tensor {
         let node = self.node.clone();
         node.lock().as_mut().unwrap().ones_grad();
 
+        //
+        // let mut q = VecDeque::new();
+        // q.push_front(node.clone());
+        // let mut visited: HashSet<u128> = HashSet::new();
+        // let mut graph = vec![];
+
+        // while q.len() > 0 {
+        //     let _node = q.pop_back().unwrap();
+        //     let node = _node.lock().unwrap();
+        //     if node.requires_grad {
+        //         if let None = visited.get(&node.id) {
+        //             visited.insert(node.id);
+
+        //             for parent in &node.parent {
+        //                 q.push_back(parent.clone());
+        //             }
+
+        //             graph.push(_node.clone());
+        //         }
+        //     }
+        // }
+        // graph.reverse();
+        //
+
         let mut graph: Vec<NodeType> = vec![];
         let mut visited: HashSet<u128> = HashSet::new();
-
         build(node, &mut graph, &mut visited);
 
         for idx in (0..graph.len()).rev() {
             let node_arc = graph[idx].clone();
             let node = node_arc.lock().unwrap();
             let grad = node.grad.clone();
-
-            // println!("===============");
-            // if let Some(label) = &node.label {
-            //     match label {
-            //         BackwardLabel::Broadcasting(_, _) => (),
-            //         _ => {
-            //             println!("{}", grad);
-            //             println!("{:?}", label);
-            //         }
-            //     }
-            // }
-
-            // println!("===============");
 
             if let Some(label) = &node.label {
                 match label {
@@ -102,6 +83,9 @@ impl Tensor {
                     BackwardLabel::Ln(x) => d_ln(x, &grad),
                     BackwardLabel::Abs(x) => d_abs(x, &grad),
                     BackwardLabel::Sign(x) => d_sign(x),
+                    BackwardLabel::Sin(x) => d_sin(x, &grad),
+                    BackwardLabel::Cos(x) => d_cos(x, &grad),
+                    BackwardLabel::Tan(x) => d_tan(x, &grad),
 
                     // activation
                     BackwardLabel::Relu(x) => d_relu(x, &grad),
@@ -129,10 +113,10 @@ pub fn build(node_arc: NodeType, graph: &mut Vec<NodeType>, vitited: &mut HashSe
         if let None = vitited.get(&node.id) {
             vitited.insert(node.id);
 
-            let parents = node.parent.clone();
+            let parents = &node.parent;
 
             for parent in parents {
-                build(parent, graph, vitited);
+                build(parent.clone(), graph, vitited);
             }
 
             graph.push(node_arc.clone());

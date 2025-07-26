@@ -1,6 +1,6 @@
 use std::sync::{ Arc, Mutex };
 
-use rand::rngs::StdRng;
+use rand_chacha::ChaCha8Rng;
 use rand_distr::{ Bernoulli, Distribution };
 
 use crate::rotta_rs_module::{ arrayy::Arrayy, Tensor };
@@ -8,7 +8,7 @@ use crate::rotta_rs_module::{ arrayy::Arrayy, Tensor };
 pub struct Dropout {
     pub bernoulli: Bernoulli,
     pub p: f64,
-    pub rng: StdRng,
+    pub rng: ChaCha8Rng,
     pub eval: Arc<Mutex<bool>>,
 }
 

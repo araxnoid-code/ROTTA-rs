@@ -223,10 +223,11 @@ dependencies = [
 
 [[package]]
 name = "rotta_rs"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "matrixmultiply",
  "rand",
+ "rand_chacha",
  "rand_distr",
  "rayon",
  "uuid",

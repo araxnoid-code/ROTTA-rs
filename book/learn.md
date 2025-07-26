@@ -411,4 +411,5 @@ label:
 ```
 bisa kita lihat, prediksi model AI kita sudah mendekati data test, berarti model kita berhasil mempelajari data latihan dengan baik.
 
+
 sekian, terimakasih telah membaca. maaf jikalau ada kesalahan.

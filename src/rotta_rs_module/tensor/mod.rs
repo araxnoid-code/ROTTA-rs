@@ -19,3 +19,6 @@ pub use method::*;
 
 mod function;
 pub use function::*;
+
+mod tensor_collection;
+pub use tensor_collection::*;
