@@ -5,8 +5,8 @@
 # ROTTA-rs  
 **A Deep Learning Library In Rust 🦀**
 
-[![Current Crates.io Version](https://img.shields.io/crates/v/rotta_rs.svg)](https://crates.io/crates/rotta_rs)
 [<img alt="Static Badge" src="https://img.shields.io/badge/discord-ROTTA_rs-%235a69fc">](https://discord.gg/cgB7jst7mS)
+[![Current Crates.io Version](https://img.shields.io/crates/v/rotta_rs.svg)](https://crates.io/crates/rotta_rs)
 [![license](https://shields.io/badge/license-Apache--2.0-blue)](https://github.com/araxnoid-code/ROTTA-rs/blob/main/LICENSE)
 
 
