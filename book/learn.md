@@ -1,6 +1,7 @@
 # Learn
-
 pada learn.md akan memberikan contoh pemakaian ROTTA-rs dalam bahasa indonesia.
+
+<u>⚠️ mungkin saja akan terjadi error, dikarenakan learn.md yang belum diupdate mengikuti versi saat ini ⚠️</u>
 
 hal yang harus diperhatikan:
 - pastikan sudah menginstall RUST
@@ -18,7 +19,7 @@ namun saat ini kita akan membuat model sederhana untuk memprediksi data linear b
 Ayo awali dengan data sederhana
 ```rust
 fn main() {
-    let data = Tensor::arange(0, 20, 1).reshape(vec![1, -1]);
+    let data = Tensor::arange(0..20).collect().reshape(vec![1, -1]);
     println!("{}", data)
 }
 ```
@@ -33,7 +34,7 @@ ini adalah tensor, bisa dibilang tensor adalah bentuk menyimpan data berupa angk
 ayo kita buat tensor satu lagi! lalu kita lakukan operasi perkalian secara element wise!
 ```rust
 fn main() {
-    let tensor = Tensor::arange(0, 20, 1).reshape(vec![1, -1]);
+    let tensor = Tensor::arange(0..20).collect().reshape(vec![1, -1]);
     let tensor = &tensor * 2.0;
     println!("{}", tensor)
 }
@@ -44,7 +45,7 @@ output:
  [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0, 34.0, 36.0, 38.0]
 ]
 ```
-bisa kita lihat, pada versi 0.0.5 saat ini dan dibawahnya, perkalian menggunakan tensor harus menggunakan reference `&`. Mungkin saja di update berikutnya akan ditambahkan pengoperasian dengan cara langsung tanpa reference, tergantung mood saya ;)
+bisa kita lihat, pada versi 0.0.6 saat ini dan dibawahnya, perkalian menggunakan tensor harus menggunakan reference `&`. Mungkin saja di update berikutnya akan ditambahkan pengoperasian dengan cara langsung tanpa reference.
 
 
 ## features & label
@@ -53,8 +54,8 @@ untuk lebih mudahnya, features bisa dianggap adalah input dan label bisa diangga
 berdasarkan contoh yang diatas kita bisa membuat features dan label:
 ```rust
 fn main() {
-    let features = Tensor::arange(0, 20, 1).reshape(vec![1, -1]);
-    let label = &Tensor::arange(0, 20, 1).reshape(vec![1, -1]) * 2.0;
+    let features = Tensor::arange(0..20).collect().reshape(vec![1, -1]);
+    let label = &Tensor::arange(0..20).collect().reshape(vec![1, -1]) * 2.0;
 
     println!("features:\n{}", features);
     println!("label:\n{}", label)
@@ -80,8 +81,8 @@ sebelum itu dalam deep learning ada 2 tahapan yang penting yaitu training phase 
 ayo kita bagi data features dan label kita menjadi data untuk training dan data untuk testing, dalam kasus ini kita akan split 80% untuk training dan 20% untuk testing
 ```rust
 fn main() {
-    let features = Tensor::arange(0, 20, 1).reshape(vec![1, -1]);
-    let label = &Tensor::arange(0, 20, 1).reshape(vec![1, -1]) * 2.0;
+    let features = Tensor::arange(0..20).collect().reshape(vec![1, -1]);
+    let label = &Tensor::arange(0..20).collect().reshape(vec![1, -1]) * 2.0;
 
     let training_features = features.slice(
         vec![r(..), r(..((features.len() as f64) * 0.8) as i32)]
@@ -123,8 +124,8 @@ testing_label:
 kita akan membuat data diatas menjadi batch, agar mudah di training nantinya:
 ```rust
 fn main() {
-    let features = Tensor::arange(0, 20, 1).reshape(vec![1, -1]);
-    let label = &Tensor::arange(0, 20, 1).reshape(vec![1, -1]) * 2.0;
+    let features = Tensor::arange(0..20).collect().reshape(vec![1, -1]);
+    let label = &Tensor::arange(0..20).collect().reshape(vec![1, -1]) * 2.0;
 
     let training_features = features
         .slice(vec![r(..), r(..((features.len() as f64) * 0.8) as i32)])
@@ -209,7 +210,6 @@ testing_label:
 dari data di atas. kita akan membuat sebuah model AI yang dari data training akan dilatih sehingga dapat memprediksi data pada testing label.
 
 ## build An AI Model
-ROTTA-rs disengaja oleh developer untuk dikembangkan dengan pendekatan mirip dengan pytorch(mengingat developer dulunya pengguna pytorch, dengan kata lain sudah kebiasaan hehehe)
 
 ```rust
 fn main() {
@@ -237,8 +237,8 @@ dalam model AI Deep Learning, ada 2 tahapan dalam melatih AI, yaitu forward dan 
 ayo kita gabungkan model Deep learning dengan data training dan data testing, serta kita latih AI kita menggunakan looping sebanyak 5 kali
 ```rust
 fn main() {
-    let features = Tensor::arange(0, 20, 1).reshape(vec![1, -1]);
-    let label = &Tensor::arange(0, 20, 1).reshape(vec![1, -1]) * 2.0;
+    let features = Tensor::arange(0..20).collect().reshape(vec![1, -1]);
+    let label = &Tensor::arange(0..20).collect().reshape(vec![1, -1]) * 2.0;
 
     let training_features = features
         .slice(vec![r(..), r(..((features.len() as f64) * 0.8) as i32)])
