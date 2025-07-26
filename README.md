@@ -324,7 +324,7 @@ Those who want to learn how to create AI can access [📔 learn.md](https://gith
 ## 🤖 Experimental Model
 ROTTA-rs also has several AI models intended for testing and not for production.
 
-See more details about: [Experimental Models](https://github.com/araxnoid-code/ROTTA-rs/blob/main/experimental_model)
+See more details about: [🤖 Experimental Models](https://github.com/araxnoid-code/ROTTA-rs/blob/main/experimental_model)
 
 
 ## 👍️ Support the Developer
