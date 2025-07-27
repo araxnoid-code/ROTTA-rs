@@ -43,7 +43,7 @@ fn main() {
 [ROTTA-rs](https://crates.io/crates/rotta_rs) can be installed directly through [crates.io](https://crates.io).
 To use it:
 
-Run the following Cargo command in your project directory 📁:
+Or add the following line to your Cargo.toml 📁:
 ```toml
 [dependencies]
 rotta_rs = "0.0.6"
