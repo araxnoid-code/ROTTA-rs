@@ -29,7 +29,7 @@ fn main() {
 ```
 
 ## 📦 Version `0.0.6`
-### see more details about what's new in: [0.0.6](https://github.com/araxnoid-code/ROTTA-rs/blob/main/version.md)
+### see more details about what's new in: [0.0.6](https://github.com/araxnoid-code/ROTTA-rs/releases/tag/0.0.6)
 
 
 🧑‍💻 see other versions: </br>
