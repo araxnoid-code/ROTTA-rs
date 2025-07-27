@@ -1,6 +1,7 @@
 <div align="center">
 
-![ROTTA Logo](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta-rs_logo_for_github.png?raw=true)
+<img width="300px" src="https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta_logo.png?raw=true">
+<!-- ![ROTTA Logo](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta_logo.png?raw=true) -->
 
 # ROTTA-rs  
 **A Deep Learning Library In Rust 🦀**
@@ -18,7 +19,7 @@
 ---
 
 ## ⚙️ Create Your AI Model On Rust 🦀
-`ROTTA-rs` was developed as an open-source deep learning library with the primary goal of providing an <u>easy-to-use</u>, <u>lightweight</u>, and <u>flexible</u> tool
+`ROTTA-rs` was developed as an open-source deep learning library with the primary goal of providing an `easy-to-use`, `lightweight`, and `flexible` tool
 
 ```rust
 fn main() {
