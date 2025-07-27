@@ -12,24 +12,14 @@
 </div align=center>
 
 
-## Tensor
-### [🔢 Tensor](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/1_tensor.md)
+## [🔢 Tensor](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/1_tensor.md)
 
-## Activation Function
-### [📈 Activation Function](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/2_Activation_Function.md)
+## [📈 Activation Function](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/2_Activation_Function.md)
 
+## [⚙️ Loss Function](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/3_Loss_Function.md)
 
-## Loss Function
-### [⚙️ Loss Function](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/3_Loss_Function.md)
+## [📦️ Module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
 
+## [🚀 Optimazer](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimazer.md)
 
-## Module
-### [📦️ Module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
-
-
-## Optimazer
-### [🚀 Optimazer](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimazer.md)
-
-
-## Simple AI Model & Training
-### [🤖 Simple AI Model & Training](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/6_simple_AI_model.md)
+## [🤖 Simple AI Model & Training](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/6_simple_AI_model.md)
