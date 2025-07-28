@@ -1,5 +1,6 @@
 use crate::rotta_rs_module::{ matmul, Tensor };
 
+#[derive(Clone)]
 pub struct Linear {
     pub input: usize,
     pub output: usize,

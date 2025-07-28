@@ -1,5 +1,6 @@
 use crate::rotta_rs_module::Tensor;
 
+#[derive(Clone)]
 pub struct MSE {}
 
 impl MSE {

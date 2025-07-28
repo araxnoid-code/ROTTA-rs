@@ -1,3 +1,5 @@
+use std::{ marker, sync::{ Arc, Mutex }, thread };
+
 use rand::{ seq::SliceRandom, SeedableRng };
 use rand_chacha::ChaCha8Rng;
 
@@ -53,6 +55,30 @@ impl DataHandler {
     pub fn batch(&mut self, batch: usize) {
         self.batch = batch;
     }
+
+    // multithread
+    pub fn par_by_sample<F: CloneableFn>(&self, f: F) -> Tensor {
+        let box_f = Box::new(f);
+        let mut _loss = Tensor::new([0.0]);
+
+        let mut handles = vec![];
+        for sample in &self.dataset {
+            let sample_arc: Arc<Mutex<(Tensor, Tensor)>> = Arc::new(Mutex::new(sample.clone()));
+
+            let f = box_f.clone_box();
+            let sample = sample_arc.clone();
+            let handle = thread::spawn(move || { f(&*sample.lock().unwrap()) });
+
+            handles.push(handle);
+        }
+
+        for handle in handles {
+            let loss = handle.join().unwrap();
+            _loss = &_loss + &loss;
+        }
+
+        _loss
+    }
 }
 
 // iterator
@@ -86,5 +112,22 @@ impl<'a> Iterator for &'a mut DataHandler {
         let label = sample.1.slice(&[ArrSlice(Some(start), length)]);
 
         Some((input, label))
+    }
+}
+
+//
+pub trait CloneableFn: FnOnce(&(Tensor, Tensor)) -> Tensor + 'static + Send {
+    fn clone_box(&self) -> Box<dyn CloneableFn>;
+}
+
+impl<T: FnOnce(&(Tensor, Tensor)) -> Tensor + 'static + Send + Clone> CloneableFn for T {
+    fn clone_box(&self) -> Box<dyn CloneableFn> {
+        Box::new(self.clone())
+    }
+}
+
+impl Clone for Box<dyn CloneableFn> {
+    fn clone(&self) -> Self {
+        self.clone_box()
     }
 }
