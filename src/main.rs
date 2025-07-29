@@ -72,9 +72,9 @@ fn main() {
     //
 
     let mut model = Module::init();
-    let linear_1 = model.liniar_init(1, 256);
-    let linear_2 = model.liniar_init(256, 256);
-    let linear_3 = model.liniar_init(256, 1);
+    let linear_1 = model.liniar_init(1, 1024);
+    let linear_2 = model.liniar_init(1024, 1024);
+    let linear_3 = model.liniar_init(1024, 1);
 
     let loss_fn = MSE::init();
     let mut optimazer = Adam::init(model.parameters(), 0.001);
@@ -100,22 +100,18 @@ fn main() {
             let x = linear_3.forward(&x);
             let loss = loss_fn.forward(&x, label);
 
-            loss.backward();
+            // loss.backward();
 
             loss
         });
         println!("epoch:{epoch} | loss => {}", loss);
 
-        optimazer.optim();
+        // optimazer.optim();
     }
 
     let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
     println!("{}ms", tock - tick);
-
-    // thread::spawn(move || {
-    //     data._ref.iter().for_each(|a| {});
-    // });
 
     // let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
@@ -132,9 +128,9 @@ fn main() {
 
     //     optimazer.zero_grad();
 
-    //     loss.backward();
+    //     // loss.backward();
 
-    //     optimazer.optim();
+    //     // optimazer.optim();
     // }
 
     // let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
