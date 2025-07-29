@@ -72,9 +72,9 @@ fn main() {
     //
 
     let mut model = Module::init();
-    let linear_1 = model.liniar_init(1, 256);
-    let linear_2 = model.liniar_init(256, 256);
-    let linear_3 = model.liniar_init(256, 1);
+    let linear_1 = model.liniar_init(1, 1024);
+    let linear_2 = model.liniar_init(1024, 1024);
+    let linear_3 = model.liniar_init(1024, 1);
 
     let loss_fn = MSE::init();
     let mut optimazer = Adam::init(model.parameters(), 0.001);
