@@ -9,10 +9,10 @@ pub fn abs(x: &Tensor) -> Tensor {
 }
 
 pub fn d_abs(x: &NodeType, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
+    let _x = x.read().unwrap();
 
-    if x.requires_grad {
-        let d_x = x.value.sign() * grad;
-        x.add_grad(d_x);
+    if _x.requires_grad {
+        let d_x = _x.value.sign() * grad;
+        x.write().unwrap().add_grad(d_x);
     }
 }

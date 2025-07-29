@@ -11,12 +11,12 @@ pub fn slice(x: &Tensor, range: &[ArrSlice]) -> Tensor {
 pub fn slice_replace(x: &Tensor, range: &[ArrSlice], replace: &Tensor) {
     if !x.requires_grad() {
         // only can to tensor requires_gradient=false
-        x.node.lock().unwrap().value.slice_replace(range, &replace.value());
+        x.node.write().unwrap().value.slice_replace(range, &replace.value());
     } else {
         panic!("{}", "can't change manualy a tensor if the tensor is requires_grad=true")
     }
 }
 
 pub fn d_slice(x: &NodeType, range: Vec<ArrSlice>, grad: &Arrayy) {
-    x.lock().unwrap().grad.slice_replace(&range, grad);
+    x.write().unwrap().grad.slice_replace(&range, grad);
 }

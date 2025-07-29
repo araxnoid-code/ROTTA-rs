@@ -10,12 +10,12 @@ pub fn powf(x: &Tensor, n: f64) -> Tensor {
 }
 
 pub fn d_powf(x: &NodeType, powf: f64, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
+    let _x = x.read().unwrap();
 
     // d/x = n * x^n-1
-    if x.requires_grad {
-        let dx = powf * &x.value.powf(powf - 1.0) * grad;
+    if _x.requires_grad {
+        let dx = powf * &_x.value.powf(powf - 1.0) * grad;
 
-        x.add_grad(dx);
+        x.write().unwrap().add_grad(dx);
     }
 }

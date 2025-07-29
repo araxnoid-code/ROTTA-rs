@@ -9,7 +9,7 @@ pub struct Backward {
 impl Backward {
     pub fn zero_grad(&self) {
         for node in self.map.lock().unwrap().iter() {
-            let mut node = node.lock().unwrap();
+            let mut node = node.write().unwrap();
             if node.auto_zero_grad {
                 node.zero_grad();
             }
@@ -20,7 +20,8 @@ impl Backward {
 impl Tensor {
     pub fn backward(&self) {
         let node = self.node.clone();
-        node.lock().as_mut().unwrap().ones_grad();
+        // node.read().as_mut().unwrap().ones_grad();
+        node.write().unwrap().ones_grad();
 
         //
         // let mut q = VecDeque::new();
@@ -52,7 +53,7 @@ impl Tensor {
 
         for idx in (0..graph.len()).rev() {
             let node_arc = graph[idx].clone();
-            let node = node_arc.lock().unwrap();
+            let node = node_arc.read().unwrap();
             let grad = node.grad.clone();
 
             if let Some(label) = &node.label {
@@ -108,7 +109,7 @@ impl Tensor {
 }
 
 pub fn build(node_arc: NodeType, graph: &mut Vec<NodeType>, vitited: &mut HashSet<u128>) {
-    let node = node_arc.lock().unwrap();
+    let node = node_arc.read().unwrap();
     if node.requires_grad {
         if let None = vitited.get(&node.id) {
             vitited.insert(node.id);

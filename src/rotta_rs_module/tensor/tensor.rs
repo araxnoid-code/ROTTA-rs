@@ -1,4 +1,4 @@
-use std::{ fmt::Display, ops::Range, sync::{ Arc, Mutex } };
+use std::{ fmt::Display, ops::Range, sync::{ Arc, Mutex, RwLock } };
 
 use rand::random;
 
@@ -17,7 +17,7 @@ impl Tensor {
     pub fn new<T: RecFlatten>(arr: T) -> Tensor {
         let (shape, vector) = arr.rec_flatten();
         let arr = Arrayy::from_vector(shape, vector);
-        let node = Arc::new(Mutex::new(Node::new(arr)));
+        let node = Arc::new(RwLock::new(Node::new(arr)));
 
         Tensor {
             node,
@@ -26,7 +26,7 @@ impl Tensor {
 
     pub fn from_arrayy(array: Arrayy) -> Tensor {
         let node = Node::new(array);
-        let node = Arc::new(Mutex::new(node));
+        let node = Arc::new(RwLock::new(node));
 
         let tensor = Tensor {
             node,
@@ -39,7 +39,7 @@ impl Tensor {
         let array = Arrayy::from_vector(shape, vector);
 
         let node = Node::new(array);
-        let node = Arc::new(Mutex::new(node));
+        let node = Arc::new(RwLock::new(node));
 
         let tensor = Tensor {
             node,
@@ -52,7 +52,7 @@ impl Tensor {
         let array = Arrayy::arrayy_from_element(shape, element);
 
         let node = Node::new(array);
-        let node = Arc::new(Mutex::new(node));
+        let node = Arc::new(RwLock::new(node));
 
         let tensor = Tensor {
             node,
@@ -65,7 +65,7 @@ impl Tensor {
         let array = Arrayy::arrayy_from_shape_fn(shape, f);
 
         let node = Node::new(array);
-        let node = Arc::new(Mutex::new(node));
+        let node = Arc::new(RwLock::new(node));
 
         let tensor = Tensor {
             node,
@@ -89,55 +89,55 @@ impl Tensor {
     // get
     // value
     pub fn value(&self) -> Arrayy {
-        self.node.lock().unwrap().value.clone()
+        self.node.read().unwrap().value.clone()
     }
 
     // requires gradient
     pub fn requires_grad(&self) -> bool {
-        self.node.lock().unwrap().requires_grad
+        self.node.read().unwrap().requires_grad
     }
 
     // grad
     pub fn grad(&self) -> Arrayy {
-        self.node.lock().unwrap().grad.clone()
+        self.node.read().unwrap().grad.clone()
     }
 
     // shape
     pub fn shape(&self) -> Vec<usize> {
-        self.node.lock().unwrap().value.shape.clone()
+        self.node.read().unwrap().value.shape.clone()
     }
 
     // update
     // parent
     pub fn update_parent(&self, parent: Vec<NodeType>) {
-        self.node.lock().as_mut().unwrap().parent = parent;
+        self.node.write().as_mut().unwrap().parent = parent;
     }
 
     // label
     pub fn update_label(&self, label: Option<BackwardLabel>) {
-        self.node.lock().as_mut().unwrap().label = label;
+        self.node.write().as_mut().unwrap().label = label;
     }
 
     pub fn update_parent_label(&self, parent: Vec<NodeType>, label: Option<BackwardLabel>) {
-        let mut node = self.node.lock().unwrap();
+        let mut node = self.node.write().unwrap();
         node.parent = parent;
         node.label = label;
     }
 
     // requires grad
     pub fn set_requires_grad(&self, stat: bool) {
-        self.node.lock().unwrap().requires_grad = stat;
+        self.node.write().unwrap().requires_grad = stat;
     }
 
     // auto zero grad
     pub fn set_auto_zero_grad(&self, stat: bool) {
-        self.node.lock().unwrap().auto_zero_grad = stat;
+        self.node.write().unwrap().auto_zero_grad = stat;
     }
 }
 
 impl Display for Tensor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string = format!("{}", self.node.lock().unwrap().value);
+        let string = format!("{}", self.node.read().unwrap().value);
         f.write_str(&string)
     }
 }

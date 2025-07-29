@@ -25,16 +25,16 @@ impl AdaGrad {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.lock().as_mut().unwrap().zero_grad();
+            node_type.write().unwrap().zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let mut node = node_type.lock().unwrap();
+            let _node = node_type.read().unwrap();
             if let None = self.g.get(i) {
-                self.g.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
+                self.g.push(Arrayy::arrayy_from_element(_node.value.shape.clone(), 0.0));
             }
 
             // ada grad
@@ -42,11 +42,11 @@ impl AdaGrad {
             // w_n + 1 = w_n - (lr/(g_n^0.5 + e).sqrt) * grad(w_n)
 
             let eps = self.eps;
-            let grad = &node.grad;
+            let grad = &_node.grad;
             let g_n = &self.g[i] + grad.powi(2);
-            let new = &node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;
+            let new = &_node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;
 
-            node.update_value(new);
+            node_type.write().unwrap().update_value(new);
             // update g
             self.g[i] = g_n;
         }

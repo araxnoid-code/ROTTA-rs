@@ -15,7 +15,7 @@ impl SSResidual {
         let output = (actual_value - prediction_value).powi(2).sum();
         let tensor = Tensor::from_vector(vec![1], vec![output]);
         tensor.update_parent(vec![prediction.node.clone(), actual.node.clone()]);
-        tensor.node.lock().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::SSResidual(prediction.node.clone(), actual.node.clone())
         );
 
@@ -24,18 +24,18 @@ impl SSResidual {
 }
 
 pub fn d_ssresidual(prediction: &NodeType, actual: &NodeType, grad: &Arrayy) {
-    let mut prediction_value = prediction.lock().unwrap();
-    let mut actual_value = actual.lock().unwrap();
+    let prediction_value = prediction.read().unwrap();
+    let actual_value = actual.read().unwrap();
 
     // df/dprediction = -2(actual - prediction) * grad
     if prediction_value.requires_grad {
         let d_predcition = -2.0 * (&actual_value.value - &prediction_value.value) * grad;
-        prediction_value.add_grad(d_predcition);
+        prediction.write().unwrap().add_grad(d_predcition);
     }
 
     // df/dactual = 2(actual - prediction) * grad
     if actual_value.requires_grad {
         let d_actual = 2.0 * (&actual_value.value - &prediction_value.value) * grad;
-        actual_value.add_grad(d_actual);
+        actual.write().unwrap().add_grad(d_actual);
     }
 }

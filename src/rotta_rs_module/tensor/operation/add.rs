@@ -21,7 +21,7 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Add(a.node.clone(), b.node.clone())
         );
 
@@ -32,7 +32,7 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Add(a.node.clone(), b.node.clone())
         );
 
@@ -47,7 +47,7 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
         let output = broadcast_a.value() + broadcast_b.value();
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Add(broadcast_a.node.clone(), broadcast_b.node.clone())
         );
 
@@ -56,27 +56,27 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_add(a: &NodeType, b: &NodeType, grad: Arrayy) {
-    // let mut a = a.lock().unwrap();
-    // let mut b = b.lock().unwrap();
+    let _a = a.read().unwrap();
+    let _b = b.read().unwrap();
 
     // f/da = 1 * grad = grad
-    if a.lock().unwrap().requires_grad {
-        let d_a = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![grad.sum()])
+    if _a.requires_grad {
+        let d_a = if _a.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(_a.value.shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
-        a.lock().unwrap().add_grad(d_a);
+        a.write().unwrap().add_grad(d_a);
     }
 
     // f/db = 1 * grad = grad
-    if b.lock().unwrap().requires_grad {
-        let d_b = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![grad.sum()])
+    if _b.requires_grad {
+        let d_b = if _b.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(_b.value.shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
-        b.lock().unwrap().add_grad(d_b);
+        b.write().unwrap().add_grad(d_b);
     }
 }
 

@@ -18,7 +18,5 @@ pub fn reshape(x: &Tensor, reshape: Vec<i32>) -> Tensor {
 }
 
 pub fn d_to_shape(x: &NodeType, to_shape: Vec<usize>, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
-
-    x.grad = grad.to_shape(to_shape);
+    x.write().unwrap().grad = grad.to_shape(to_shape);
 }

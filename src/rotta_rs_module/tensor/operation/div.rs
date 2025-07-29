@@ -20,7 +20,7 @@ pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
 
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Diveded(a.node.clone(), b.node.clone())
         );
 
@@ -31,7 +31,7 @@ pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
 
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Diveded(a.node.clone(), b.node.clone())
         );
 
@@ -46,7 +46,7 @@ pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
         let output = broadcast_a.value() / broadcast_b.value();
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Diveded(broadcast_a.node.clone(), broadcast_b.node.clone())
         );
 
@@ -55,33 +55,33 @@ pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let mut a = a.lock().unwrap();
-    let mut b = b.lock().unwrap();
+    let _a = a.read().unwrap();
+    let _b = b.read().unwrap();
 
     // da = 1/b
-    if a.requires_grad {
-        let da = if a.value.shape.multiple_sum() == 1 {
-            let da = (1.0 / &b.value) * grad;
-            Arrayy::from_vector(a.value.shape.clone(), vec![da.sum()])
+    if _a.requires_grad {
+        let da = if _a.value.shape.multiple_sum() == 1 {
+            let da = (1.0 / &_b.value) * grad;
+            Arrayy::from_vector(_a.value.shape.clone(), vec![da.sum()])
         } else {
-            let da = (1.0 / &b.value) * grad;
+            let da = (1.0 / &_b.value) * grad;
             da
         };
 
-        a.add_grad(da);
+        a.write().unwrap().add_grad(da);
     }
 
     // db = -a/b^2
 
-    if b.requires_grad {
-        let db = if b.value.shape.multiple_sum() == 1 {
-            let db = -1.0 * (&a.value / &b.value.powi(2)) * grad;
-            Arrayy::from_vector(b.value.shape.clone(), vec![db.sum()])
+    if _b.requires_grad {
+        let db = if _b.value.shape.multiple_sum() == 1 {
+            let db = -1.0 * (&_a.value / &_b.value.powi(2)) * grad;
+            Arrayy::from_vector(_b.value.shape.clone(), vec![db.sum()])
         } else {
-            let db = -1.0 * (&a.value / &b.value.powi(2)) * grad;
+            let db = -1.0 * (&_a.value / &_b.value.powi(2)) * grad;
             db
         };
-        b.add_grad(db);
+        b.write().unwrap().add_grad(db);
     }
 }
 

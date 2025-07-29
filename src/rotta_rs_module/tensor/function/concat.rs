@@ -14,9 +14,9 @@ pub fn concat(tensors: Vec<&Tensor>, dim: i32) -> Tensor {
         .into_iter()
         .map(|tensor| {
             if let None = check_shape {
-                check_shape = Some(tensor.node.lock().unwrap().value.shape.clone());
+                check_shape = Some(tensor.node.read().unwrap().value.shape.clone());
             } else {
-                if check_shape.as_ref().unwrap() != &tensor.node.lock().unwrap().value.shape {
+                if check_shape.as_ref().unwrap() != &tensor.node.read().unwrap().value.shape {
                     panic!("concat error: shape of tensors not same");
                 }
             }
@@ -37,8 +37,9 @@ pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
     // }
 
     for (i, node) in nodes.iter().enumerate() {
-        let mut node = node.lock().unwrap();
-        let shape = &node.value.shape;
+        let _node = node.read().unwrap();
+
+        let shape = &_node.value.shape;
         let dim_len = shape[dim];
 
         let slice = shape[..dim + 1]
@@ -56,7 +57,7 @@ pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
             })
             .collect::<Vec<ArrSlice>>();
 
-        node.add_grad(grad.slice(&slice));
+        node.write().unwrap().add_grad(grad.slice(&slice));
     }
 }
 
@@ -81,9 +82,9 @@ impl ConcatTensors for Vec<Tensor> {
             .into_iter()
             .map(|tensor| {
                 if let None = check_shape {
-                    check_shape = Some(tensor.node.lock().unwrap().value.shape.clone());
+                    check_shape = Some(tensor.node.read().unwrap().value.shape.clone());
                 } else {
-                    if check_shape.as_ref().unwrap() != &tensor.node.lock().unwrap().value.shape {
+                    if check_shape.as_ref().unwrap() != &tensor.node.read().unwrap().value.shape {
                         panic!("concat error: shape of tensors not same");
                     }
                 }
@@ -115,9 +116,9 @@ impl ConcatTensors for Vec<&Tensor> {
             .into_iter()
             .map(|tensor| {
                 if let None = check_shape {
-                    check_shape = Some(tensor.node.lock().unwrap().value.shape.clone());
+                    check_shape = Some(tensor.node.read().unwrap().value.shape.clone());
                 } else {
-                    if check_shape.as_ref().unwrap() != &tensor.node.lock().unwrap().value.shape {
+                    if check_shape.as_ref().unwrap() != &tensor.node.read().unwrap().value.shape {
                         panic!("concat error: shape of tensors not same");
                     }
                 }

@@ -9,7 +9,7 @@ pub fn permute(x: &Tensor, order: Vec<usize>) -> Tensor {
 }
 
 pub fn d_permute(x: &NodeType, order: Vec<usize>, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
+    // let x = x.read().unwrap();
 
     let mut new_order = order.clone();
     for (i, d) in order.iter().enumerate() {
@@ -17,5 +17,5 @@ pub fn d_permute(x: &NodeType, order: Vec<usize>, grad: &Arrayy) {
     }
 
     let d_x = grad.permute(&new_order);
-    x.add_grad(d_x);
+    x.write().unwrap().add_grad(d_x);
 }

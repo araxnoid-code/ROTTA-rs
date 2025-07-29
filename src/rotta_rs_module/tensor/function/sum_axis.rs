@@ -12,7 +12,7 @@ pub fn sum_axis(x: &Tensor, d: &[i32]) -> Tensor {
     let array = x.value();
     let tensor = Tensor::from_arrayy(sum_axis_arr(&array, d));
     tensor.update_parent(vec![x.node.clone()]);
-    tensor.node.lock().unwrap().label = Some(
+    tensor.node.write().unwrap().label = Some(
         BackwardLabel::SumAxis(
             x.node.clone(),
             {
@@ -34,7 +34,7 @@ pub fn sum_axis_keep_dim(x: &Tensor, d: &[i32]) -> Tensor {
 
     let tensor = Tensor::from_arrayy(sum);
     tensor.update_parent(vec![x.node.clone()]);
-    tensor.node.lock().unwrap().label = Some(
+    tensor.node.write().unwrap().label = Some(
         BackwardLabel::SumAxis(x.node.clone(), d.to_vec(), true)
     );
 
@@ -42,11 +42,11 @@ pub fn sum_axis_keep_dim(x: &Tensor, d: &[i32]) -> Tensor {
 }
 
 pub fn d_sum_axis(x: &NodeType, d: &[i32], keep_dim: bool, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
+    let _x = x.read().unwrap();
 
-    if x.requires_grad {
+    if _x.requires_grad {
         if !keep_dim {
-            let ones = Arrayy::ones(x.value.shape.clone());
+            let ones = Arrayy::ones(_x.value.shape.clone());
             let mut new_shape = grad.shape.clone();
 
             for d in d {
@@ -54,12 +54,12 @@ pub fn d_sum_axis(x: &NodeType, d: &[i32], keep_dim: bool, grad: &Arrayy) {
             }
 
             let d = ones * to_shape_arr(grad, new_shape);
-            x.add_grad(d);
+            x.write().unwrap().add_grad(d);
         } else {
-            let ones = Arrayy::ones(x.value.shape.clone());
+            let ones = Arrayy::ones(_x.value.shape.clone());
             // println!("{}", grad);
             let d = ones * grad;
-            x.add_grad(d);
+            x.write().unwrap().add_grad(d);
         }
     }
 }

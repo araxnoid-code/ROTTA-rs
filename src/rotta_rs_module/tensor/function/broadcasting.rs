@@ -14,7 +14,7 @@ pub fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<u
 
     let tensor = Tensor::from_arrayy(arr);
     tensor.update_parent(vec![tensor_arr.node.clone()]);
-    tensor.node.lock().unwrap().label = Some(
+    tensor.node.write().unwrap().label = Some(
         BackwardLabel::Broadcasting(tensor_arr.node.clone(), tensor.value())
     );
 
@@ -22,12 +22,12 @@ pub fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<u
 }
 
 pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arrayy) {
-    // let mut tensor_arr = tensor_arr.lock().unwrap();
+    let _tensor_arr = tensor_arr.read().unwrap();
 
-    if tensor_arr.lock().unwrap().requires_grad {
+    if _tensor_arr.requires_grad {
         let broadcasted_shape = &broad_arr.shape;
 
-        let pre_shape = tensor_arr.lock().unwrap().value.shape.clone();
+        let pre_shape = _tensor_arr.value.shape.clone();
         let mut sum_list = vec![];
 
         let mut broad_rev = broadcasted_shape.clone();
@@ -53,6 +53,6 @@ pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arr
         }
 
         let d_arr = to_shape_arr(&sum, pre_shape);
-        tensor_arr.lock().unwrap().add_grad(d_arr);
+        tensor_arr.write().unwrap().add_grad(d_arr);
     }
 }

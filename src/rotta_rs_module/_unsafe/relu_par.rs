@@ -50,7 +50,7 @@ pub unsafe fn relu_par(x: &Tensor) -> Tensor {
 
     let tensor = Tensor::from_arrayy(output);
     tensor.update_parent(vec![x.node.clone()]);
-    tensor.node.lock().as_mut().unwrap().label = Some(BackwardLabel::Relu(x.node.clone()));
+    tensor.node.write().unwrap().label = Some(BackwardLabel::Relu(x.node.clone()));
 
     tensor
 }

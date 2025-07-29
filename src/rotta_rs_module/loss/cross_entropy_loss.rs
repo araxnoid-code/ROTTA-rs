@@ -37,7 +37,7 @@ impl CrossEntropyLoss {
 
         let tensor = Tensor::from_arrayy(loss_batch);
         tensor.update_parent(vec![prob_prediction.node.clone(), prob_actual.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::CEL(prob_prediction.node.clone(), prob_actual.node.clone())
         );
 
@@ -47,14 +47,14 @@ impl CrossEntropyLoss {
 
 pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) {
     let epsilon = 1e-9;
-    let mut prob_pred = prob_prediction.lock().unwrap();
-    let prob_actual = prob_actual.lock().unwrap();
+    let _prob_pred = prob_prediction.read().unwrap();
+    let prob_actual = prob_actual.read().unwrap();
 
-    if prob_pred.requires_grad {
-        let mut d_pred = prob_pred.grad.clone();
-        for batch in 0..prob_pred.value.shape[0] {
+    if _prob_pred.requires_grad {
+        let mut d_pred = _prob_pred.grad.clone();
+        for batch in 0.._prob_pred.value.shape[0] {
             let actual_class = prob_actual.value.index(vec![batch as i32]);
-            let pred_value = prob_pred.value.index(
+            let pred_value = _prob_pred.value.index(
                 vec![batch as i32, actual_class.value[0] as i32]
             );
 
@@ -62,6 +62,6 @@ pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) 
             d_pred.index_mut(vec![batch as i32, actual_class.value[0] as i32], d);
         }
 
-        prob_pred.add_grad(d_pred);
+        prob_prediction.write().unwrap().add_grad(d_pred);
     }
 }

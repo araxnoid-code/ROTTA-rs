@@ -33,14 +33,14 @@ impl Adam {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.lock().as_mut().unwrap().zero_grad();
+            node_type.write().unwrap().zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let mut node = node_type.lock().unwrap();
+            let node = node_type.read().unwrap();
             if let None = self.g.get(i) {
                 self.g.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
                 self.m.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
@@ -66,7 +66,7 @@ impl Adam {
             let gh_n = &g_n / (1.0 - self.hyperparameter_2.powi(self.i));
 
             let new = &node.value - (&self.lr / (gh_n.powf(0.5) + eps)) * mh_n;
-            node.update_value(new);
+            node_type.write().unwrap().update_value(new);
 
             self.g[i] = g_n;
             self.m[i] = m_n;

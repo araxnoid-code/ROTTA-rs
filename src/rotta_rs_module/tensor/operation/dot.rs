@@ -7,26 +7,24 @@ pub fn dot(a: &Tensor, b: &Tensor) -> Tensor {
 
     let tensor = Tensor::from_arrayy(output);
     tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-    tensor.node.lock().as_mut().unwrap().label = Some(
-        BackwardLabel::Dot(a.node.clone(), b.node.clone())
-    );
+    tensor.node.write().unwrap().label = Some(BackwardLabel::Dot(a.node.clone(), b.node.clone()));
 
     tensor
 }
 
 pub fn d_dot(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let mut a = a.lock().unwrap();
-    let mut b = b.lock().unwrap();
+    let _a = a.read().unwrap();
+    let _b = b.read().unwrap();
 
     // d/da = b * grad
-    if a.requires_grad {
-        let d_a = &b.value * grad;
-        a.add_grad(d_a);
+    if _a.requires_grad {
+        let d_a = &_b.value * grad;
+        a.write().unwrap().add_grad(d_a);
     }
 
     // db = a * grad
-    if b.requires_grad {
-        let d_b = &a.value * grad;
-        b.add_grad(d_b);
+    if _b.requires_grad {
+        let d_b = &_a.value * grad;
+        b.write().unwrap().add_grad(d_b);
     }
 }

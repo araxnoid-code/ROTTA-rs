@@ -2,8 +2,8 @@ use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
 
 // matmul
 pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
-    let tensor_a = a.node.lock().unwrap();
-    let tensor_b = b.node.lock().unwrap();
+    let tensor_a = a.node.read().unwrap();
+    let tensor_b = b.node.read().unwrap();
 
     // let output = if tensor_a.multithread {
     // tensor_a.value.par_matmul(&tensor_b.value)
@@ -14,7 +14,7 @@ pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
     let tensor = Tensor::from_arrayy(output);
 
     tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-    tensor.node.lock().as_mut().unwrap().label = Some(
+    tensor.node.write().unwrap().label = Some(
         BackwardLabel::Matmul(a.node.clone(), b.node.clone())
     );
 
@@ -22,19 +22,18 @@ pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_matmul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    // let mut a = a.lock().unwrap();
-
-    // let mut b = b.lock().unwrap();
+    let _a = a.read().unwrap();
+    let _b = b.read().unwrap();
 
     // da = grad * b^t
-    if a.lock().unwrap().requires_grad {
-        let d_a = grad.matmul(&b.lock().unwrap().value.t());
-        a.lock().unwrap().add_grad(d_a);
+    if _a.requires_grad {
+        let d_a = grad.matmul(&_b.value.t());
+        a.write().unwrap().add_grad(d_a);
     }
 
     // // db = a * grad
-    if b.lock().unwrap().requires_grad {
-        let d_b = a.lock().unwrap().value.t().matmul(grad);
-        b.lock().unwrap().add_grad(d_b);
+    if _b.requires_grad {
+        let d_b = _a.value.t().matmul(grad);
+        b.write().unwrap().add_grad(d_b);
     }
 }

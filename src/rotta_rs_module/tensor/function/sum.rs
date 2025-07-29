@@ -11,11 +11,11 @@ pub fn sum(x: &Tensor) -> Tensor {
 }
 
 pub fn d_sum(x: &NodeType, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
+    let _x = x.read().unwrap();
 
-    if x.requires_grad {
-        let d_x = Arrayy::ones(x.value.shape.clone()) * grad;
+    if _x.requires_grad {
+        let d_x = Arrayy::ones(_x.value.shape.clone()) * grad;
 
-        x.add_grad(d_x);
+        x.write().unwrap().add_grad(d_x);
     }
 }

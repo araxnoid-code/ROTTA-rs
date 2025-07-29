@@ -10,5 +10,5 @@ pub fn sign(x: &Tensor) -> Tensor {
 
 pub fn d_sign(x: &NodeType) {
     // dx = 0 * grad = 0
-    x.lock().unwrap().zero_grad();
+    x.write().unwrap().zero_grad();
 }

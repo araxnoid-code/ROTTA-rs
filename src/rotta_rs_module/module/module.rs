@@ -1,4 +1,4 @@
-use std::sync::{ Arc, Mutex };
+use std::sync::{ Arc, Mutex, RwLock };
 
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
@@ -28,7 +28,7 @@ impl Module {
     }
 
     // parameters
-    pub fn parameters(&self) -> Arc<Mutex<Vec<Arc<Mutex<crate::rotta_rs_module::Node>>>>> {
+    pub fn parameters(&self) -> Arc<Mutex<Vec<Arc<RwLock<crate::rotta_rs_module::Node>>>>> {
         self.parameters.clone()
     }
 

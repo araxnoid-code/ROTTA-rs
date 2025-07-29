@@ -25,14 +25,14 @@ impl SgdMomen {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.lock().as_mut().unwrap().zero_grad();
+            node_type.write().unwrap().zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let mut node = node_type.lock().unwrap();
+            let node = node_type.read().unwrap();
 
             // v initialization
             if let None = self.v.get(i) {
@@ -43,7 +43,7 @@ impl SgdMomen {
             // w = w -  v
             let v = self.g * &self.v[i] + &self.lr * &node.grad;
             let new = &node.value - &v;
-            node.update_value(new);
+            node_type.write().unwrap().update_value(new);
 
             // update v
             self.v[i] = v;

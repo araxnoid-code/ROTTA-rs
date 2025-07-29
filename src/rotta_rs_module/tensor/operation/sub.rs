@@ -20,7 +20,7 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
 
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Sub(a.node.clone(), b.node.clone())
         );
 
@@ -31,7 +31,7 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
 
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Sub(a.node.clone(), b.node.clone())
         );
 
@@ -46,7 +46,7 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
         let output = broadcast_a.value() - broadcast_b.value();
         let tensor = Tensor::from_arrayy(output);
         tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
+        tensor.node.write().unwrap().label = Some(
             BackwardLabel::Sub(broadcast_a.node.clone(), broadcast_b.node.clone())
         );
 
@@ -55,27 +55,29 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let mut a = a.lock().unwrap();
-    let mut b = b.lock().unwrap();
+    let _a = a.read().unwrap();
+    let _b = b.read().unwrap();
 
     // d/da = 1  * grad = grad
-    if a.requires_grad {
-        let d_a = if a.value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(a.value.shape.clone(), vec![grad.sum()])
+    if _a.requires_grad {
+        let d_a = if _a.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(_a.value.shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
-        a.add_grad(d_a);
+        a.write().unwrap().add_grad(d_a);
     }
 
     // db = -1 * grad = -grad
-    if b.requires_grad {
-        let d_b = if b.value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(b.value.shape.clone(), vec![grad.sum()])
+    if _b.requires_grad {
+        let d_b = if _b.value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(_b.value.shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
-        b.add_grad(-1.0 * d_b);
+        b.write()
+            .unwrap()
+            .add_grad(-1.0 * d_b);
         // println!("{}", b.grad);
     }
 }

@@ -11,22 +11,22 @@ pub fn relu(x: &Tensor) -> Tensor {
 
     let tensor = Tensor::from_arrayy(output);
     tensor.update_parent(vec![x.node.clone()]);
-    tensor.node.lock().as_mut().unwrap().label = Some(BackwardLabel::Relu(x.node.clone()));
+    tensor.node.write().unwrap().label = Some(BackwardLabel::Relu(x.node.clone()));
 
     tensor
 }
 
 #[allow(dead_code)]
 pub fn d_relu(x: &NodeType, grad: &Arrayy) {
-    let mut x_lock = x.lock().unwrap();
+    let _x_lock = x.read().unwrap();
 
     // f(x) = if x >= 0 1, if x < 0 0
-    if x_lock.requires_grad {
+    if _x_lock.requires_grad {
         let d_x =
-            x_lock.value.map(|x| {
+            _x_lock.value.map(|x| {
                 if *x >= 0.0 { 1.0 } else { 0.0 }
             }) * grad;
 
-        x_lock.add_grad(d_x);
+        x.write().unwrap().add_grad(d_x);
     }
 }
