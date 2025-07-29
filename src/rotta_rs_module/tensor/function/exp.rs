@@ -10,10 +10,10 @@ pub fn exp(x: &Tensor) -> Tensor {
 }
 
 pub fn d_exp(x: &NodeType, exp: &Arrayy, grad: &Arrayy) {
-    let _x = x.read().unwrap();
+    let mut _x = x.write().unwrap();
 
     if _x.requires_grad {
         let dx = exp * grad;
-        x.write().unwrap().add_grad(dx);
+        _x.add_grad(dx);
     }
 }

@@ -20,32 +20,7 @@ impl Backward {
 impl Tensor {
     pub fn backward(&self) {
         let node = self.node.clone();
-        // node.read().as_mut().unwrap().ones_grad();
         node.write().unwrap().ones_grad();
-
-        //
-        // let mut q = VecDeque::new();
-        // q.push_front(node.clone());
-        // let mut visited: HashSet<u128> = HashSet::new();
-        // let mut graph = vec![];
-
-        // while q.len() > 0 {
-        //     let _node = q.pop_back().unwrap();
-        //     let node = _node.lock().unwrap();
-        //     if node.requires_grad {
-        //         if let None = visited.get(&node.id) {
-        //             visited.insert(node.id);
-
-        //             for parent in &node.parent {
-        //                 q.push_back(parent.clone());
-        //             }
-
-        //             graph.push(_node.clone());
-        //         }
-        //     }
-        // }
-        // graph.reverse();
-        //
 
         let mut graph: Vec<NodeType> = vec![];
         let mut visited: HashSet<u128> = HashSet::new();

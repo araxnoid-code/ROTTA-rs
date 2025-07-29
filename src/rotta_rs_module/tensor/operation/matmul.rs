@@ -22,18 +22,34 @@ pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_matmul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let _a = a.read().unwrap();
-    let _b = b.read().unwrap();
+    let (d_a, d_b) = {
+        let mut _a = a.read().unwrap();
+        let mut _b = b.read().unwrap();
 
-    // da = grad * b^t
-    if _a.requires_grad {
-        let d_a = grad.matmul(&_b.value.t());
+        // da = grad * b^t
+        let d_a = if _a.requires_grad {
+            let d_a = grad.matmul(&_b.value.t());
+            Some(d_a)
+        } else {
+            None
+        };
+
+        // // db = a * grad
+        let d_b = if _b.requires_grad {
+            let d_b = _a.value.t().matmul(grad);
+            Some(d_b)
+        } else {
+            None
+        };
+
+        (d_a, d_b)
+    };
+
+    if let Some(d_a) = d_a {
         a.write().unwrap().add_grad(d_a);
     }
 
-    // // db = a * grad
-    if _b.requires_grad {
-        let d_b = _a.value.t().matmul(grad);
+    if let Some(d_b) = d_b {
         b.write().unwrap().add_grad(d_b);
     }
 }

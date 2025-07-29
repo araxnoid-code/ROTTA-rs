@@ -55,8 +55,8 @@ pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let _a = a.read().unwrap();
-    let _b = b.read().unwrap();
+    let mut _a = a.write().unwrap();
+    let mut _b = b.write().unwrap();
 
     // d/da = 1  * grad = grad
     if _a.requires_grad {
@@ -65,7 +65,7 @@ pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
         } else {
             grad.clone()
         };
-        a.write().unwrap().add_grad(d_a);
+        _a.add_grad(d_a);
     }
 
     // db = -1 * grad = -grad
@@ -75,9 +75,7 @@ pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
         } else {
             grad.clone()
         };
-        b.write()
-            .unwrap()
-            .add_grad(-1.0 * d_b);
+        _b.add_grad(-1.0 * d_b);
         // println!("{}", b.grad);
     }
 }

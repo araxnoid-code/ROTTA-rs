@@ -9,11 +9,11 @@ pub fn ln(x: &Tensor) -> Tensor {
 }
 
 pub fn d_ln(x: &NodeType, grad: &Arrayy) {
-    let _x = x.read().unwrap();
+    let mut _x = x.write().unwrap();
 
     // dx = 1/x
     if _x.requires_grad {
         let dx = (1.0 / &_x.value) * grad;
-        x.write().unwrap().add_grad(dx);
+        _x.add_grad(dx);
     }
 }

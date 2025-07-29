@@ -37,7 +37,7 @@ pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
     // }
 
     for (i, node) in nodes.iter().enumerate() {
-        let _node = node.read().unwrap();
+        let mut _node = node.write().unwrap();
 
         let shape = &_node.value.shape;
         let dim_len = shape[dim];
@@ -57,7 +57,7 @@ pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
             })
             .collect::<Vec<ArrSlice>>();
 
-        node.write().unwrap().add_grad(grad.slice(&slice));
+        _node.add_grad(grad.slice(&slice));
     }
 }
 

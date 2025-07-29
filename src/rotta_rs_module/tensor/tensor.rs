@@ -5,6 +5,7 @@ use rand::random;
 use crate::{
     rotta_rs_module::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, Node, NodeType },
     TensorRange,
+    TensorRef,
 };
 
 #[derive(Debug, Clone)]
@@ -133,6 +134,13 @@ impl Tensor {
     pub fn set_auto_zero_grad(&self, stat: bool) {
         self.node.write().unwrap().auto_zero_grad = stat;
     }
+
+    // tensor_ref
+    // pub fn get_tensor_ref(&self){
+    //     TensorRef{
+    //         value: &self.node.read().unwrap().value
+    //     }
+    // }
 }
 
 impl Display for Tensor {

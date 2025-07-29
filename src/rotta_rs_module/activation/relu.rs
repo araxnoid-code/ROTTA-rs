@@ -18,7 +18,7 @@ pub fn relu(x: &Tensor) -> Tensor {
 
 #[allow(dead_code)]
 pub fn d_relu(x: &NodeType, grad: &Arrayy) {
-    let _x_lock = x.read().unwrap();
+    let mut _x_lock = x.write().unwrap();
 
     // f(x) = if x >= 0 1, if x < 0 0
     if _x_lock.requires_grad {
@@ -27,6 +27,6 @@ pub fn d_relu(x: &NodeType, grad: &Arrayy) {
                 if *x >= 0.0 { 1.0 } else { 0.0 }
             }) * grad;
 
-        x.write().unwrap().add_grad(d_x);
+        _x_lock.add_grad(d_x);
     }
 }

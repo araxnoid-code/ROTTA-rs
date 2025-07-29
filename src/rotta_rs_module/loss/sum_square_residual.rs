@@ -24,18 +24,18 @@ impl SSResidual {
 }
 
 pub fn d_ssresidual(prediction: &NodeType, actual: &NodeType, grad: &Arrayy) {
-    let prediction_value = prediction.read().unwrap();
-    let actual_value = actual.read().unwrap();
+    let mut prediction_value = prediction.write().unwrap();
+    let mut actual_value = actual.write().unwrap();
 
     // df/dprediction = -2(actual - prediction) * grad
     if prediction_value.requires_grad {
         let d_predcition = -2.0 * (&actual_value.value - &prediction_value.value) * grad;
-        prediction.write().unwrap().add_grad(d_predcition);
+        prediction_value.add_grad(d_predcition);
     }
 
     // df/dactual = 2(actual - prediction) * grad
     if actual_value.requires_grad {
         let d_actual = 2.0 * (&actual_value.value - &prediction_value.value) * grad;
-        actual.write().unwrap().add_grad(d_actual);
+        actual_value.add_grad(d_actual);
     }
 }

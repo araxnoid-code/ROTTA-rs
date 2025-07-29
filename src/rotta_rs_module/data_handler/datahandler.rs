@@ -60,6 +60,7 @@ impl DataHandler {
     pub fn par_by_sample<F: CloneableFn>(&self, f: F) -> Tensor {
         let box_f = Box::new(f);
         let mut loss = Tensor::new([0.0]);
+        loss.set_requires_grad(false);
 
         let mut handles = vec![];
         for sample in &self.dataset {

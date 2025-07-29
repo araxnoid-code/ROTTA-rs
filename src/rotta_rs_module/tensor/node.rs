@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use uuid::Uuid;
 
 use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType };

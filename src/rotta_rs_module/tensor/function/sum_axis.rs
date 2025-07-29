@@ -42,7 +42,7 @@ pub fn sum_axis_keep_dim(x: &Tensor, d: &[i32]) -> Tensor {
 }
 
 pub fn d_sum_axis(x: &NodeType, d: &[i32], keep_dim: bool, grad: &Arrayy) {
-    let _x = x.read().unwrap();
+    let mut _x = x.write().unwrap();
 
     if _x.requires_grad {
         if !keep_dim {
@@ -54,12 +54,12 @@ pub fn d_sum_axis(x: &NodeType, d: &[i32], keep_dim: bool, grad: &Arrayy) {
             }
 
             let d = ones * to_shape_arr(grad, new_shape);
-            x.write().unwrap().add_grad(d);
+            _x.add_grad(d);
         } else {
             let ones = Arrayy::ones(_x.value.shape.clone());
             // println!("{}", grad);
             let d = ones * grad;
-            x.write().unwrap().add_grad(d);
+            _x.add_grad(d);
         }
     }
 }

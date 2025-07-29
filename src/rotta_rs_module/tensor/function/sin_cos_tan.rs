@@ -6,10 +6,10 @@ pub fn sin(x: &Tensor) -> Tensor {
 }
 
 pub fn d_sin(x: &NodeType, grad: &Arrayy) {
-    let _x = x.read().unwrap();
+    let mut _x = x.write().unwrap();
 
     let d = _x.value.cos() * grad;
-    x.write().unwrap().add_grad(d);
+    _x.add_grad(d);
 }
 
 // cos
@@ -18,10 +18,10 @@ pub fn cos(x: &Tensor) -> Tensor {
 }
 
 pub fn d_cos(x: &NodeType, grad: &Arrayy) {
-    let mut _x = x.read().unwrap();
+    let mut _x = x.write().unwrap();
 
     let d = -1.0 * _x.value.sin() * grad;
-    x.write().unwrap().add_grad(d);
+    _x.add_grad(d);
 }
 
 // tan
@@ -30,8 +30,8 @@ pub fn tan(x: &Tensor) -> Tensor {
 }
 
 pub fn d_tan(x: &NodeType, grad: &Arrayy) {
-    let _x = x.read().unwrap();
+    let mut _x = x.write().unwrap();
 
     let d = _x.value.tan().powi(2) * grad;
-    x.write().unwrap().add_grad(d);
+    _x.add_grad(d);
 }

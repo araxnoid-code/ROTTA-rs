@@ -56,8 +56,8 @@ pub fn mul(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_mul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let _a = a.read().unwrap();
-    let _b = b.read().unwrap();
+    let mut _a = a.write().unwrap();
+    let mut _b = b.write().unwrap();
 
     // da = b * grad
     if _a.requires_grad {
@@ -68,7 +68,7 @@ pub fn d_mul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
             let da = &_b.value * grad;
             da
         };
-        a.write().unwrap().add_grad(da);
+        _a.add_grad(da);
     }
 
     // db = a * grad
@@ -81,7 +81,7 @@ pub fn d_mul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
             db
         };
 
-        b.write().unwrap().add_grad(db);
+        _b.add_grad(db);
     }
 }
 

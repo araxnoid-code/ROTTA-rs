@@ -13,18 +13,18 @@ pub fn dot(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_dot(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let _a = a.read().unwrap();
-    let _b = b.read().unwrap();
+    let mut _a = a.write().unwrap();
+    let mut _b = b.write().unwrap();
 
     // d/da = b * grad
     if _a.requires_grad {
         let d_a = &_b.value * grad;
-        a.write().unwrap().add_grad(d_a);
+        _a.add_grad(d_a);
     }
 
     // db = a * grad
     if _b.requires_grad {
         let d_b = &_a.value * grad;
-        b.write().unwrap().add_grad(d_b);
+        _b.add_grad(d_b);
     }
 }

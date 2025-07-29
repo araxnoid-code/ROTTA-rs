@@ -55,8 +55,8 @@ pub fn divided(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let _a = a.read().unwrap();
-    let _b = b.read().unwrap();
+    let mut _a = a.write().unwrap();
+    let mut _b = b.write().unwrap();
 
     // da = 1/b
     if _a.requires_grad {
@@ -68,7 +68,7 @@ pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
             da
         };
 
-        a.write().unwrap().add_grad(da);
+        _a.add_grad(da);
     }
 
     // db = -a/b^2
@@ -81,7 +81,7 @@ pub fn d_divided(a: &NodeType, b: &NodeType, grad: &Arrayy) {
             let db = -1.0 * (&_a.value / &_b.value.powi(2)) * grad;
             db
         };
-        b.write().unwrap().add_grad(db);
+        _b.add_grad(db);
     }
 }
 

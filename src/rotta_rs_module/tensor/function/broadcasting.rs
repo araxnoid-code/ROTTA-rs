@@ -22,7 +22,7 @@ pub fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<u
 }
 
 pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arrayy) {
-    let _tensor_arr = tensor_arr.read().unwrap();
+    let mut _tensor_arr = tensor_arr.read().unwrap();
 
     if _tensor_arr.requires_grad {
         let broadcasted_shape = &broad_arr.shape;
@@ -53,6 +53,6 @@ pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arr
         }
 
         let d_arr = to_shape_arr(&sum, pre_shape);
-        tensor_arr.write().unwrap().add_grad(d_arr);
+        // _tensor_arr.add_grad(d_arr);
     }
 }
