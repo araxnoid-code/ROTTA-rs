@@ -71,50 +71,50 @@ fn main() {
 
     //
 
-    let mut model = Module::init();
-    let linear_1 = model.liniar_init(1, 2048);
-    let linear_2 = model.liniar_init(2048, 2048);
-    let linear_3 = model.liniar_init(2048, 1);
+    // let mut model = Module::init();
+    // let linear_1 = model.liniar_init(1, 2048);
+    // let linear_2 = model.liniar_init(2048, 2048);
+    // let linear_3 = model.liniar_init(2048, 1);
 
-    let loss_fn = MSE::init();
-    let mut optimazer = Adam::init(model.parameters(), 0.001);
+    // let loss_fn = MSE::init();
+    // let mut optimazer = Adam::init(model.parameters(), 0.001);
 
-    // arc
+    // // arc
 
-    let linear_1 = Arc::new(linear_1);
-    let linear_2 = Arc::new(linear_2);
-    let linear_3 = Arc::new(linear_3);
-    let loss_fn = Arc::new(loss_fn);
-    let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
-    for epoch in 0..1 {
-        optimazer.zero_grad();
+    // let linear_1 = Arc::new(linear_1);
+    // let linear_2 = Arc::new(linear_2);
+    // let linear_3 = Arc::new(linear_3);
+    // let loss_fn = Arc::new(loss_fn);
+    // let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
+    // for epoch in 0..1 {
+    //     optimazer.zero_grad();
 
-        let linear_1 = Arc::clone(&linear_1);
-        let linear_2 = Arc::clone(&linear_2);
-        let linear_3 = Arc::clone(&linear_3);
-        let loss_fn = Arc::clone(&loss_fn);
+    //     let linear_1 = Arc::clone(&linear_1);
+    //     let linear_2 = Arc::clone(&linear_2);
+    //     let linear_3 = Arc::clone(&linear_3);
+    //     let loss_fn = Arc::clone(&loss_fn);
 
-        let loss = data_handler.par_by_sample(move |(input, label)| {
-            input.set_requires_grad(false);
-            label.set_requires_grad(false);
+    //     let loss = data_handler.par_by_sample(move |(input, label)| {
+    //         input.set_requires_grad(false);
+    //         label.set_requires_grad(false);
 
-            let x = linear_1.forward(input);
-            let x = linear_2.forward(&x);
-            let x = linear_3.forward(&x);
-            let loss = loss_fn.forward(&x, label);
+    //         let x = linear_1.forward(input);
+    //         let x = linear_2.forward(&x);
+    //         let x = linear_3.forward(&x);
+    //         let loss = loss_fn.forward(&x, label);
 
-            loss.backward();
+    //         loss.backward();
 
-            loss
-        });
-        println!("epoch:{epoch} | loss => {}", loss);
+    //         loss
+    //     });
+    //     println!("epoch:{epoch} | loss => {}", loss);
 
-        // optimazer.optim();
-    }
+    //     // optimazer.optim();
+    // }
 
-    let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
+    // let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
-    println!("{}ms", tock - tick);
+    // println!("{}ms", tock - tick);
 
     // let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
@@ -139,4 +139,6 @@ fn main() {
     // let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
     // println!("{}ms", tock - tick);
+    // let a = Tensor::new([0.0]);
+    // a.index(idx)
 }

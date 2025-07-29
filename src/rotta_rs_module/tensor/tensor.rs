@@ -1,16 +1,20 @@
-use std::{ fmt::Display, ops::Range, sync::{ Arc, Mutex, RwLock } };
+use std::{ fmt::Display, sync::{ Arc, RwLock } };
 
 use rand::random;
+use uuid::Uuid;
 
-use crate::{
-    rotta_rs_module::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, Node, NodeType },
-    TensorRange,
-    TensorRef,
-};
+use crate::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel };
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Tensor {
-    pub node: NodeType,
+    pub id: u128,
+    pub value: Arc<RwLock<Arrayy>>,
+    pub grad: Arc<RwLock<Arrayy>>,
+    pub parent: Vec<Arc<RwLock<Tensor>>>,
+    pub label: Option<BackwardLabel>,
+    // requires
+    pub requires_grad: Arc<RwLock<bool>>,
+    pub auto_zero_grad: Arc<RwLock<bool>>,
 }
 
 impl Tensor {
@@ -18,70 +22,79 @@ impl Tensor {
     pub fn new<T: RecFlatten>(arr: T) -> Tensor {
         let (shape, vector) = arr.rec_flatten();
         let arr = Arrayy::from_vector(shape, vector);
-        let node = Arc::new(RwLock::new(Node::new(arr)));
 
         Tensor {
-            node,
+            id: Uuid::new_v4().as_u128(),
+            grad: Arc::new(RwLock::new(Arrayy::zeros(arr.shape.clone()))),
+            value: Arc::new(RwLock::new(arr)),
+            parent: Vec::new(),
+            label: None,
+            requires_grad: Arc::new(RwLock::new(true)),
+            auto_zero_grad: Arc::new(RwLock::new(true)),
         }
     }
 
     pub fn from_arrayy(array: Arrayy) -> Tensor {
-        let node = Node::new(array);
-        let node = Arc::new(RwLock::new(node));
-
-        let tensor = Tensor {
-            node,
-        };
-
-        tensor
+        Tensor {
+            id: Uuid::new_v4().as_u128(),
+            grad: Arc::new(RwLock::new(Arrayy::zeros(array.shape.clone()))),
+            value: Arc::new(RwLock::new(array)),
+            parent: Vec::new(),
+            label: None,
+            requires_grad: Arc::new(RwLock::new(true)),
+            auto_zero_grad: Arc::new(RwLock::new(true)),
+        }
     }
 
     pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Tensor {
         let array = Arrayy::from_vector(shape, vector);
 
-        let node = Node::new(array);
-        let node = Arc::new(RwLock::new(node));
-
-        let tensor = Tensor {
-            node,
-        };
-
-        tensor
+        Tensor {
+            id: Uuid::new_v4().as_u128(),
+            grad: Arc::new(RwLock::new(Arrayy::zeros(array.shape.clone()))),
+            value: Arc::new(RwLock::new(array)),
+            parent: Vec::new(),
+            label: None,
+            requires_grad: Arc::new(RwLock::new(true)),
+            auto_zero_grad: Arc::new(RwLock::new(true)),
+        }
     }
 
     pub fn from_element(shape: Vec<usize>, element: f64) -> Tensor {
         let array = Arrayy::arrayy_from_element(shape, element);
 
-        let node = Node::new(array);
-        let node = Arc::new(RwLock::new(node));
-
-        let tensor = Tensor {
-            node,
-        };
-
-        tensor
+        Tensor {
+            id: Uuid::new_v4().as_u128(),
+            grad: Arc::new(RwLock::new(Arrayy::zeros(array.shape.clone()))),
+            value: Arc::new(RwLock::new(array)),
+            parent: Vec::new(),
+            label: None,
+            requires_grad: Arc::new(RwLock::new(true)),
+            auto_zero_grad: Arc::new(RwLock::new(true)),
+        }
     }
 
     pub fn from_shape_fn<T: FnMut() -> f64>(shape: Vec<usize>, f: T) -> Tensor {
         let array = Arrayy::arrayy_from_shape_fn(shape, f);
 
-        let node = Node::new(array);
-        let node = Arc::new(RwLock::new(node));
-
-        let tensor = Tensor {
-            node,
-        };
-
-        tensor
+        Tensor {
+            id: Uuid::new_v4().as_u128(),
+            grad: Arc::new(RwLock::new(Arrayy::zeros(array.shape.clone()))),
+            value: Arc::new(RwLock::new(array)),
+            parent: Vec::new(),
+            label: None,
+            requires_grad: Arc::new(RwLock::new(true)),
+            auto_zero_grad: Arc::new(RwLock::new(true)),
+        }
     }
 
     pub fn rand(shape: Vec<usize>) -> Tensor {
         Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || random::<f64>()))
     }
 
-    pub fn arange(range: Range<usize>) -> TensorRange {
-        TensorRange::init(range)
-    }
+    // pub fn arange(range: Ra<usize>) -> TensorRange {
+    //     TensorRange::init(range)
+    // }
 
     pub fn zeros(shape: Vec<usize>) -> Tensor {
         Tensor::from_arrayy(Arrayy::zeros(shape))
@@ -90,62 +103,80 @@ impl Tensor {
     // get
     // value
     pub fn value(&self) -> Arrayy {
-        self.node.read().unwrap().value.clone()
+        self.value.read().unwrap().clone()
     }
 
     // requires gradient
     pub fn requires_grad(&self) -> bool {
-        self.node.read().unwrap().requires_grad
+        *self.requires_grad.read().unwrap()
     }
 
     // grad
     pub fn grad(&self) -> Arrayy {
-        self.node.read().unwrap().grad.clone()
+        self.grad.read().unwrap().clone()
     }
 
     // shape
     pub fn shape(&self) -> Vec<usize> {
-        self.node.read().unwrap().value.shape.clone()
+        self.value.read().unwrap().shape.clone()
     }
 
     // update
     // parent
-    pub fn update_parent(&self, parent: Vec<NodeType>) {
-        self.node.write().as_mut().unwrap().parent = parent;
+    pub fn update_parent(&mut self, parent: Vec<Arc<RwLock<Tensor>>>) {
+        self.parent = parent;
     }
 
     // label
-    pub fn update_label(&self, label: Option<BackwardLabel>) {
-        self.node.write().as_mut().unwrap().label = label;
+    pub fn update_label(&mut self, label: Option<BackwardLabel>) {
+        self.label = label;
     }
 
-    pub fn update_parent_label(&self, parent: Vec<NodeType>, label: Option<BackwardLabel>) {
-        let mut node = self.node.write().unwrap();
-        node.parent = parent;
-        node.label = label;
+    pub fn update_parent_label(
+        &mut self,
+        parent: Vec<Arc<RwLock<Tensor>>>,
+        label: Option<BackwardLabel>
+    ) {
+        self.update_parent(parent);
+        self.update_label(label);
+    }
+
+    pub fn zeros_grad(&self) {
+        let arr = Arrayy::zeros(self.shape());
+        *self.grad.write().unwrap() = arr;
+    }
+
+    pub fn ones_grad(&self) {
+        let arr = Arrayy::ones(self.shape());
+        *self.grad.write().unwrap() = arr;
     }
 
     // requires grad
     pub fn set_requires_grad(&self, stat: bool) {
-        self.node.write().unwrap().requires_grad = stat;
+        *self.requires_grad.write().unwrap() = stat;
     }
 
     // auto zero grad
     pub fn set_auto_zero_grad(&self, stat: bool) {
-        self.node.write().unwrap().auto_zero_grad = stat;
+        *self.auto_zero_grad.write().unwrap() = stat;
     }
 
-    // tensor_ref
-    // pub fn get_tensor_ref(&self){
-    //     TensorRef{
-    //         value: &self.node.read().unwrap().value
-    //     }
-    // }
+    pub fn add_grad(&mut self, grad: Arrayy) {
+        if self.requires_grad() {
+            let mut grad_tensor = self.grad.write().unwrap();
+            *grad_tensor = &*grad_tensor + grad;
+        }
+    }
+
+    // shared_tensor
+    pub fn shared_tensor(&self) -> Arc<Tensor> {
+        Arc::new(self.clone())
+    }
 }
 
 impl Display for Tensor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string = format!("{}", self.node.read().unwrap().value);
+        let string = format!("{}", self.value.read().unwrap());
         f.write_str(&string)
     }
 }

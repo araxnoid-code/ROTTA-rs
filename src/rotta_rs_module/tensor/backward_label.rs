@@ -1,40 +1,40 @@
-use crate::rotta_rs_module::{ arrayy::ArrSlice, arrayy::Arrayy, NodeType };
+use crate::{ rotta_rs_module::{ arrayy::{ ArrSlice, Arrayy } }, ShareTensor };
 
 #[derive(Debug, Clone)]
 pub enum BackwardLabel {
     // operation
-    Dot(NodeType, NodeType),
-    Matmul(NodeType, NodeType),
-    Add(NodeType, NodeType),
-    Diveded(NodeType, NodeType),
-    Mul(NodeType, NodeType),
-    Sub(NodeType, NodeType),
+    Dot(ShareTensor, ShareTensor),
+    Matmul(ShareTensor, ShareTensor),
+    Add(ShareTensor, ShareTensor),
+    Diveded(ShareTensor, ShareTensor),
+    Mul(ShareTensor, ShareTensor),
+    Sub(ShareTensor, ShareTensor),
 
     // mutation
-    Index(NodeType, Vec<i32>),
-    Broadcasting(NodeType, Arrayy),
-    SumAxis(NodeType, Vec<i32>, bool), // keep_dim
-    Sum(NodeType),
-    Permute(NodeType, Vec<usize>),
-    Slice(NodeType, Vec<ArrSlice>),
-    ToShape(NodeType, Vec<usize>),
-    Concat(Vec<NodeType>, usize),
+    Index(ShareTensor, Vec<i32>),
+    Broadcasting(ShareTensor, Arrayy),
+    SumAxis(ShareTensor, Vec<i32>, bool), // keep_dim
+    Sum(ShareTensor),
+    Permute(ShareTensor, Vec<usize>),
+    Slice(ShareTensor, Vec<ArrSlice>),
+    ToShape(ShareTensor, Vec<usize>),
+    Concat(Vec<ShareTensor>, usize),
 
     // method
-    Exp(NodeType, Arrayy),
-    Powi(NodeType, i32),
-    Powf(NodeType, f64),
-    Ln(NodeType),
-    Abs(NodeType),
-    Sign(NodeType),
-    Sin(NodeType),
-    Cos(NodeType),
-    Tan(NodeType),
+    Exp(ShareTensor, Arrayy),
+    Powi(ShareTensor, i32),
+    Powf(ShareTensor, f64),
+    Ln(ShareTensor),
+    Abs(ShareTensor),
+    Sign(ShareTensor),
+    Sin(ShareTensor),
+    Cos(ShareTensor),
+    Tan(ShareTensor),
 
     // activation
-    Relu(NodeType),
+    Relu(ShareTensor),
 
     // loss
-    SSResidual(NodeType, NodeType), // prediction, actual
-    CEL(NodeType, NodeType), // prediction, actual
+    SSResidual(ShareTensor, ShareTensor), // prediction, actual
+    CEL(ShareTensor, ShareTensor), // prediction, actual
 }

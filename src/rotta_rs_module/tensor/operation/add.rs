@@ -1,13 +1,14 @@
 use std::ops::Add;
 
-use crate::rotta_rs_module::{
-    arrayy::broadcast_concat,
-    broadcasting_tensor_non_panic,
-    arrayy::Arrayy,
-    BackwardLabel,
-    arrayy::MultipleSum,
-    NodeType,
-    Tensor,
+use crate::{
+    rotta_rs_module::{
+        arrayy::{ broadcast_concat, Arrayy, MultipleSum },
+        broadcasting_tensor_non_panic,
+        BackwardLabel,
+        NodeType,
+        Tensor,
+    },
+    ShareTensor,
 };
 
 // add
@@ -19,22 +20,18 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
         // skalar
         let output = a_arr + b_arr;
 
-        let tensor = Tensor::from_arrayy(output);
-        tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.write().unwrap().label = Some(
-            BackwardLabel::Add(a.node.clone(), b.node.clone())
-        );
+        let mut tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![a.shared_tensor(), b.shared_tensor()]);
+        tensor.update_label(Some(BackwardLabel::Add(a.shared_tensor(), b.shared_tensor())));
 
         tensor
     } else if a_arr.shape == b_arr.shape {
         // same shape
         let output = a_arr + b_arr;
 
-        let tensor = Tensor::from_arrayy(output);
-        tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.write().unwrap().label = Some(
-            BackwardLabel::Add(a.node.clone(), b.node.clone())
-        );
+        let mut tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![a.shared_tensor(), b.shared_tensor()]);
+        tensor.update_label(Some(BackwardLabel::Add(a.shared_tensor(), b.shared_tensor())));
 
         tensor
     } else {
@@ -45,34 +42,45 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
         let broadcast_b = broadcasting_tensor_non_panic(b, broadcast_shape);
 
         let output = broadcast_a.value() + broadcast_b.value();
-        let tensor = Tensor::from_arrayy(output);
-        tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
-        tensor.node.write().unwrap().label = Some(
-            BackwardLabel::Add(broadcast_a.node.clone(), broadcast_b.node.clone())
+        let mut tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![broadcast_a.shared_tensor(), broadcast_b.shared_tensor()]);
+        tensor.update_label(
+            Some(BackwardLabel::Add(broadcast_a.shared_tensor(), broadcast_b.shared_tensor()))
         );
 
         tensor
     }
 }
 
-pub fn d_add(a: &NodeType, b: &NodeType, grad: Arrayy) {
+pub fn d_add(a: &ShareTensor, b: &ShareTensor, grad: Arrayy) {
+    let a = a.read().unwrap();
+
     // f/da = 1 * grad = grad
-    let d_a = {
-        let mut _a = a.read().unwrap();
-        if _a.requires_grad {
-            let d_a = if _a.value.shape.multiple_sum() == 1 {
-                Arrayy::from_vector(_a.value.shape.clone(), vec![grad.sum()])
-            } else {
-                grad.clone()
-            };
-            Some(d_a)
+    if a.requires_grad() {
+        let d_a = if a.value().shape.multiple_sum() == 1 {
+            Arrayy::from_vector(a.value().shape.clone(), vec![grad.sum()])
         } else {
-            None
-        }
-    };
-    if let Some(d_a) = d_a {
-        a.write().unwrap().add_grad(d_a);
+            grad.clone()
+        };
+
+        a.add_grad(d_a);
     }
+    // let d_a = {
+    //     let mut _a = a.read().unwrap();
+    //     if _a.requires_grad {
+    //         let d_a = if _a.value.shape.multiple_sum() == 1 {
+    //             Arrayy::from_vector(_a.value.shape.clone(), vec![grad.sum()])
+    //         } else {
+    //             grad.clone()
+    //         };
+    //         Some(d_a)
+    //     } else {
+    //         None
+    //     }
+    // };
+    // if let Some(d_a) = d_a {
+    //     a.write().unwrap().add_grad(d_a);
+    // }
 
     // f/db = 1 * grad = grad
     let d_b = {
