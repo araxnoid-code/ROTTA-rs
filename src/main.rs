@@ -72,58 +72,69 @@ fn main() {
     //
 
     let mut model = Module::init();
-    let linear_1 = model.liniar_init(1, 64);
-    let linear_2 = model.liniar_init(64, 64);
-    let linear_3 = model.liniar_init(64, 1);
+    let linear_1 = model.liniar_init(1, 256);
+    let linear_2 = model.liniar_init(256, 256);
+    let linear_3 = model.liniar_init(256, 1);
 
     let loss_fn = MSE::init();
-    let mut optimazer = Adam::init(model.parameters(), 0.01);
+    let mut optimazer = Adam::init(model.parameters(), 0.001);
 
-    // // arc
+    // arc
 
     let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
-    for epoch in 0..100 {
+    for epoch in 0..250 {
         let linear_1 = linear_1.clone();
         let linear_2 = linear_2.clone();
         let linear_3 = linear_3.clone();
         let loss_fn = loss_fn.clone();
 
+        optimazer.zero_grad();
+
         let loss = data_handler.par_by_sample(move |(input, label)| {
+            input.set_requires_grad(false);
+            label.set_requires_grad(false);
+
             let x = linear_1.forward(input);
             let x = linear_2.forward(&x);
             let x = linear_3.forward(&x);
-
             let loss = loss_fn.forward(&x, label);
+
+            loss.backward();
+
             loss
         });
         println!("epoch:{epoch} | loss => {}", loss);
 
-        optimazer.zero_grad();
-
-        let backward = loss.backward();
-
-        optimazer.optim(backward);
+        optimazer.optim();
     }
 
     let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
     println!("{}ms", tock - tick);
 
+    // thread::spawn(move || {
+    //     data._ref.iter().for_each(|a| {});
+    // });
+
     // let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
 
-    // for epoch in 0..100 {
+    // input.set_requires_grad(false);
+    // label.set_requires_grad(false);
+
+    // for epoch in 0..250 {
     //     let x = linear_1.forward(&input);
     //     let x = linear_2.forward(&x);
+    //     let x = linear_3.forward(&x);
 
     //     let loss = loss_fn.forward(&x, &label);
     //     println!("epoch:{epoch} | loss => {}", loss);
 
     //     optimazer.zero_grad();
 
-    //     let backward = loss.backward();
+    //     loss.backward();
 
-    //     optimazer.optim(backward);
+    //     optimazer.optim();
     // }
 
     // let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();

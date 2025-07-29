@@ -59,7 +59,7 @@ impl DataHandler {
     // multithread
     pub fn par_by_sample<F: CloneableFn>(&self, f: F) -> Tensor {
         let box_f = Box::new(f);
-        let mut _loss = Tensor::new([0.0]);
+        let mut loss = Tensor::new([0.0]);
 
         let mut handles = vec![];
         for sample in &self.dataset {
@@ -73,11 +73,11 @@ impl DataHandler {
         }
 
         for handle in handles {
-            let loss = handle.join().unwrap();
-            _loss = &_loss + &loss;
+            let _loss = handle.join().unwrap();
+            loss = &loss + &_loss;
         }
 
-        _loss
+        &loss / 4.0
     }
 }
 

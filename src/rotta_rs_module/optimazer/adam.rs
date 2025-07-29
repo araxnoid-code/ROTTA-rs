@@ -38,7 +38,7 @@ impl Adam {
     }
 
     // optimazer
-    pub fn optim(&mut self, backward: Backward) {
+    pub fn optim(&mut self) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
             let mut node = node_type.lock().unwrap();
             if let None = self.g.get(i) {
@@ -74,9 +74,9 @@ impl Adam {
         self.i += 1;
 
         // auto_grad_zero
-        if self.auto_zero_grad_execute {
-            backward.zero_grad();
-        }
+        // if self.auto_zero_grad_execute {
+        //     backward.zero_grad();
+        // }
     }
 
     pub fn update_hyperparameter(&mut self, parameter_1: f64, parameter_2: f64) {

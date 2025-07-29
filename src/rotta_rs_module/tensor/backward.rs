@@ -18,7 +18,7 @@ impl Backward {
 }
 
 impl Tensor {
-    pub fn backward(&self) -> Backward {
+    pub fn backward(&self) {
         let node = self.node.clone();
         node.lock().as_mut().unwrap().ones_grad();
 
@@ -99,11 +99,11 @@ impl Tensor {
             }
         }
 
-        let backward = Backward {
-            map: Arc::new(Mutex::new(graph)),
-        };
+        // let backward = Backward {
+        //     map: Arc::new(Mutex::new(graph)),
+        // };
 
-        backward
+        // backward
     }
 }
 

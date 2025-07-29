@@ -56,27 +56,27 @@ pub fn add(a: &Tensor, b: &Tensor) -> Tensor {
 }
 
 pub fn d_add(a: &NodeType, b: &NodeType, grad: Arrayy) {
-    let mut a = a.lock().unwrap();
-    let mut b = b.lock().unwrap();
+    // let mut a = a.lock().unwrap();
+    // let mut b = b.lock().unwrap();
 
     // f/da = 1 * grad = grad
-    if a.requires_grad {
-        let d_a = if a.value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(a.value.shape.clone(), vec![grad.sum()])
+    if a.lock().unwrap().requires_grad {
+        let d_a = if a.lock().unwrap().value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(a.lock().unwrap().value.shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
-        a.add_grad(d_a);
+        a.lock().unwrap().add_grad(d_a);
     }
 
     // f/db = 1 * grad = grad
-    if b.requires_grad {
-        let d_b = if b.value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(b.value.shape.clone(), vec![grad.sum()])
+    if b.lock().unwrap().requires_grad {
+        let d_b = if b.lock().unwrap().value.shape.multiple_sum() == 1 {
+            Arrayy::from_vector(b.lock().unwrap().value.shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
-        b.add_grad(d_b);
+        b.lock().unwrap().add_grad(d_b);
     }
 }
 

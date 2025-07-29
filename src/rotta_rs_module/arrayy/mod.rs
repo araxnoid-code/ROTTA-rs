@@ -1,6 +1,9 @@
 mod array;
 pub use array::*;
 
+mod array_ref;
+pub use array_ref::*;
+
 mod operation;
 pub use operation::*;
 
