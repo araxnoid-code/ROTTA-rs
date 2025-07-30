@@ -4,7 +4,13 @@ use rand::{ seq::SliceRandom, SeedableRng };
 use rand_chacha::ChaCha8Rng;
 use rayon::iter::{ IntoParallelRefIterator, ParallelIterator };
 
-use crate::{ arrayy::ArrSlice, Dataset, Tensor };
+use crate::{
+    arrayy::ArrSlice,
+    rotta_rs_module::data_handler::dataset,
+    DataHandlerMultiThreadTrait,
+    Dataset,
+    Tensor,
+};
 
 pub struct DataHandler {
     rng: ChaCha8Rng,
@@ -58,30 +64,29 @@ impl DataHandler {
     }
 
     // multithread
-    pub fn par_by_sample<F: Fn(&(Tensor, Tensor)) + Send + Sync>(&self, f: F) -> Tensor {
-        // let box_f = Box::new(f);
-        let loss = Tensor::new([0.0]);
-        loss.set_requires_grad(false);
+    pub fn par_by_sample<
+        F: CloneableFn<M>,
+        M: DataHandlerMultiThreadTrait + Clone + 'static + Send + Sync
+    >(&self, model: M, f: F) -> (Tensor, M) {
+        let len = self.len();
+        let mut loss = Tensor::new([0.0]);
+        let model_arc = Arc::new(model.clone());
 
-        self.dataset.par_iter().for_each(f);
+        let mut handles = vec![];
+        for data in &self.dataset {
+            let f = f.clone_box();
+            let data = data.clone();
+            let model_arc = model_arc.clone();
 
-        // let mut handles = vec![];
-        // for sample in &self.dataset {
-        //     let sample_arc: Arc<Mutex<(Tensor, Tensor)>> = Arc::new(Mutex::new(sample.clone()));
+            let handle = thread::spawn(move || { f(&data, &*model_arc) });
+            handles.push(handle);
+        }
 
-        //     let f = box_f.clone_box();
-        //     let sample = sample_arc.clone();
-        //     let handle = thread::spawn(move || { f(&*sample.lock().unwrap()) });
-
-        //     handles.push(handle);
-        // }
-
-        // for handle in handles {
-        //     let _loss = handle.join().unwrap();
-        //     loss = &loss + &_loss;
-        // }
-
-        &loss / 2.0
+        for handle in handles {
+            let _loss = handle.join().unwrap();
+            loss = &loss + &_loss;
+        }
+        (&loss / (len as f64), model)
     }
 }
 
@@ -120,17 +125,23 @@ impl<'a> Iterator for &'a mut DataHandler {
 }
 
 //
-pub trait CloneableFn: FnOnce(&(Tensor, Tensor)) -> Tensor + 'static + Send {
-    fn clone_box(&self) -> Box<dyn CloneableFn>;
+pub trait CloneableFn<M>
+    : FnOnce(&(Tensor, Tensor), &M) -> Tensor + 'static + Send
+    where M: DataHandlerMultiThreadTrait + 'static
+{
+    fn clone_box(&self) -> Box<dyn CloneableFn<M>>;
 }
 
-impl<T: FnOnce(&(Tensor, Tensor)) -> Tensor + 'static + Send + Clone> CloneableFn for T {
-    fn clone_box(&self) -> Box<dyn CloneableFn> {
+impl<
+    M: DataHandlerMultiThreadTrait + 'static,
+    T: FnOnce(&(Tensor, Tensor), &M) -> Tensor + 'static + Send + Clone
+> CloneableFn<M> for T {
+    fn clone_box(&self) -> Box<dyn CloneableFn<M>> {
         Box::new(self.clone())
     }
 }
 
-impl Clone for Box<dyn CloneableFn> {
+impl<M: DataHandlerMultiThreadTrait + 'static> Clone for Box<dyn CloneableFn<M>> {
     fn clone(&self) -> Self {
         self.clone_box()
     }

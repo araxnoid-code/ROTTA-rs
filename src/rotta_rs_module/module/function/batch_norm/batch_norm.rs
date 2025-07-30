@@ -2,6 +2,7 @@ use std::sync::{ Arc, Mutex };
 
 use crate::{ Tensor, TrainEvalHandler };
 
+#[derive(Clone)]
 pub struct BatchNorm {
     pub gamma: Tensor,
     pub beta: Tensor,
@@ -13,7 +14,7 @@ pub struct BatchNorm {
 }
 
 impl BatchNorm {
-    pub fn forward(&mut self, x: &Tensor) -> Tensor {
+    pub fn forward(&self, x: &Tensor) -> Tensor {
         let shape = x.shape();
         if shape.len() <= 1 {
             panic!("error, BatchNorm input must have minimum have 2dimension");

@@ -1,5 +1,6 @@
 use std::sync::{ Arc, Mutex };
 
+use rand::{ random, SeedableRng };
 use rand_chacha::ChaCha8Rng;
 use rand_distr::{ Bernoulli, Distribution };
 
@@ -24,9 +25,10 @@ impl Dropout {
         }
     }
 
-    fn r(&mut self, shape: Vec<usize>) -> Tensor {
+    fn r(&self, shape: Vec<usize>) -> Tensor {
+        let mut rng = ChaCha8Rng::seed_from_u64(random());
         let arr = Arrayy::arrayy_from_shape_fn(shape, || {
-            let prob = self.bernoulli.sample(&mut self.rng);
+            let prob = self.bernoulli.sample(&mut rng);
             if prob {
                 0.0
             } else {

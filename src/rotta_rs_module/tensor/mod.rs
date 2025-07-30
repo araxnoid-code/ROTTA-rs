@@ -28,6 +28,3 @@ pub use tensor_collection::*;
 
 // mod tensor_2_method;
 // pub use tensor_2_method::*;
-
-mod function_2;
-pub use function_2::*;

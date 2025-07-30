@@ -12,7 +12,7 @@ pub struct LayerNorm {
 }
 
 impl LayerNorm {
-    pub fn forward(&mut self, x: &Tensor) -> Tensor {
+    pub fn forward(&self, x: &Tensor) -> Tensor {
         let shape = x.shape();
 
         if shape[1..] != self.gamma.shape() {
