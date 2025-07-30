@@ -197,9 +197,9 @@ fn main() {
 
             optimazer.zero_grad();
 
-            let backward = loss.backward();
+            loss.backward();
 
-            optimazer.optim(backward);
+            optimazer.optim();
         }
 
         println!("epoch:{epoch} | loss => {}", avg / (ask_tensors.len() as f64));
