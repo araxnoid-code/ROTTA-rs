@@ -18,7 +18,7 @@ impl Module {
             uniform.sample(&mut self.rng)
         });
         let mut parameters = self.parameters.lock().unwrap();
-        parameters.push(parameter.node.clone());
+        parameters.push(parameter.shared_tensor());
 
         Embedding {
             num_vocab: vocab_num,

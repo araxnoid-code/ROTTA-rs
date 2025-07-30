@@ -16,7 +16,7 @@ impl Module {
         });
 
         let tensor_weight = Tensor::from_arrayy(weight);
-        self.parameters.lock().unwrap().push(tensor_weight.node.clone());
+        self.parameters.lock().unwrap().push(tensor_weight.shared_tensor());
 
         // bias
         let bias = Arrayy::arrayy_from_shape_fn(vec![1, output], || {
@@ -28,7 +28,7 @@ impl Module {
         });
 
         let tensor_bias = Tensor::from_arrayy(bias);
-        self.parameters.lock().unwrap().push(tensor_bias.node.clone());
+        self.parameters.lock().unwrap().push(tensor_bias.shared_tensor());
 
         // linear cfg
         let linear_cfg = Linear {

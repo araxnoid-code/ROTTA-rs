@@ -3,14 +3,14 @@ use std::{ fmt::Display, sync::{ Arc, RwLock } };
 use rand::random;
 use uuid::Uuid;
 
-use crate::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel };
+use crate::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, ShareTensor };
 
 #[derive(Clone, Debug)]
 pub struct Tensor {
     pub id: u128,
     pub value: Arc<RwLock<Arrayy>>,
     pub grad: Arc<RwLock<Arrayy>>,
-    pub parent: Vec<Arc<RwLock<Tensor>>>,
+    pub parent: Vec<ShareTensor>,
     pub label: Option<BackwardLabel>,
     // requires
     pub requires_grad: Arc<RwLock<bool>>,
@@ -123,7 +123,7 @@ impl Tensor {
 
     // update
     // parent
-    pub fn update_parent(&mut self, parent: Vec<Arc<RwLock<Tensor>>>) {
+    pub fn update_parent(&mut self, parent: Vec<ShareTensor>) {
         self.parent = parent;
     }
 
@@ -132,16 +132,12 @@ impl Tensor {
         self.label = label;
     }
 
-    pub fn update_parent_label(
-        &mut self,
-        parent: Vec<Arc<RwLock<Tensor>>>,
-        label: Option<BackwardLabel>
-    ) {
+    pub fn update_parent_label(&mut self, parent: Vec<ShareTensor>, label: Option<BackwardLabel>) {
         self.update_parent(parent);
         self.update_label(label);
     }
 
-    pub fn zeros_grad(&self) {
+    pub fn zero_grad(&self) {
         let arr = Arrayy::zeros(self.shape());
         *self.grad.write().unwrap() = arr;
     }
@@ -161,11 +157,15 @@ impl Tensor {
         *self.auto_zero_grad.write().unwrap() = stat;
     }
 
-    pub fn add_grad(&mut self, grad: Arrayy) {
+    pub fn add_grad(&self, grad: Arrayy) {
         if self.requires_grad() {
             let mut grad_tensor = self.grad.write().unwrap();
             *grad_tensor = &*grad_tensor + grad;
         }
+    }
+
+    pub fn update_value(&self, value: Arrayy) {
+        *self.value.write().unwrap() = value;
     }
 
     // shared_tensor

@@ -16,10 +16,10 @@ impl Module {
         let mut shape = vec![1;input_dimension];
         shape[1] = channel_features;
         let gamma = Tensor::from_element(shape.clone(), 1.0);
-        parameters.push(gamma.node.clone());
+        parameters.push(gamma.shared_tensor());
 
         let beta = Tensor::from_element(shape.clone(), 0.0);
-        parameters.push(beta.node.clone());
+        parameters.push(beta.shared_tensor());
 
         let r_mean = Tensor::from_element(shape.clone(), 0.0);
         r_mean.set_requires_grad(false);

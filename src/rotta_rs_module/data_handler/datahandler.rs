@@ -2,6 +2,7 @@ use std::{ marker, sync::{ Arc, Mutex }, thread };
 
 use rand::{ seq::SliceRandom, SeedableRng };
 use rand_chacha::ChaCha8Rng;
+use rayon::iter::{ IntoParallelRefIterator, ParallelIterator };
 
 use crate::{ arrayy::ArrSlice, Dataset, Tensor };
 
@@ -57,28 +58,30 @@ impl DataHandler {
     }
 
     // multithread
-    pub fn par_by_sample<F: CloneableFn>(&self, f: F) -> Tensor {
-        let box_f = Box::new(f);
-        let mut loss = Tensor::new([0.0]);
+    pub fn par_by_sample<F: Fn(&(Tensor, Tensor)) + Send + Sync>(&self, f: F) -> Tensor {
+        // let box_f = Box::new(f);
+        let loss = Tensor::new([0.0]);
         loss.set_requires_grad(false);
 
-        let mut handles = vec![];
-        for sample in &self.dataset {
-            let sample_arc: Arc<Mutex<(Tensor, Tensor)>> = Arc::new(Mutex::new(sample.clone()));
+        self.dataset.par_iter().for_each(f);
 
-            let f = box_f.clone_box();
-            let sample = sample_arc.clone();
-            let handle = thread::spawn(move || { f(&*sample.lock().unwrap()) });
+        // let mut handles = vec![];
+        // for sample in &self.dataset {
+        //     let sample_arc: Arc<Mutex<(Tensor, Tensor)>> = Arc::new(Mutex::new(sample.clone()));
 
-            handles.push(handle);
-        }
+        //     let f = box_f.clone_box();
+        //     let sample = sample_arc.clone();
+        //     let handle = thread::spawn(move || { f(&*sample.lock().unwrap()) });
 
-        for handle in handles {
-            let _loss = handle.join().unwrap();
-            loss = &loss + &_loss;
-        }
+        //     handles.push(handle);
+        // }
 
-        &loss / 4.0
+        // for handle in handles {
+        //     let _loss = handle.join().unwrap();
+        //     loss = &loss + &_loss;
+        // }
+
+        &loss / 2.0
     }
 }
 

@@ -1,55 +1,25 @@
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 // matmul
 pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
-    let tensor_a = a.node.read().unwrap();
-    let tensor_b = b.node.read().unwrap();
+    let output = a.value.read().unwrap().matmul(&b.value.read().unwrap());
 
-    // let output = if tensor_a.multithread {
-    // tensor_a.value.par_matmul(&tensor_b.value)
-    // } else {
-    let output = tensor_a.value.matmul(&tensor_b.value);
-    // };
+    let mut tensor = Tensor::from_arrayy(output);
 
-    let tensor = Tensor::from_arrayy(output);
-
-    tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-    tensor.node.write().unwrap().label = Some(
-        BackwardLabel::Matmul(a.node.clone(), b.node.clone())
-    );
+    tensor.update_parent(vec![a.shared_tensor(), b.shared_tensor()]);
+    tensor.update_label(Some(BackwardLabel::Matmul(a.shared_tensor(), b.shared_tensor())));
 
     tensor
 }
 
-pub fn d_matmul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let (d_a, d_b) = {
-        let mut _a = a.read().unwrap();
-        let mut _b = b.read().unwrap();
-
-        // da = grad * b^t
-        let d_a = if _a.requires_grad {
-            let d_a = grad.matmul(&_b.value.t());
-            Some(d_a)
-        } else {
-            None
-        };
-
-        // // db = a * grad
-        let d_b = if _b.requires_grad {
-            let d_b = _a.value.t().matmul(grad);
-            Some(d_b)
-        } else {
-            None
-        };
-
-        (d_a, d_b)
-    };
-
-    if let Some(d_a) = d_a {
-        a.write().unwrap().add_grad(d_a);
+pub fn d_matmul(a: &ShareTensor, b: &ShareTensor, grad: &Arrayy) {
+    if a.requires_grad() {
+        let d_a = grad.matmul(&b.value.read().unwrap().t());
+        a.add_grad(d_a);
     }
 
-    if let Some(d_b) = d_b {
-        b.write().unwrap().add_grad(d_b);
+    if b.requires_grad() {
+        let d_b = a.value.read().unwrap().t().matmul(grad);
+        b.add_grad(d_b);
     }
 }

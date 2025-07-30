@@ -11,10 +11,10 @@ impl Module {
 
         let shape = layer_shape.to_vec();
         let gamma = Tensor::from_element(shape.clone(), 1.0);
-        parameters.push(gamma.node.clone());
+        parameters.push(gamma.shared_tensor());
 
         let beta = Tensor::from_element(shape.clone(), 0.0);
-        parameters.push(beta.node.clone());
+        parameters.push(beta.shared_tensor());
 
         let eval_status = Arc::new(Mutex::new(false));
         self.eval_handlers.push(eval_status.clone());

@@ -1,32 +1,33 @@
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
 
 #[allow(dead_code)]
 pub fn relu(x: &Tensor) -> Tensor {
     // f(x) = if x >= 0 x, if x < 0 0
-    let value = x.value();
+    let value = x.value.read().unwrap();
 
     let output = value.map(|x| {
         if *x >= 0.0 { *x } else { 0.0 }
     });
 
-    let tensor = Tensor::from_arrayy(output);
-    tensor.update_parent(vec![x.node.clone()]);
-    tensor.node.write().unwrap().label = Some(BackwardLabel::Relu(x.node.clone()));
+    let mut tensor = Tensor::from_arrayy(output);
+    tensor.update_parent(vec![x.shared_tensor()]);
+    tensor.update_label(Some(BackwardLabel::Relu(x.shared_tensor())));
 
     tensor
 }
 
 #[allow(dead_code)]
-pub fn d_relu(x: &NodeType, grad: &Arrayy) {
-    let mut _x_lock = x.write().unwrap();
-
+pub fn d_relu(x: &ShareTensor, grad: &Arrayy) {
     // f(x) = if x >= 0 1, if x < 0 0
-    if _x_lock.requires_grad {
+    if x.requires_grad() {
         let d_x =
-            _x_lock.value.map(|x| {
-                if *x >= 0.0 { 1.0 } else { 0.0 }
-            }) * grad;
+            x.value
+                .read()
+                .unwrap()
+                .map(|x| {
+                    if *x >= 0.0 { 1.0 } else { 0.0 }
+                }) * grad;
 
-        _x_lock.add_grad(d_x);
+        x.add_grad(d_x);
     }
 }

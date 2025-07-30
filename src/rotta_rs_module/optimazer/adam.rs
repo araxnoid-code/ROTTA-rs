@@ -1,9 +1,9 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType }, ShareTensor };
 
 pub struct Adam {
-    parameters: Arc<Mutex<Vec<NodeType>>>,
+    parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub lr: Arrayy,
     g: Vec<Arrayy>,
     m: Vec<Arrayy>,
@@ -15,7 +15,7 @@ pub struct Adam {
 }
 
 impl Adam {
-    pub fn init(parameters: Arc<Mutex<Vec<NodeType>>>, lr: f64) -> Adam {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> Adam {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         Adam {
             parameters,
@@ -33,17 +33,21 @@ impl Adam {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.write().unwrap().zero_grad();
+            node_type.zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let node = node_type.read().unwrap();
+            let node = node_type;
             if let None = self.g.get(i) {
-                self.g.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
-                self.m.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
+                self.g.push(
+                    Arrayy::arrayy_from_element(node.value.read().unwrap().shape.clone(), 0.0)
+                );
+                self.m.push(
+                    Arrayy::arrayy_from_element(node.value.read().unwrap().shape.clone(), 0.0)
+                );
             }
 
             // g_n = parameter_1 * g_n-1 + (1 - parameter_1) * grad(w_n)^2
@@ -57,16 +61,19 @@ impl Adam {
 
             let eps = self.eps;
             let grad = &node.grad;
-            let m_n = self.hyperparameter_1 * &self.m[i] + (1.0 - &self.hyperparameter_1) * grad;
+            let m_n =
+                self.hyperparameter_1 * &self.m[i] +
+                (1.0 - &self.hyperparameter_1) * &*grad.read().unwrap();
             let g_n =
-                self.hyperparameter_2 * &self.g[i] + (1.0 - &self.hyperparameter_2) * grad.powi(2);
+                self.hyperparameter_2 * &self.g[i] +
+                (1.0 - &self.hyperparameter_2) * grad.read().unwrap().powi(2);
 
             // bias correction
             let mh_n = &m_n / (1.0 - self.hyperparameter_1.powi(self.i));
             let gh_n = &g_n / (1.0 - self.hyperparameter_2.powi(self.i));
 
-            let new = &node.value - (&self.lr / (gh_n.powf(0.5) + eps)) * mh_n;
-            node_type.write().unwrap().update_value(new);
+            let new = &*node.value.read().unwrap() - (&self.lr / (gh_n.powf(0.5) + eps)) * mh_n;
+            node_type.update_value(new);
 
             self.g[i] = g_n;
             self.m[i] = m_n;

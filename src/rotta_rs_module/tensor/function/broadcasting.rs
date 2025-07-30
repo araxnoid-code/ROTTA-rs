@@ -1,33 +1,32 @@
-use crate::rotta_rs_module::{
-    arrayy::broadcasting,
-    arrayy::to_shape_arr,
-    arrayy::sum_axis_arr,
-    arrayy::Arrayy,
-    BackwardLabel,
-    NodeType,
-    Tensor,
+use crate::{
+    rotta_rs_module::{
+        arrayy::{ broadcasting, sum_axis_arr, to_shape_arr, Arrayy },
+        BackwardLabel,
+        Tensor,
+    },
+    ShareTensor,
 };
 
 // broadcasting_tensor
 pub fn broadcasting_tensor_non_panic(tensor_arr: &Tensor, broadcast_shape: Vec<usize>) -> Tensor {
-    let arr = broadcasting(&tensor_arr.value(), broadcast_shape);
+    let arr = broadcasting(&tensor_arr.value.read().unwrap(), broadcast_shape);
 
-    let tensor = Tensor::from_arrayy(arr);
-    tensor.update_parent(vec![tensor_arr.node.clone()]);
-    tensor.node.write().unwrap().label = Some(
-        BackwardLabel::Broadcasting(tensor_arr.node.clone(), tensor.value())
+    let mut tensor = Tensor::from_arrayy(arr);
+    tensor.update_parent(vec![tensor_arr.shared_tensor()]);
+    tensor.update_label(
+        Some(BackwardLabel::Broadcasting(tensor_arr.shared_tensor(), tensor.value()))
     );
 
     tensor
 }
 
-pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arrayy) {
-    let mut _tensor_arr = tensor_arr.read().unwrap();
+pub fn d_broadcasting_tensor(tensor_arr: &ShareTensor, broad_arr: Arrayy, grad: &Arrayy) {
+    // let mut _tensor_arr = tensor_arr.read().unwrap();
 
-    if _tensor_arr.requires_grad {
+    if tensor_arr.requires_grad() {
         let broadcasted_shape = &broad_arr.shape;
 
-        let pre_shape = _tensor_arr.value.shape.clone();
+        let pre_shape = tensor_arr.value.read().unwrap().shape.clone();
         let mut sum_list = vec![];
 
         let mut broad_rev = broadcasted_shape.clone();
@@ -46,13 +45,13 @@ pub fn d_broadcasting_tensor(tensor_arr: &NodeType, broad_arr: Arrayy, grad: Arr
             }
         }
 
-        let mut sum = grad;
+        let mut sum = grad.clone();
 
         for sum_d in sum_list {
             sum = sum_axis_arr(&sum, &[sum_d as i32]);
         }
 
         let d_arr = to_shape_arr(&sum, pre_shape);
-        // _tensor_arr.add_grad(d_arr);
+        tensor_arr.add_grad(d_arr);
     }
 }
