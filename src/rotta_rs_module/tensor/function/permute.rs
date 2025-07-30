@@ -1,15 +1,15 @@
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
 
 pub fn permute(x: &Tensor, order: Vec<usize>) -> Tensor {
-    let tensor = Tensor::from_arrayy(x.value().permute(&order));
-    tensor.update_parent(vec![x.node.clone()]);
-    tensor.update_label(Some(BackwardLabel::Permute(x.node.clone(), order)));
+    let mut tensor = Tensor::from_arrayy(x.value.read().unwrap().permute(&order));
+    tensor.update_parent(vec![x.shared_tensor()]);
+    tensor.update_label(Some(BackwardLabel::Permute(x.shared_tensor(), order)));
 
     tensor
 }
 
-pub fn d_permute(x: &NodeType, order: Vec<usize>, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
+pub fn d_permute(x: &ShareTensor, order: Vec<usize>, grad: &Arrayy) {
+    // let x = x.read().unwrap();
 
     let mut new_order = order.clone();
     for (i, d) in order.iter().enumerate() {

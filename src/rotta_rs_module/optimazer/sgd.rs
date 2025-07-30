@@ -21,17 +21,16 @@ impl Sgd {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.lock().as_mut().unwrap().zero_grad();
+            node_type.write().unwrap().zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&self, backward: Backward) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            let mut node = node_type.lock();
-            let node_mutex = node.as_mut().unwrap();
+            let node_mutex = node_type.write().unwrap();
             let new = &node_mutex.value - &self.lr * &node_mutex.grad;
-            node_mutex.update_value(new);
+            node_type.write().unwrap().update_value(new);
         }
 
         // auto_grad_zero

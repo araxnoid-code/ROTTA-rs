@@ -17,28 +17,28 @@ impl Module {
         let w_r = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
-        self.parameters.lock().unwrap().push(w_r.node.clone());
+        self.parameters.lock().unwrap().push(w_r.shared_tensor());
 
         let b_r = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
-        self.parameters.lock().unwrap().push(b_r.node.clone());
+        self.parameters.lock().unwrap().push(b_r.shared_tensor());
 
         // update parameters
         let w_u = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
-        self.parameters.lock().unwrap().push(w_u.node.clone());
+        self.parameters.lock().unwrap().push(w_u.shared_tensor());
 
         let b_u = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
-        self.parameters.lock().unwrap().push(b_u.node.clone());
+        self.parameters.lock().unwrap().push(b_u.shared_tensor());
 
         // candidate parameters
         let w_c = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
-        self.parameters.lock().unwrap().push(w_c.node.clone());
+        self.parameters.lock().unwrap().push(w_c.shared_tensor());
 
         let b_c = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
-        self.parameters.lock().unwrap().push(b_c.node.clone());
+        self.parameters.lock().unwrap().push(b_c.shared_tensor());
 
         Gru {
             b_c,

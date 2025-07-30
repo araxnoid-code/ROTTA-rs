@@ -1,18 +1,16 @@
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
 
 pub fn exp(x: &Tensor) -> Tensor {
-    let exp_arr = x.value().exp();
-    let tensor = Tensor::from_arrayy(exp_arr.clone());
-    tensor.update_parent(vec![x.node.clone()]);
-    tensor.node.lock().unwrap().label = Some(BackwardLabel::Exp(x.node.clone(), exp_arr));
+    let exp_arr = x.value.read().unwrap().exp();
+    let mut tensor = Tensor::from_arrayy(exp_arr.clone());
+    tensor.update_parent(vec![x.shared_tensor()]);
+    tensor.update_label(Some(BackwardLabel::Exp(x.shared_tensor(), exp_arr)));
 
     tensor
 }
 
-pub fn d_exp(x: &NodeType, exp: &Arrayy, grad: &Arrayy) {
-    let mut x = x.lock().unwrap();
-
-    if x.requires_grad {
+pub fn d_exp(x: &ShareTensor, exp: &Arrayy, grad: &Arrayy) {
+    if x.requires_grad() {
         let dx = exp * grad;
         x.add_grad(dx);
     }

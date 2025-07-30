@@ -27,14 +27,14 @@ impl RMSprop {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.lock().as_mut().unwrap().zero_grad();
+            node_type.write().unwrap().zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let mut node = node_type.lock().unwrap();
+            let node = node_type.read().unwrap();
             if let None = self.g.get(i) {
                 self.g.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
             }
@@ -46,7 +46,7 @@ impl RMSprop {
             let grad = &node.grad;
             let g_n = &self.g[i] * self.hyperparameter + (1.0 - self.hyperparameter) * grad.powi(2);
             let new = &node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;
-            node.update_value(new);
+            node_type.write().unwrap().update_value(new);
 
             self.g[i] = g_n;
         }

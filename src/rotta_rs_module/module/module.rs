@@ -1,12 +1,12 @@
-use std::sync::{ Arc, Mutex };
+use std::sync::{ Arc, Mutex, RwLock };
 
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
-use crate::rotta_rs_module::{ NodeType, WeightInitialization };
+use crate::{ rotta_rs_module::{ WeightInitialization }, ShareTensor };
 
 pub struct Module {
-    pub parameters: Arc<Mutex<Vec<NodeType>>>,
+    pub parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub initialization: WeightInitialization,
     pub eval_handlers: Vec<Arc<Mutex<bool>>>,
 
@@ -28,7 +28,7 @@ impl Module {
     }
 
     // parameters
-    pub fn parameters(&self) -> Arc<Mutex<Vec<Arc<Mutex<crate::rotta_rs_module::Node>>>>> {
+    pub fn parameters(&self) -> Arc<Mutex<Vec<ShareTensor>>> {
         self.parameters.clone()
     }
 

@@ -1,40 +1,25 @@
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 // matmul
 pub fn matmul(a: &Tensor, b: &Tensor) -> Tensor {
-    let tensor_a = a.node.lock().unwrap();
-    let tensor_b = b.node.lock().unwrap();
+    let output = a.value.read().unwrap().matmul(&b.value.read().unwrap());
 
-    // let output = if tensor_a.multithread {
-    // tensor_a.value.par_matmul(&tensor_b.value)
-    // } else {
-    let output = tensor_a.value.matmul(&tensor_b.value);
-    // };
+    let mut tensor = Tensor::from_arrayy(output);
 
-    let tensor = Tensor::from_arrayy(output);
-
-    tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-    tensor.node.lock().as_mut().unwrap().label = Some(
-        BackwardLabel::Matmul(a.node.clone(), b.node.clone())
-    );
+    tensor.update_parent(vec![a.shared_tensor(), b.shared_tensor()]);
+    tensor.update_label(Some(BackwardLabel::Matmul(a.shared_tensor(), b.shared_tensor())));
 
     tensor
 }
 
-pub fn d_matmul(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    // let mut a = a.lock().unwrap();
-
-    // let mut b = b.lock().unwrap();
-
-    // da = grad * b^t
-    if a.lock().unwrap().requires_grad {
-        let d_a = grad.matmul(&b.lock().unwrap().value.t());
-        a.lock().unwrap().add_grad(d_a);
+pub fn d_matmul(a: &ShareTensor, b: &ShareTensor, grad: &Arrayy) {
+    if a.requires_grad() {
+        let d_a = grad.matmul(&b.value.read().unwrap().t());
+        a.add_grad(d_a);
     }
 
-    // // db = a * grad
-    if b.lock().unwrap().requires_grad {
-        let d_b = a.lock().unwrap().value.t().matmul(grad);
-        b.lock().unwrap().add_grad(d_b);
+    if b.requires_grad() {
+        let d_b = a.value.read().unwrap().t().matmul(grad);
+        b.add_grad(d_b);
     }
 }

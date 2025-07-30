@@ -1,67 +1,61 @@
 use std::ops::Sub;
 
-use crate::rotta_rs_module::{
-    arrayy::broadcast_concat,
-    broadcasting_tensor_non_panic,
-    arrayy::Arrayy,
-    BackwardLabel,
-    arrayy::MultipleSum,
-    NodeType,
-    Tensor,
+use crate::{
+    rotta_rs_module::{
+        arrayy::{ broadcast_concat, Arrayy, MultipleSum },
+        broadcasting_tensor_non_panic,
+        BackwardLabel,
+        NodeType,
+        Tensor,
+    },
+    ShareTensor,
 };
 
 pub fn sub(a: &Tensor, b: &Tensor) -> Tensor {
-    let a_arr = a.value();
-    let b_arr = b.value();
+    let a_arr = &*a.value.read().unwrap();
+    let b_arr = &*b.value.read().unwrap();
 
     if a_arr.shape.multiple_sum() == 1 || b_arr.shape.multiple_sum() == 1 {
         // skalar
         let output = a_arr - b_arr;
 
-        let tensor = Tensor::from_arrayy(output);
-        tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::Sub(a.node.clone(), b.node.clone())
-        );
+        let mut tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![a.shared_tensor(), b.shared_tensor()]);
+        tensor.update_label(Some(BackwardLabel::Sub(a.shared_tensor(), b.shared_tensor())));
 
         tensor
     } else if a_arr.shape == b_arr.shape {
         // same shape
         let output = a_arr - b_arr;
 
-        let tensor = Tensor::from_arrayy(output);
-        tensor.update_parent(vec![a.node.clone(), b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::Sub(a.node.clone(), b.node.clone())
-        );
+        let mut tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![a.shared_tensor(), b.shared_tensor()]);
+        tensor.update_label(Some(BackwardLabel::Sub(a.shared_tensor(), b.shared_tensor())));
 
         tensor
     } else {
         // broadcasting
-        let broadcast_shape = broadcast_concat(&a.value(), &b.value());
+        let broadcast_shape = broadcast_concat(&a.value.read().unwrap(), &b.value.read().unwrap());
 
         let broadcast_a = broadcasting_tensor_non_panic(a, broadcast_shape.clone());
         let broadcast_b = broadcasting_tensor_non_panic(b, broadcast_shape);
 
-        let output = broadcast_a.value() - broadcast_b.value();
-        let tensor = Tensor::from_arrayy(output);
-        tensor.update_parent(vec![broadcast_a.node.clone(), broadcast_b.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::Sub(broadcast_a.node.clone(), broadcast_b.node.clone())
+        let output = &*broadcast_a.value.read().unwrap() - &*broadcast_b.value.read().unwrap();
+        let mut tensor = Tensor::from_arrayy(output);
+        tensor.update_parent(vec![broadcast_a.shared_tensor(), broadcast_b.shared_tensor()]);
+        tensor.update_label(
+            Some(BackwardLabel::Sub(broadcast_a.shared_tensor(), broadcast_b.shared_tensor()))
         );
 
         tensor
     }
 }
 
-pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
-    let mut a = a.lock().unwrap();
-    let mut b = b.lock().unwrap();
-
+pub fn d_sub(a: &ShareTensor, b: &ShareTensor, grad: &Arrayy) {
     // d/da = 1  * grad = grad
-    if a.requires_grad {
-        let d_a = if a.value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(a.value.shape.clone(), vec![grad.sum()])
+    if a.requires_grad() {
+        let d_a = if a.value.read().unwrap().shape.multiple_sum() == 1 {
+            Arrayy::from_vector(a.value.read().unwrap().shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
@@ -69,14 +63,13 @@ pub fn d_sub(a: &NodeType, b: &NodeType, grad: &Arrayy) {
     }
 
     // db = -1 * grad = -grad
-    if b.requires_grad {
-        let d_b = if b.value.shape.multiple_sum() == 1 {
-            Arrayy::from_vector(b.value.shape.clone(), vec![grad.sum()])
+    if b.requires_grad() {
+        let d_b = if b.value.read().unwrap().shape.multiple_sum() == 1 {
+            Arrayy::from_vector(b.value.read().unwrap().shape.clone(), vec![grad.sum()])
         } else {
             grad.clone()
         };
         b.add_grad(-1.0 * d_b);
-        // println!("{}", b.grad);
     }
 }
 

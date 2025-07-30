@@ -1,4 +1,4 @@
-use crate::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, BackwardLabel, NodeType, Tensor };
+use crate::{ arrayy::{ concat_arr, ArrSlice, Arrayy }, BackwardLabel, ShareTensor, Tensor };
 
 pub fn concat(tensors: Vec<&Tensor>, dim: i32) -> Tensor {
     let mut check_shape = None;
@@ -14,31 +14,32 @@ pub fn concat(tensors: Vec<&Tensor>, dim: i32) -> Tensor {
         .into_iter()
         .map(|tensor| {
             if let None = check_shape {
-                check_shape = Some(tensor.node.lock().unwrap().value.shape.clone());
+                check_shape = Some(tensor.value.read().unwrap().shape.clone());
             } else {
-                if check_shape.as_ref().unwrap() != &tensor.node.lock().unwrap().value.shape {
+                if check_shape.as_ref().unwrap() != &tensor.value.read().unwrap().shape {
                     panic!("concat error: shape of tensors not same");
                 }
             }
 
-            nodes.push(tensor.node.clone());
+            nodes.push(tensor.shared_tensor());
             tensor.value()
         })
         .collect::<Vec<Arrayy>>();
 
-    let tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
+    let mut tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
     tensor.update_parent_label(nodes.clone(), Some(BackwardLabel::Concat(nodes, dim)));
     tensor
 }
 
-pub fn d_concat(nodes: Vec<NodeType>, dim: usize, grad: &Arrayy) {
+pub fn d_concat(nodes: Vec<ShareTensor>, dim: usize, grad: &Arrayy) {
     // for i in &nodes {
     //     println!("{}", i.lock().unwrap().value);
     // }
 
     for (i, node) in nodes.iter().enumerate() {
-        let mut node = node.lock().unwrap();
-        let shape = &node.value.shape;
+        // let mut _node = node.write().unwrap();
+
+        let shape = &node.value.read().unwrap().shape;
         let dim_len = shape[dim];
 
         let slice = shape[..dim + 1]
@@ -81,19 +82,19 @@ impl ConcatTensors for Vec<Tensor> {
             .into_iter()
             .map(|tensor| {
                 if let None = check_shape {
-                    check_shape = Some(tensor.node.lock().unwrap().value.shape.clone());
+                    check_shape = Some(tensor.value.read().unwrap().shape.clone());
                 } else {
-                    if check_shape.as_ref().unwrap() != &tensor.node.lock().unwrap().value.shape {
+                    if check_shape.as_ref().unwrap() != &tensor.value.read().unwrap().shape {
                         panic!("concat error: shape of tensors not same");
                     }
                 }
 
-                nodes.push(tensor.node.clone());
+                nodes.push(tensor.shared_tensor());
                 tensor.value()
             })
             .collect::<Vec<Arrayy>>();
 
-        let tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
+        let mut tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
         tensor.update_parent_label(nodes.clone(), Some(BackwardLabel::Concat(nodes, dim)));
         tensor
     }
@@ -115,19 +116,19 @@ impl ConcatTensors for Vec<&Tensor> {
             .into_iter()
             .map(|tensor| {
                 if let None = check_shape {
-                    check_shape = Some(tensor.node.lock().unwrap().value.shape.clone());
+                    check_shape = Some(tensor.value.read().unwrap().shape.clone());
                 } else {
-                    if check_shape.as_ref().unwrap() != &tensor.node.lock().unwrap().value.shape {
+                    if check_shape.as_ref().unwrap() != &tensor.value.read().unwrap().shape {
                         panic!("concat error: shape of tensors not same");
                     }
                 }
 
-                nodes.push(tensor.node.clone());
+                nodes.push(tensor.shared_tensor());
                 tensor.value()
             })
             .collect::<Vec<Arrayy>>();
 
-        let tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
+        let mut tensor = Tensor::from_arrayy(concat_arr(arrayys, dim as i32));
         tensor.update_parent_label(nodes.clone(), Some(BackwardLabel::Concat(nodes, dim)));
         tensor
     }

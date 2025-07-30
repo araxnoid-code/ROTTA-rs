@@ -1,4 +1,4 @@
-use crate::rotta_rs_module::{ arrayy::{ Arrayy }, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
 
 pub struct CrossEntropyLoss {}
 
@@ -20,8 +20,8 @@ impl CrossEntropyLoss {
             );
         }
 
-        let pred_arr = prob_prediction.value();
-        let actual_arr = prob_actual.value();
+        let pred_arr = &*prob_prediction.value.read().unwrap();
+        let actual_arr = &*prob_actual.value.read().unwrap();
 
         // prob_actual * log(1/prob_prediction)
         let mut loss_batch = Arrayy::new([0.0]);
@@ -35,33 +35,40 @@ impl CrossEntropyLoss {
             loss_batch = loss_batch + loss;
         }
 
-        let tensor = Tensor::from_arrayy(loss_batch);
-        tensor.update_parent(vec![prob_prediction.node.clone(), prob_actual.node.clone()]);
-        tensor.node.lock().as_mut().unwrap().label = Some(
-            BackwardLabel::CEL(prob_prediction.node.clone(), prob_actual.node.clone())
+        let mut tensor = Tensor::from_arrayy(loss_batch);
+        tensor.update_parent(vec![prob_prediction.shared_tensor(), prob_actual.shared_tensor()]);
+        tensor.update_label(
+            Some(BackwardLabel::CEL(prob_prediction.shared_tensor(), prob_actual.shared_tensor()))
         );
 
         tensor
     }
 }
 
-pub fn d_cel(prob_prediction: &NodeType, prob_actual: &NodeType, grad: &Arrayy) {
+pub fn d_cel(prob_prediction: &ShareTensor, prob_actual: &ShareTensor, grad: &Arrayy) {
     let epsilon = 1e-9;
-    let mut prob_pred = prob_prediction.lock().unwrap();
-    let prob_actual = prob_actual.lock().unwrap();
+    // let mut _prob_pred = prob_prediction.write().unwrap();
+    // let prob_actual = prob_actual.write().unwrap();
 
-    if prob_pred.requires_grad {
-        let mut d_pred = prob_pred.grad.clone();
-        for batch in 0..prob_pred.value.shape[0] {
-            let actual_class = prob_actual.value.index(vec![batch as i32]);
-            let pred_value = prob_pred.value.index(
-                vec![batch as i32, actual_class.value[0] as i32]
-            );
+    if prob_prediction.requires_grad() {
+        for batch in 0..prob_prediction.value.read().unwrap().shape[0] {
+            let actual_class = prob_actual.value
+                .read()
+                .unwrap()
+                .index(vec![batch as i32]);
+            let pred_value = prob_prediction.value
+                .read()
+                .unwrap()
+                .index(vec![batch as i32, actual_class.value[0] as i32]);
 
             let d = -1.0 * (1.0 / (pred_value + epsilon)) * grad.index(vec![0]);
-            d_pred.index_mut(vec![batch as i32, actual_class.value[0] as i32], d);
+            // let mut d_pred = &mut *prob_prediction.grad.write().unwrap();
+            prob_prediction.grad
+                .write()
+                .unwrap()
+                .index_mut(vec![batch as i32, actual_class.value[0] as i32], d);
         }
 
-        prob_pred.add_grad(d_pred);
+        // prob_prediction.add_grad(d_pred);
     }
 }

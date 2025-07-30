@@ -1,4 +1,4 @@
-use crate::rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
 
 pub struct SSResidual {}
 
@@ -9,33 +9,34 @@ impl SSResidual {
 
     pub fn forward(&self, prediction: &Tensor, actual: &Tensor) -> Tensor {
         // f = sum((actual - prediction)^2)
-        let prediction_value = prediction.value();
-        let actual_value = actual.value();
+        let prediction_value = &*prediction.value.read().unwrap();
+        let actual_value = &*actual.value.read().unwrap();
 
         let output = (actual_value - prediction_value).powi(2).sum();
-        let tensor = Tensor::from_vector(vec![1], vec![output]);
-        tensor.update_parent(vec![prediction.node.clone(), actual.node.clone()]);
-        tensor.node.lock().unwrap().label = Some(
-            BackwardLabel::SSResidual(prediction.node.clone(), actual.node.clone())
+        let mut tensor = Tensor::from_vector(vec![1], vec![output]);
+        tensor.update_parent(vec![prediction.shared_tensor(), actual.shared_tensor()]);
+        tensor.update_label(
+            Some(BackwardLabel::SSResidual(prediction.shared_tensor(), actual.shared_tensor()))
         );
-
         tensor
     }
 }
 
-pub fn d_ssresidual(prediction: &NodeType, actual: &NodeType, grad: &Arrayy) {
-    let mut prediction_value = prediction.lock().unwrap();
-    let mut actual_value = actual.lock().unwrap();
+pub fn d_ssresidual(prediction: &ShareTensor, actual: &ShareTensor, grad: &Arrayy) {
+    // let mut prediction_value = prediction.write().unwrap();
+    // let mut actual_value = actual.write().unwrap();
 
     // df/dprediction = -2(actual - prediction) * grad
-    if prediction_value.requires_grad {
-        let d_predcition = -2.0 * (&actual_value.value - &prediction_value.value) * grad;
-        prediction_value.add_grad(d_predcition);
+    if prediction.requires_grad() {
+        let d_predcition =
+            -2.0 * (&*actual.value.read().unwrap() - &*prediction.value.read().unwrap()) * grad;
+        prediction.add_grad(d_predcition);
     }
 
     // df/dactual = 2(actual - prediction) * grad
-    if actual_value.requires_grad {
-        let d_actual = 2.0 * (&actual_value.value - &prediction_value.value) * grad;
-        actual_value.add_grad(d_actual);
+    if actual.requires_grad() {
+        let d_actual =
+            2.0 * (&*actual.value.read().unwrap() - &*prediction.value.read().unwrap()) * grad;
+        actual.add_grad(d_actual);
     }
 }

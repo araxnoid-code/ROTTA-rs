@@ -61,7 +61,7 @@ impl Tensor {
     }
 
     pub fn len(&self) -> usize {
-        self.node.lock().unwrap().value.len()
+        self.value().len()
     }
 
     pub fn abs(&self) -> Tensor {
@@ -81,7 +81,7 @@ impl Tensor {
     }
 
     pub fn index_replace(&self, index: Vec<i32>, replace: Tensor) {
-        if !self.node.lock().unwrap().requires_grad {
+        if !self.requires_grad() {
             index_replace(self, index, replace);
         } else {
             panic!("{}", "can't change manualy a tensor if the tensor is requires_grad=true")

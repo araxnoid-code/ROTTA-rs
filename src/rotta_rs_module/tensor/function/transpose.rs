@@ -1,7 +1,7 @@
 use crate::rotta_rs_module::{ arrayy::permute_arr, BackwardLabel, Tensor };
 
 pub fn transpose(x: &Tensor, d: (i32, i32)) -> Tensor {
-    let arr = x.value();
+    let arr = x.value.read().unwrap();
     let shape = arr.shape.clone();
     let dimension_t = [d.0, d.1]
         .iter()
@@ -41,10 +41,10 @@ pub fn transpose(x: &Tensor, d: (i32, i32)) -> Tensor {
     order[dimension_t[1] as usize] = dimension_t[0] as usize;
 
     let arr = permute_arr(&order, &arr);
-    let tensor = Tensor::from_arrayy(arr);
+    let mut tensor = Tensor::from_arrayy(arr);
 
-    tensor.update_parent(vec![x.node.clone()]);
-    tensor.update_label(Some(BackwardLabel::Permute(x.node.clone(), order)));
+    tensor.update_parent(vec![x.shared_tensor()]);
+    tensor.update_label(Some(BackwardLabel::Permute(x.shared_tensor(), order)));
 
     tensor
 }
