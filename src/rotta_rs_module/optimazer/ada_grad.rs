@@ -30,7 +30,7 @@ impl AdaGrad {
     }
 
     // optimazer
-    pub fn optim(&mut self, backward: Backward) {
+    pub fn optim(&mut self) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
             let _node = node_type;
             if let None = self.g.get(i) {
@@ -49,11 +49,6 @@ impl AdaGrad {
             node_type.update_value(new);
             // update g
             self.g[i] = g_n;
-        }
-
-        // auto_grad_zero
-        if self.auto_zero_grad_execute {
-            backward.zero_grad();
         }
     }
 }

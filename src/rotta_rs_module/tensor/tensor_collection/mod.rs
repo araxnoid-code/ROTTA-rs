@@ -1,4 +1,5 @@
 mod tensor_range;
 pub use tensor_range::*;
-mod tensor_ref;
-pub use tensor_ref::*;
+
+mod vector_to_tensor;
+pub use vector_to_tensor::*;

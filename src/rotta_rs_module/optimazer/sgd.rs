@@ -26,16 +26,11 @@ impl Sgd {
     }
 
     // optimazer
-    pub fn optim(&self, backward: Backward) {
+    pub fn optim(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
             let node_mutex = node_type;
             let new = &node_mutex.value() - &self.lr * &node_mutex.grad();
             node_type.update_value(new);
-        }
-
-        // auto_grad_zero
-        if self.auto_zero_grad_execute {
-            backward.zero_grad();
         }
     }
 }
