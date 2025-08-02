@@ -1,9 +1,9 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType }, ShareTensor };
 
 pub struct RMSprop {
-    parameters: Arc<Mutex<Vec<NodeType>>>,
+    parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub lr: Arrayy,
     g: Vec<Arrayy>,
     pub eps: f64,
@@ -12,7 +12,7 @@ pub struct RMSprop {
 }
 
 impl RMSprop {
-    pub fn init(parameters: Arc<Mutex<Vec<NodeType>>>, lr: f64) -> RMSprop {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> RMSprop {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         RMSprop {
             parameters,
@@ -27,16 +27,16 @@ impl RMSprop {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.write().unwrap().zero_grad();
+            node_type.zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let node = node_type.read().unwrap();
+            let node = node_type;
             if let None = self.g.get(i) {
-                self.g.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
+                self.g.push(Arrayy::arrayy_from_element(node.value().shape.clone(), 0.0));
             }
 
             // g_n = g_n-1 * hyperparameter + (1 - hyperparameter) * grad(w_n)^2
@@ -44,9 +44,11 @@ impl RMSprop {
 
             let eps = self.eps;
             let grad = &node.grad;
-            let g_n = &self.g[i] * self.hyperparameter + (1.0 - self.hyperparameter) * grad.powi(2);
-            let new = &node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;
-            node_type.write().unwrap().update_value(new);
+            let g_n =
+                &self.g[i] * self.hyperparameter +
+                (1.0 - self.hyperparameter) * grad.read().unwrap().powi(2);
+            let new = &node.value() - (&self.lr / (g_n.powf(0.5) + eps)) * &*grad.read().unwrap();
+            node_type.update_value(new);
 
             self.g[i] = g_n;
         }

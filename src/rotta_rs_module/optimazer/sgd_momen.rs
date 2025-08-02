@@ -1,9 +1,9 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType }, ShareTensor };
 
 pub struct SgdMomen {
-    parameters: Arc<Mutex<Vec<NodeType>>>,
+    parameters: Arc<Mutex<Vec<ShareTensor>>>,
     lr: Arrayy,
     v: Vec<Arrayy>,
     g: f64,
@@ -11,7 +11,7 @@ pub struct SgdMomen {
 }
 
 impl SgdMomen {
-    pub fn init(parameters: Arc<Mutex<Vec<NodeType>>>, lr: f64) -> SgdMomen {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> SgdMomen {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         SgdMomen {
             parameters,
@@ -25,25 +25,25 @@ impl SgdMomen {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.write().unwrap().zero_grad();
+            node_type.zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let node = node_type.read().unwrap();
+            let node = node_type;
 
             // v initialization
             if let None = self.v.get(i) {
-                self.v.push(Arrayy::arrayy_from_element(node.value.shape.clone(), 0.0));
+                self.v.push(Arrayy::arrayy_from_element(node.value().shape.clone(), 0.0));
             }
 
             // v = g * v + lr * grad(w)
             // w = w -  v
-            let v = self.g * &self.v[i] + &self.lr * &node.grad;
-            let new = &node.value - &v;
-            node_type.write().unwrap().update_value(new);
+            let v = self.g * &self.v[i] + &self.lr * &node.grad();
+            let new = &node.value() - &v;
+            node_type.update_value(new);
 
             // update v
             self.v[i] = v;

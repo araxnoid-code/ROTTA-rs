@@ -1,9 +1,9 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType }, ShareTensor };
 
 pub struct AdaGrad {
-    parameters: Arc<Mutex<Vec<NodeType>>>,
+    parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub lr: Arrayy,
     pub g: Vec<Arrayy>,
     pub eps: f64,
@@ -11,7 +11,7 @@ pub struct AdaGrad {
 }
 
 impl AdaGrad {
-    pub fn init(parameters: Arc<Mutex<Vec<NodeType>>>, lr: f64) -> AdaGrad {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> AdaGrad {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         AdaGrad {
             parameters,
@@ -25,16 +25,16 @@ impl AdaGrad {
     // zero
     pub fn zero_grad(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
-            node_type.write().unwrap().zero_grad();
+            node_type.zero_grad();
         }
     }
 
     // optimazer
     pub fn optim(&mut self, backward: Backward) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
-            let _node = node_type.read().unwrap();
+            let _node = node_type;
             if let None = self.g.get(i) {
-                self.g.push(Arrayy::arrayy_from_element(_node.value.shape.clone(), 0.0));
+                self.g.push(Arrayy::arrayy_from_element(_node.value().shape.clone(), 0.0));
             }
 
             // ada grad
@@ -43,10 +43,10 @@ impl AdaGrad {
 
             let eps = self.eps;
             let grad = &_node.grad;
-            let g_n = &self.g[i] + grad.powi(2);
-            let new = &_node.value - (&self.lr / (g_n.powf(0.5) + eps)) * grad;
+            let g_n = &self.g[i] + grad.read().unwrap().powi(2);
+            let new = &_node.value() - (&self.lr / (g_n.powf(0.5) + eps)) * &*grad.read().unwrap();
 
-            node_type.write().unwrap().update_value(new);
+            node_type.update_value(new);
             // update g
             self.g[i] = g_n;
         }
