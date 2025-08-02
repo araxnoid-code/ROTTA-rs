@@ -4,5 +4,5 @@ pub use dataset::*;
 mod datahandler;
 pub use datahandler::*;
 
-mod datahandler_multithread;
-pub use datahandler_multithread::*;
+mod par_datahandler;
+pub use par_datahandler::*;

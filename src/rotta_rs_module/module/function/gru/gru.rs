@@ -1,5 +1,6 @@
 use crate::{ matmul, sigmoid, tanh, ConcatTensors, Tensor };
 
+#[derive(Clone)]
 pub struct Gru {
     // reset
     pub w_r: Tensor,

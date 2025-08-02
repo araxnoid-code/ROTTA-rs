@@ -1,5 +1,6 @@
 use crate::{ r, ConcatTensors, Tensor };
 
+#[derive(Clone)]
 pub struct Embedding {
     pub num_vocab: usize,
     pub hidden: usize,

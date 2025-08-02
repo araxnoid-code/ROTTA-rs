@@ -2,6 +2,7 @@ use std::sync::{ Arc, Mutex };
 
 use crate::{ Tensor, TrainEvalHandler };
 
+#[derive(Clone)]
 pub struct LayerNorm {
     pub gamma: Tensor,
     pub beta: Tensor,

@@ -2,8 +2,9 @@ use std::sync::{ Arc, Mutex };
 
 use crate::{ rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType }, ShareTensor };
 
+#[derive(Clone)]
 pub struct Adam {
-    parameters: Arc<Mutex<Vec<ShareTensor>>>,
+    pub parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub lr: Arrayy,
     g: Vec<Arrayy>,
     m: Vec<Arrayy>,

@@ -1,5 +1,6 @@
 use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
 
+#[derive(Clone)]
 pub struct CrossEntropyLoss {}
 
 impl CrossEntropyLoss {
