@@ -14,7 +14,7 @@ pub struct Dropout {
 }
 
 impl Dropout {
-    pub fn forward(&mut self, x: &Tensor) -> Tensor {
+    pub fn forward(&self, x: &Tensor) -> Tensor {
         if !self.eval_status() {
             let r = self.r(x.shape());
             r.set_requires_grad(false);

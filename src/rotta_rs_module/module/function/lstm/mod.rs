@@ -16,35 +16,43 @@ impl Module {
         let w_f = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
+        w_f.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(w_f.shared_tensor());
 
         let b_f = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
+        b_f.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(b_f.shared_tensor());
 
         // input parameters
         let w_i = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
+        w_i.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(w_i.shared_tensor());
 
         let b_i = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
+        b_i.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(b_i.shared_tensor());
 
         let w_c = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
+        w_c.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(w_c.shared_tensor());
 
         let b_c = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
+        b_c.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(b_c.shared_tensor());
 
         // output parameters
         let w_o = Tensor::from_shape_fn(vec![hidden * 2, hidden], || {
             uniform.sample(&mut self.rng)
         });
+        w_o.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(w_o.shared_tensor());
 
         let b_o = Tensor::from_shape_fn(vec![1, hidden], || { uniform.sample(&mut self.rng) });
+        b_o.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(b_o.shared_tensor());
 
         Lstm {

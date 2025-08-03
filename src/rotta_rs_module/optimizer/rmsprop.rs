@@ -36,7 +36,7 @@ impl RMSprop {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
             let node = node_type;
             if let None = self.g.get(i) {
-                self.g.push(Arrayy::arrayy_from_element(node.value().shape.clone(), 0.0));
+                self.g.push(Arrayy::arrayy_from_element(node.shape(), 0.0));
             }
 
             // g_n = g_n-1 * hyperparameter + (1 - hyperparameter) * grad(w_n)^2
@@ -47,7 +47,9 @@ impl RMSprop {
             let g_n =
                 &self.g[i] * self.hyperparameter +
                 (1.0 - self.hyperparameter) * grad.read().unwrap().powi(2);
-            let new = &node.value() - (&self.lr / (g_n.powf(0.5) + eps)) * &*grad.read().unwrap();
+            let new =
+                &*node.value.read().unwrap() -
+                (&self.lr / (g_n.powf(0.5) + eps)) * &*grad.read().unwrap();
             node_type.update_value(new);
 
             self.g[i] = g_n;

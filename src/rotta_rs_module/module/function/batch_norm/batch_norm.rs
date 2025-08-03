@@ -41,12 +41,14 @@ impl BatchNorm {
             // update running value
             // r_mean = r_mean * (1 - alpha) + mean * alpha
             let r_mean =
-                &(&self.r_mean.value() * (1.0 - self.alpha)) + &(&mean.value() * self.alpha);
+                &(&*self.r_mean.value.read().unwrap() * (1.0 - self.alpha)) +
+                &(&*mean.value.read().unwrap() * self.alpha);
             self.r_mean.update_value(r_mean);
 
             // r_variant = r_variant * (1 - alpha) + variant * alpha
             let r_variant =
-                &(&self.r_variant.value() * (1.0 - self.alpha)) + &(&variant.value() * self.alpha);
+                &(&*self.r_variant.value.read().unwrap() * (1.0 - self.alpha)) +
+                &(&*variant.value.read().unwrap() * self.alpha);
             self.r_variant.update_value(r_variant);
 
             // output

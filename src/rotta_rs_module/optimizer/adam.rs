@@ -80,11 +80,6 @@ impl Adam {
             self.m[i] = m_n;
         }
         self.i += 1;
-
-        // auto_grad_zero
-        // if self.auto_zero_grad_execute {
-        //     backward.zero_grad();
-        // }
     }
 
     pub fn update_hyperparameter(&mut self, parameter_1: f64, parameter_2: f64) {

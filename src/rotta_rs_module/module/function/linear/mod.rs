@@ -16,6 +16,7 @@ impl Module {
         });
 
         let tensor_weight = Tensor::from_arrayy(weight);
+        tensor_weight.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(tensor_weight.shared_tensor());
 
         // bias
@@ -28,6 +29,7 @@ impl Module {
         });
 
         let tensor_bias = Tensor::from_arrayy(bias);
+        tensor_bias.set_auto_zero_grad(false);
         self.parameters.lock().unwrap().push(tensor_bias.shared_tensor());
 
         // linear cfg

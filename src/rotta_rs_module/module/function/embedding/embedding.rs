@@ -10,10 +10,10 @@ pub struct Embedding {
 
 impl Embedding {
     pub fn forward(&self, x: &Tensor) -> Tensor {
-        let tokens = x.value().value;
+        let tokens = &x.value.read().unwrap().value;
         let mut map = vec![];
 
-        for token in tokens {
+        for &token in tokens {
             map.push(self.parameter.slice(&[r(token as i32..(token as i32) + 1)]));
         }
 

@@ -11,7 +11,7 @@ pub fn concat(tensors: Vec<&Tensor>, dim: i32) -> Tensor {
     };
 
     let arrayys = tensors
-        .into_iter()
+        .iter()
         .map(|tensor| {
             if let None = check_shape {
                 check_shape = Some(tensor.value.read().unwrap().shape.clone());

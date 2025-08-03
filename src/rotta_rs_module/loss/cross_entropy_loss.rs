@@ -67,7 +67,7 @@ pub fn d_cel(prob_prediction: &ShareTensor, prob_actual: &ShareTensor, grad: &Ar
             prob_prediction.grad
                 .write()
                 .unwrap()
-                .index_mut(vec![batch as i32, actual_class.value[0] as i32], d);
+                .index_mut(vec![batch as i32, actual_class.value[0] as i32], &d);
         }
 
         // prob_prediction.add_grad(d_pred);

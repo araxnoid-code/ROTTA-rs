@@ -61,7 +61,7 @@ impl Tensor {
     }
 
     pub fn len(&self) -> usize {
-        self.value().len()
+        self.value.read().unwrap().len()
     }
 
     pub fn abs(&self) -> Tensor {

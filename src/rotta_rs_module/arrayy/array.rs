@@ -107,7 +107,7 @@ impl Arrayy {
         arrayy
     }
 
-    pub fn index_mut(&mut self, index: Vec<i32>, value: Arrayy) {
+    pub fn index_mut(&mut self, index: Vec<i32>, value: &Arrayy) {
         let shape = self.shape.clone();
         let index = negative_indexing(&self.shape, index).unwrap();
         let slicing = (&self.shape[index.len()..]).multiple_sum();

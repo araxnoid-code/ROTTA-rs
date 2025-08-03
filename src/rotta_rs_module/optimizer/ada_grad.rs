@@ -34,7 +34,7 @@ impl AdaGrad {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
             let _node = node_type;
             if let None = self.g.get(i) {
-                self.g.push(Arrayy::arrayy_from_element(_node.value().shape.clone(), 0.0));
+                self.g.push(Arrayy::arrayy_from_element(_node.shape(), 0.0));
             }
 
             // ada grad
@@ -44,7 +44,9 @@ impl AdaGrad {
             let eps = self.eps;
             let grad = &_node.grad;
             let g_n = &self.g[i] + grad.read().unwrap().powi(2);
-            let new = &_node.value() - (&self.lr / (g_n.powf(0.5) + eps)) * &*grad.read().unwrap();
+            let new =
+                &*_node.value.read().unwrap() -
+                (&self.lr / (g_n.powf(0.5) + eps)) * &*grad.read().unwrap();
 
             node_type.update_value(new);
             // update g

@@ -111,6 +111,11 @@ impl Tensor {
         *self.requires_grad.read().unwrap()
     }
 
+    // auto zero grad
+    pub fn auto_zero_grad(&self) -> bool {
+        *self.auto_zero_grad.read().unwrap()
+    }
+
     // grad
     pub fn grad(&self) -> Arrayy {
         self.grad.read().unwrap().clone()

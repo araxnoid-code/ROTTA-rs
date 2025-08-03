@@ -36,13 +36,13 @@ impl SgdMomen {
 
             // v initialization
             if let None = self.v.get(i) {
-                self.v.push(Arrayy::arrayy_from_element(node.value().shape.clone(), 0.0));
+                self.v.push(Arrayy::arrayy_from_element(node.shape(), 0.0));
             }
 
             // v = g * v + lr * grad(w)
             // w = w -  v
-            let v = self.g * &self.v[i] + &self.lr * &node.grad();
-            let new = &node.value() - &v;
+            let v = self.g * &self.v[i] + &self.lr * &*node.grad.read().unwrap();
+            let new = &*node.value.read().unwrap() - &v;
             node_type.update_value(new);
 
             // update v

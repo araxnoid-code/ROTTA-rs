@@ -25,11 +25,12 @@ impl Sgd {
         }
     }
 
-    // optimazer
+    // optimizer
     pub fn optim(&self) {
         for node_type in self.parameters.lock().unwrap().iter() {
             let node_mutex = node_type;
-            let new = &node_mutex.value() - &self.lr * &node_mutex.grad();
+            let new =
+                &*node_mutex.value.read().unwrap() - &self.lr * &*node_mutex.grad.read().unwrap();
             node_type.update_value(new);
         }
     }

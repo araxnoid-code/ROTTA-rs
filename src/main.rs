@@ -3,8 +3,6 @@ use rotta_rs::{ Adam, Module, SSResidual, VectorToTensor, MAE, MSE };
 fn main() {
     let input = (0..20).collect::<Vec<i32>>().to_tensor().reshape(vec![-1, 1]);
     let label = &input * 2.0;
-    input.set_requires_grad(false);
-    label.set_requires_grad(false);
 
     let mut model = Module::init();
     let linear_1 = model.liniar_init(1, 8);

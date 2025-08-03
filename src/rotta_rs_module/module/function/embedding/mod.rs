@@ -17,6 +17,7 @@ impl Module {
         let parameter = Tensor::from_shape_fn(vec![vocab_num, hidden], || {
             uniform.sample(&mut self.rng)
         });
+        parameter.set_auto_zero_grad(false);
         let mut parameters = self.parameters.lock().unwrap();
         parameters.push(parameter.shared_tensor());
 
