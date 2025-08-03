@@ -20,6 +20,6 @@
 
 ## [📦️ Module](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/4_Module.md)
 
-## [🚀 Optimazer](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimazer.md)
+## [🚀 Optimazer](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimizer.md)
 
 ## [🤖 Simple AI Model & Training](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/6_simple_AI_model.md)
