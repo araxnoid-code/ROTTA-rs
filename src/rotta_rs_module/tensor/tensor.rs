@@ -1,6 +1,7 @@
 use std::{ fmt::Display, sync::{ Arc, RwLock } };
 
-use rand::random;
+use rand::{ random, Rng, SeedableRng };
+use rand_chacha::ChaCha8Rng;
 use uuid::Uuid;
 
 use crate::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, ShareTensor };
@@ -89,7 +90,8 @@ impl Tensor {
     }
 
     pub fn rand(shape: Vec<usize>) -> Tensor {
-        Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || random::<f64>()))
+        let mut rng = ChaCha8Rng::seed_from_u64(42);
+        Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || rng.random()))
     }
 
     // pub fn arange(range: Ra<usize>) -> TensorRange {

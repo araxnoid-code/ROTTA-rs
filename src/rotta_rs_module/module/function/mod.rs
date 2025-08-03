@@ -18,3 +18,6 @@ pub use lstm::*;
 
 mod gru;
 pub use gru::*;
+
+mod parameter;
+pub use parameter::*;
