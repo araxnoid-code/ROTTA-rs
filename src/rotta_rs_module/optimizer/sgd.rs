@@ -9,7 +9,7 @@ pub struct Sgd {
 }
 
 impl Sgd {
-    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> Sgd {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f32) -> Sgd {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         Sgd {
             parameters,

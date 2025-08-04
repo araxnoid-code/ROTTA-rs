@@ -48,7 +48,7 @@ pub fn par_matmul_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
 
             vec
         })
-        .collect::<Vec<Vec<f64>>>();
+        .collect::<Vec<Vec<f32>>>();
 
     let vector = result.concat();
 

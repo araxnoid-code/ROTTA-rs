@@ -10,8 +10,8 @@ impl Module {
     pub fn embedding_init(&mut self, vocab_num: usize, hidden: usize) -> Embedding {
         // let mut list = Vec::with_capacity(vocab_num);
         let uniform = Uniform::new(
-            -(1.0 / (hidden as f64)).sqrt(),
-            (1.0 / (hidden as f64)).sqrt()
+            -(1.0 / (hidden as f32)).sqrt(),
+            (1.0 / (hidden as f32)).sqrt()
         ).unwrap();
 
         let parameter = Tensor::from_shape_fn(vec![vocab_num, hidden], || {

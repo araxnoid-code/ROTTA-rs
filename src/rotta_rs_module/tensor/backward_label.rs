@@ -23,7 +23,7 @@ pub enum BackwardLabel {
     // method
     Exp(ShareTensor, Arrayy),
     Powi(ShareTensor, i32),
-    Powf(ShareTensor, f64),
+    Powf(ShareTensor, f32),
     Ln(ShareTensor),
     Abs(ShareTensor),
     Sign(ShareTensor),

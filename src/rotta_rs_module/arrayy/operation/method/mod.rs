@@ -2,8 +2,8 @@ mod base_operation;
 use crate::rotta_rs_module::{ arrayy::* };
 
 impl Arrayy {
-    pub fn sum(&self) -> f64 {
-        self.value.iter().sum::<f64>()
+    pub fn sum(&self) -> f32 {
+        self.value.iter().sum::<f32>()
     }
 
     pub fn exp(&self) -> Arrayy {
@@ -48,7 +48,7 @@ impl Arrayy {
         powi_arr(self, n)
     }
 
-    pub fn powf(&self, n: f64) -> Arrayy {
+    pub fn powf(&self, n: f32) -> Arrayy {
         powf_arr(self, n)
     }
 

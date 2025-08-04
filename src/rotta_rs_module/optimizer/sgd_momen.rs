@@ -6,12 +6,12 @@ pub struct SgdMomen {
     parameters: Arc<Mutex<Vec<ShareTensor>>>,
     lr: Arrayy,
     v: Vec<Arrayy>,
-    g: f64,
+    g: f32,
     pub auto_zero_grad_execute: bool,
 }
 
 impl SgdMomen {
-    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> SgdMomen {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f32) -> SgdMomen {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         SgdMomen {
             parameters,
@@ -51,7 +51,7 @@ impl SgdMomen {
     }
 
     // update
-    pub fn update_hyperparameter(&mut self, g: f64) {
+    pub fn update_hyperparameter(&mut self, g: f32) {
         self.g = g;
     }
 }

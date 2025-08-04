@@ -10,7 +10,7 @@ pub fn mean_axis(x: &Tensor, d: &[i32]) -> Tensor {
         len *= shape[d];
     });
 
-    &x.sum_axis(d) / (len as f64)
+    &x.sum_axis(d) / (len as f32)
 }
 
 pub fn mean_axis_keep_dim(x: &Tensor, d: &[i32]) -> Tensor {
@@ -23,5 +23,5 @@ pub fn mean_axis_keep_dim(x: &Tensor, d: &[i32]) -> Tensor {
         len *= shape[d];
     });
 
-    &x.sum_axis_keep_dim(d) / (len as f64)
+    &x.sum_axis_keep_dim(d) / (len as f32)
 }

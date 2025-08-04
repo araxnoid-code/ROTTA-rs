@@ -88,16 +88,16 @@ impl Mul<&Tensor> for &Tensor {
     }
 }
 
-impl Mul<f64> for &Tensor {
+impl Mul<f32> for &Tensor {
     type Output = Tensor;
-    fn mul(self, rhs: f64) -> Self::Output {
+    fn mul(self, rhs: f32) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
         rhs.set_requires_grad(false);
         mul(self, &rhs)
     }
 }
 
-impl Mul<&Tensor> for f64 {
+impl Mul<&Tensor> for f32 {
     type Output = Tensor;
     fn mul(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);

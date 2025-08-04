@@ -6,8 +6,8 @@ use crate::{ Tensor, TrainEvalHandler };
 pub struct LayerNorm {
     pub gamma: Tensor,
     pub beta: Tensor,
-    pub eps: f64,
-    pub alpha: f64,
+    pub eps: f32,
+    pub alpha: f32,
     pub eval: Arc<Mutex<bool>>,
     pub learnable: bool,
 }

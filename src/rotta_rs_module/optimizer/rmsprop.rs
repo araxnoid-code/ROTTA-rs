@@ -6,13 +6,13 @@ pub struct RMSprop {
     parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub lr: Arrayy,
     g: Vec<Arrayy>,
-    pub eps: f64,
-    pub hyperparameter: f64,
+    pub eps: f32,
+    pub hyperparameter: f32,
     pub auto_zero_grad_execute: bool,
 }
 
 impl RMSprop {
-    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> RMSprop {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f32) -> RMSprop {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         RMSprop {
             parameters,
@@ -56,7 +56,7 @@ impl RMSprop {
         }
     }
 
-    pub fn update_hyperparameter(&mut self, parameter: f64) {
+    pub fn update_hyperparameter(&mut self, parameter: f32) {
         self.hyperparameter = parameter;
     }
 }

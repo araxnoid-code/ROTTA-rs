@@ -31,9 +31,9 @@ pub fn par_add_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                     .into_iter()
                     .enumerate()
                     .map(|(i, a)| { a + arr_b[i] })
-                    .collect::<Vec<f64>>()
+                    .collect::<Vec<f32>>()
             })
-            .collect::<Vec<Vec<f64>>>();
+            .collect::<Vec<Vec<f32>>>();
 
         let vector = result.concat();
         Arrayy::from_vector(shape_a.to_vec(), vector)
@@ -53,9 +53,9 @@ pub fn par_add_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                     (&arr_b.value[start..stop])
                         .into_iter()
                         .map(|b| skalar + b)
-                        .collect::<Vec<f64>>()
+                        .collect::<Vec<f32>>()
                 })
-                .collect::<Vec<Vec<f64>>>();
+                .collect::<Vec<Vec<f32>>>();
 
             let vector = result.concat();
             Arrayy::from_vector(shape_b.to_vec(), vector)
@@ -73,9 +73,9 @@ pub fn par_add_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                     (&arr_a.value[start..stop])
                         .into_iter()
                         .map(|b| b + skalar)
-                        .collect::<Vec<f64>>()
+                        .collect::<Vec<f32>>()
                 })
-                .collect::<Vec<Vec<f64>>>();
+                .collect::<Vec<Vec<f32>>>();
 
             let vector = result.concat();
             Arrayy::from_vector(shape_a.to_vec(), vector)
@@ -106,9 +106,9 @@ pub fn par_add_arr(arr_a: &Arrayy, arr_b: &Arrayy) -> Arrayy {
                     .into_iter()
                     .enumerate()
                     .map(|(i, a)| { a + arr_b[i] })
-                    .collect::<Vec<f64>>()
+                    .collect::<Vec<f32>>()
             })
-            .collect::<Vec<Vec<f64>>>();
+            .collect::<Vec<Vec<f32>>>();
 
         let vector = result.concat();
         Arrayy::from_vector(shape_a.to_vec(), vector)

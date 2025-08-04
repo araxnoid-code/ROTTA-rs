@@ -129,7 +129,7 @@ impl DataHandler {
             self.par_idx = 0;
         }
 
-        (&loss / (iteration as f64), model)
+        (&loss / (iteration as f32), model)
     }
 }
 

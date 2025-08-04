@@ -10,7 +10,7 @@ pub fn mean_axis_arr(arr: &Arrayy, d: &[i32]) -> Arrayy {
         len *= shape[d];
     });
 
-    arr.sum_axis(d) / (len as f64)
+    arr.sum_axis(d) / (len as f32)
 }
 
 pub fn mean_axis_keep_dim_arr(arr: &Arrayy, d: &[i32]) -> Arrayy {
@@ -22,5 +22,5 @@ pub fn mean_axis_keep_dim_arr(arr: &Arrayy, d: &[i32]) -> Arrayy {
         len *= shape[d];
     });
 
-    arr.sum_axis_keep_dim(d) / (len as f64)
+    arr.sum_axis_keep_dim(d) / (len as f32)
 }

@@ -30,23 +30,23 @@ impl Mul<&Arrayy> for Arrayy {
     }
 }
 
-// f64
+// f32
 
-impl Mul<f64> for Arrayy {
+impl Mul<f32> for Arrayy {
     type Output = Arrayy;
-    fn mul(self, rhs: f64) -> Self::Output {
+    fn mul(self, rhs: f32) -> Self::Output {
         mul_arr(&self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
-impl Mul<f64> for &Arrayy {
+impl Mul<f32> for &Arrayy {
     type Output = Arrayy;
-    fn mul(self, rhs: f64) -> Self::Output {
+    fn mul(self, rhs: f32) -> Self::Output {
         mul_arr(self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
-impl Mul<Arrayy> for f64 {
+impl Mul<Arrayy> for f32 {
     type Output = Arrayy;
     fn mul(self, rhs: Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);
@@ -54,7 +54,7 @@ impl Mul<Arrayy> for f64 {
     }
 }
 
-impl Mul<&Arrayy> for f64 {
+impl Mul<&Arrayy> for f32 {
     type Output = Arrayy;
     fn mul(self, rhs: &Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);

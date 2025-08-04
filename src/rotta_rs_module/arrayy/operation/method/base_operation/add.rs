@@ -30,23 +30,23 @@ impl Add<&Arrayy> for Arrayy {
     }
 }
 
-// f64
+// f32
 
-impl Add<f64> for Arrayy {
+impl Add<f32> for Arrayy {
     type Output = Arrayy;
-    fn add(self, rhs: f64) -> Self::Output {
+    fn add(self, rhs: f32) -> Self::Output {
         add_arr(&self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
-impl Add<f64> for &Arrayy {
+impl Add<f32> for &Arrayy {
     type Output = Arrayy;
-    fn add(self, rhs: f64) -> Self::Output {
+    fn add(self, rhs: f32) -> Self::Output {
         add_arr(self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
-impl Add<Arrayy> for f64 {
+impl Add<Arrayy> for f32 {
     type Output = Arrayy;
     fn add(self, rhs: Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);
@@ -54,7 +54,7 @@ impl Add<Arrayy> for f64 {
     }
 }
 
-impl Add<&Arrayy> for f64 {
+impl Add<&Arrayy> for f32 {
     type Output = Arrayy;
     fn add(self, rhs: &Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);

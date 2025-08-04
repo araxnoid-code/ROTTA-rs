@@ -44,7 +44,7 @@ pub fn sum_axis_arr(arr: &Arrayy, dims: &[i32]) -> Arrayy {
                     .iter()
                     .enumerate()
                     .map(|(i, v)| { v + slice[i] })
-                    .collect::<Vec<f64>>();
+                    .collect::<Vec<f32>>();
                 vector = sum;
             }
 
@@ -114,7 +114,7 @@ pub fn sum_axis_keep_dim_arr(arr: &Arrayy, dims: &[i32]) -> Arrayy {
                     .iter()
                     .enumerate()
                     .map(|(i, v)| { v + slice[i] })
-                    .collect::<Vec<f64>>();
+                    .collect::<Vec<f32>>();
                 vector = sum;
             }
 

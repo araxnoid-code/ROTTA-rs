@@ -12,7 +12,7 @@ pub fn argmax_arr(arr: &Arrayy, dim: i32) -> Arrayy {
     let mut q = vec![];
     for i in 0..dims_loop {
         for ii in 0..length {
-            let mut max: Option<(usize, f64)> = None;
+            let mut max: Option<(usize, f32)> = None;
             let index = ii + i * dim_target;
             for iii in 0..dim_target {
                 let index = iii * length + index;
@@ -28,7 +28,7 @@ pub fn argmax_arr(arr: &Arrayy, dim: i32) -> Arrayy {
             }
 
             if let Some((idx, _)) = max {
-                q.push(idx as f64);
+                q.push(idx as f32);
             }
         }
     }

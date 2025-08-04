@@ -52,7 +52,7 @@ impl Tensor {
         powi(self, n)
     }
 
-    pub fn powf(&self, n: f64) -> Tensor {
+    pub fn powf(&self, n: f32) -> Tensor {
         powf(self, n)
     }
 

@@ -6,12 +6,12 @@ pub struct AdaGrad {
     parameters: Arc<Mutex<Vec<ShareTensor>>>,
     pub lr: Arrayy,
     pub g: Vec<Arrayy>,
-    pub eps: f64,
+    pub eps: f32,
     pub auto_zero_grad_execute: bool,
 }
 
 impl AdaGrad {
-    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> AdaGrad {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f32) -> AdaGrad {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         AdaGrad {
             parameters,

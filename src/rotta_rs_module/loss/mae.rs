@@ -9,6 +9,6 @@ impl MAE {
 
     pub fn forward(&self, prediction: &Tensor, label: &Tensor) -> Tensor {
         // 1/n sum(abs(label - prediction))
-        (1.0 / (prediction.len() as f64)) * &(label - prediction).abs().sum()
+        (1.0 / (prediction.len() as f32)) * &(label - prediction).abs().sum()
     }
 }

@@ -14,7 +14,7 @@ impl Display for Arrayy {
 impl Arrayy {
     pub fn rec_display(
         &self,
-        vector: &Vec<f64>,
+        vector: &Vec<f32>,
         shape: &Vec<usize>,
         result: &mut String,
         space: &String

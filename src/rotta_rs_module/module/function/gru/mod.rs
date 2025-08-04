@@ -9,8 +9,8 @@ use crate::{ Module, Tensor };
 impl Module {
     pub fn gru_init(&mut self, hidden: usize) -> Gru {
         let uniform = Uniform::new(
-            -(1.0 / (hidden as f64)).sqrt(),
-            (1.0 / (hidden as f64)).sqrt()
+            -(1.0 / (hidden as f32)).sqrt(),
+            (1.0 / (hidden as f32)).sqrt()
         ).unwrap();
 
         // reset parameters

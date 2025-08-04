@@ -88,16 +88,16 @@ impl Div<&Tensor> for &Tensor {
     }
 }
 
-impl Div<f64> for &Tensor {
+impl Div<f32> for &Tensor {
     type Output = Tensor;
-    fn div(self, rhs: f64) -> Self::Output {
+    fn div(self, rhs: f32) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
         rhs.set_requires_grad(false);
         divided(self, &rhs)
     }
 }
 
-impl Div<&Tensor> for f64 {
+impl Div<&Tensor> for f32 {
     type Output = Tensor;
     fn div(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);

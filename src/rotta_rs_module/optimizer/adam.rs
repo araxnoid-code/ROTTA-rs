@@ -9,14 +9,14 @@ pub struct Adam {
     g: Vec<Arrayy>,
     m: Vec<Arrayy>,
     i: i32,
-    pub eps: f64,
-    pub hyperparameter_1: f64,
-    pub hyperparameter_2: f64,
+    pub eps: f32,
+    pub hyperparameter_1: f32,
+    pub hyperparameter_2: f32,
     pub auto_zero_grad_execute: bool,
 }
 
 impl Adam {
-    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f64) -> Adam {
+    pub fn init(parameters: Arc<Mutex<Vec<ShareTensor>>>, lr: f32) -> Adam {
         let lr = Arrayy::from_vector(vec![1], vec![lr]);
         Adam {
             parameters,
@@ -82,7 +82,7 @@ impl Adam {
         self.i += 1;
     }
 
-    pub fn update_hyperparameter(&mut self, parameter_1: f64, parameter_2: f64) {
+    pub fn update_hyperparameter(&mut self, parameter_1: f32, parameter_2: f32) {
         self.hyperparameter_1 = parameter_1;
         self.hyperparameter_2 = parameter_2;
     }

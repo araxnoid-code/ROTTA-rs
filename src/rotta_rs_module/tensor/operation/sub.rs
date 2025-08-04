@@ -82,16 +82,16 @@ impl Sub<&Tensor> for &Tensor {
     }
 }
 
-impl Sub<f64> for &Tensor {
+impl Sub<f32> for &Tensor {
     type Output = Tensor;
-    fn sub(self, rhs: f64) -> Self::Output {
+    fn sub(self, rhs: f32) -> Self::Output {
         let rhs = Tensor::from_vector(vec![1], vec![rhs]);
         rhs.set_requires_grad(false);
         sub(self, &rhs)
     }
 }
 
-impl Sub<&Tensor> for f64 {
+impl Sub<&Tensor> for f32 {
     type Output = Tensor;
     fn sub(self, rhs: &Tensor) -> Self::Output {
         let float = Tensor::from_vector(vec![1], vec![self]);

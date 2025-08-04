@@ -32,9 +32,9 @@ pub fn broadcast_shape_slice(shape_a: &[usize], shape_b: &[usize]) -> Result<Vec
 }
 
 pub fn broadcasting_arr_slice(
-    arr: (&[f64], &[usize]),
+    arr: (&[f32], &[usize]),
     broadcast_shape: &[usize]
-) -> (Vec<f64>, Vec<usize>) {
+) -> (Vec<f32>, Vec<usize>) {
     let (arr, shape) = arr;
 
     let shape_len = shape.len();
@@ -45,7 +45,7 @@ pub fn broadcasting_arr_slice(
         return (arr.to_vec(), broadcast_shape.to_vec());
     }
 
-    let mut vector: Vec<f64> = Vec::with_capacity(broadcast_shape.multiple_sum());
+    let mut vector: Vec<f32> = Vec::with_capacity(broadcast_shape.multiple_sum());
     let mut new_shape = if shape_len == broadcast_shape_len {
         shape.to_vec()
     } else {

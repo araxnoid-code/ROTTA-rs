@@ -32,7 +32,7 @@ impl Dropout {
             if prob {
                 0.0
             } else {
-                1.0 / (1.0 - self.p)
+                1.0 / (1.0 - (self.p as f32))
             }
         });
         Tensor::from_arrayy(arr)

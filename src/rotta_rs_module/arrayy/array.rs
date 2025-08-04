@@ -4,7 +4,7 @@ use crate::rotta_rs_module::{ arrayy::{ negative_indexing, MultipleSum, RecFlatt
 
 #[derive(Clone, Debug)]
 pub struct Arrayy {
-    pub value: Vec<f64>,
+    pub value: Vec<f32>,
     pub shape: Vec<usize>,
 }
 
@@ -16,7 +16,7 @@ impl Arrayy {
         Arrayy::from_vector(shape, vector)
     }
 
-    pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Arrayy {
+    pub fn from_vector(shape: Vec<usize>, vector: Vec<f32>) -> Arrayy {
         let length = shape.as_slice().multiple_sum();
 
         if length != vector.len() {
@@ -51,7 +51,7 @@ impl Arrayy {
         arr
     }
 
-    pub fn arrayy_from_shape_fn<F: FnMut() -> f64>(shape: Vec<usize>, mut f: F) -> Arrayy {
+    pub fn arrayy_from_shape_fn<F: FnMut() -> f32>(shape: Vec<usize>, mut f: F) -> Arrayy {
         let len = shape.multiple_sum();
         let mut vector = Vec::with_capacity(len);
         for _ in 0..len {
@@ -61,7 +61,7 @@ impl Arrayy {
         Arrayy::from_vector(shape, vector)
     }
 
-    pub fn arrayy_from_element(shape: Vec<usize>, element: f64) -> Arrayy {
+    pub fn arrayy_from_element(shape: Vec<usize>, element: f32) -> Arrayy {
         let len = shape.multiple_sum();
         let mut vector = Vec::with_capacity(len);
         for _ in 0..len {
@@ -75,7 +75,7 @@ impl Arrayy {
         let mut vector = Vec::new();
 
         for i in (start..stop).step_by(step) {
-            vector.push(i as f64);
+            vector.push(i as f32);
         }
 
         Arrayy::from_vector(vec![vector.len()], vector)
@@ -128,8 +128,8 @@ impl Arrayy {
     }
 
     // method
-    pub fn map<F: FnMut(&f64) -> f64>(&self, f: F) -> Arrayy {
-        let vector = self.value.iter().map(f).collect::<Vec<f64>>();
+    pub fn map<F: FnMut(&f32) -> f32>(&self, f: F) -> Arrayy {
+        let vector = self.value.iter().map(f).collect::<Vec<f32>>();
 
         Arrayy::from_vector(self.shape.clone(), vector)
     }

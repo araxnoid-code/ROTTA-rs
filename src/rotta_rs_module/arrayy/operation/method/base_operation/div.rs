@@ -30,23 +30,23 @@ impl Div<Arrayy> for &Arrayy {
     }
 }
 
-// f64
+// f32
 
-impl Div<f64> for Arrayy {
+impl Div<f32> for Arrayy {
     type Output = Arrayy;
-    fn div(self, rhs: f64) -> Self::Output {
+    fn div(self, rhs: f32) -> Self::Output {
         divided_arr(&self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
-impl Div<f64> for &Arrayy {
+impl Div<f32> for &Arrayy {
     type Output = Arrayy;
-    fn div(self, rhs: f64) -> Self::Output {
+    fn div(self, rhs: f32) -> Self::Output {
         divided_arr(self, &Arrayy::from_vector(vec![1], vec![rhs]))
     }
 }
 
-impl Div<Arrayy> for f64 {
+impl Div<Arrayy> for f32 {
     type Output = Arrayy;
     fn div(self, rhs: Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);
@@ -54,7 +54,7 @@ impl Div<Arrayy> for f64 {
     }
 }
 
-impl Div<&Arrayy> for f64 {
+impl Div<&Arrayy> for f32 {
     type Output = Arrayy;
     fn div(self, rhs: &Arrayy) -> Self::Output {
         let a = Arrayy::from_vector(vec![1], vec![self]);

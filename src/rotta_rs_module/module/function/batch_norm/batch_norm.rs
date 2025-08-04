@@ -6,8 +6,8 @@ use crate::{ Tensor, TrainEvalHandler };
 pub struct BatchNorm {
     pub gamma: Tensor,
     pub beta: Tensor,
-    pub eps: f64,
-    pub alpha: f64,
+    pub eps: f32,
+    pub alpha: f32,
     pub r_mean: Tensor,
     pub r_variant: Tensor,
     pub eval: Arc<Mutex<bool>>,

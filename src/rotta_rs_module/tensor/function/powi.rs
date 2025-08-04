@@ -13,7 +13,7 @@ pub fn d_powi(x: &ShareTensor, powi: i32, grad: &Arrayy) {
     // d/x = n * x^n-1
     if x.requires_grad() {
         let dx =
-            (powi as f64) *
+            (powi as f32) *
             &x.value
                 .read()
                 .unwrap()

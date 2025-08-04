@@ -1,10 +1,10 @@
 use crate::rotta_rs_module::arrayy::*;
-use matrixmultiply::dgemm;
+use matrixmultiply::sgemm;
 
 // pub fn matmul_2d_slice(
-//     arr_a: (&[f64], &[usize]),
-//     arr_b: (&[f64], &[usize])
-// ) -> (Vec<f64>, Vec<usize>) {
+//     arr_a: (&[f32], &[usize]),
+//     arr_b: (&[f32], &[usize])
+// ) -> (Vec<f32>, Vec<usize>) {
 //     let (arr_a, shape_a) = arr_a;
 //     let (arr_b, shape_b) = arr_b;
 
@@ -36,9 +36,9 @@ use matrixmultiply::dgemm;
 // }
 
 pub fn matmul_2d_slice(
-    arr_a: (&[f64], &[usize]),
-    arr_b: (&[f64], &[usize])
-) -> (Vec<f64>, Vec<usize>) {
+    arr_a: (&[f32], &[usize]),
+    arr_b: (&[f32], &[usize])
+) -> (Vec<f32>, Vec<usize>) {
     let (arr_a, shape_a) = arr_a;
     let (arr_b, shape_b) = arr_b;
 
@@ -53,7 +53,7 @@ pub fn matmul_2d_slice(
     let mut c = vec![0.0;m * n];
 
     unsafe {
-        dgemm(
+        sgemm(
             m,
             k,
             n,
@@ -75,9 +75,9 @@ pub fn matmul_2d_slice(
 }
 
 pub fn matmul_nd_slice(
-    arr_a: (&[f64], &[usize]),
-    arr_b: (&[f64], &[usize])
-) -> (Vec<f64>, Vec<usize>) {
+    arr_a: (&[f32], &[usize]),
+    arr_b: (&[f32], &[usize])
+) -> (Vec<f32>, Vec<usize>) {
     let (arr_a, shape_a) = arr_a;
     let (arr_b, shape_b) = arr_b;
 

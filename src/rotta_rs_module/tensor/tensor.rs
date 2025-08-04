@@ -47,7 +47,7 @@ impl Tensor {
         }
     }
 
-    pub fn from_vector(shape: Vec<usize>, vector: Vec<f64>) -> Tensor {
+    pub fn from_vector(shape: Vec<usize>, vector: Vec<f32>) -> Tensor {
         let array = Arrayy::from_vector(shape, vector);
 
         Tensor {
@@ -61,7 +61,7 @@ impl Tensor {
         }
     }
 
-    pub fn from_element(shape: Vec<usize>, element: f64) -> Tensor {
+    pub fn from_element(shape: Vec<usize>, element: f32) -> Tensor {
         let array = Arrayy::arrayy_from_element(shape, element);
 
         Tensor {
@@ -75,7 +75,7 @@ impl Tensor {
         }
     }
 
-    pub fn from_shape_fn<T: FnMut() -> f64>(shape: Vec<usize>, f: T) -> Tensor {
+    pub fn from_shape_fn<T: FnMut() -> f32>(shape: Vec<usize>, f: T) -> Tensor {
         let array = Arrayy::arrayy_from_shape_fn(shape, f);
 
         Tensor {
