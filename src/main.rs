@@ -1,1 +1,343 @@
-fn main() {}
+// experimental model
+// use the model
+use std::{ collections::HashMap, fs::File, io::Read, sync::Arc, time::SystemTime };
+
+use rotta_rs::{
+    softmax,
+    Adam,
+    ConcatTensors,
+    CrossEntropyLoss,
+    DataHandler,
+    Dataset,
+    Embedding,
+    Gru,
+    LayerNorm,
+    Linear,
+    Module,
+    ParDataHandler,
+    Tensor,
+};
+use uuid::Timestamp;
+
+struct Tokenizer {
+    word2index: HashMap<String, usize>,
+    index2word: HashMap<usize, String>,
+    count: usize,
+}
+
+impl Tokenizer {
+    pub fn init() -> Tokenizer {
+        let mut index2word = HashMap::new();
+        index2word.insert(0, "SOS".to_string());
+        index2word.insert(1, "EOS".to_string());
+
+        let mut word2index = HashMap::new();
+        word2index.insert("SOS".to_string(), 0);
+        word2index.insert("EOS".to_string(), 1);
+
+        Self {
+            index2word,
+            word2index,
+            count: 2,
+        }
+    }
+
+    pub fn set_up_from_slicing(&mut self, slicing: &Vec<Vec<&str>>) {
+        for ask_ans in slicing {
+            for sentence in ask_ans {
+                let words = sentence.split(' ').collect::<Vec<&str>>();
+                for word in words {
+                    if let None = self.word2index.get(word) {
+                        self.word2index.insert(word.to_string(), self.count);
+                        self.index2word.insert(self.count, word.to_string());
+                        self.count += 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[derive(Clone)]
+pub struct MySeq2SeqModel {
+    loss_fn: CrossEntropyLoss,
+    length: usize,
+    // encoder
+    embedding_encoder: Embedding,
+    layer_norm_encoder: LayerNorm,
+    gru_encoder: Gru,
+
+    // decoder
+    embedding_decoder: Embedding,
+    layer_norm_decoder: LayerNorm,
+    gru_decoder: Gru,
+    linear_decoder: Linear,
+}
+
+impl MySeq2SeqModel {
+    pub fn init(
+        vocab_num: usize,
+        hidden: usize,
+        length: usize,
+        model: &mut Module
+    ) -> MySeq2SeqModel {
+        Self {
+            // encoder
+            embedding_encoder: model.embedding_init(vocab_num, hidden),
+            layer_norm_encoder: model.layer_norm_init(&[hidden]),
+            gru_encoder: model.gru_init(hidden),
+
+            // decoder
+            embedding_decoder: model.embedding_init(vocab_num, hidden),
+            layer_norm_decoder: model.layer_norm_init(&[hidden]),
+            gru_decoder: model.gru_init(hidden),
+            linear_decoder: model.liniar_init(hidden, vocab_num),
+
+            // model
+            loss_fn: CrossEntropyLoss::init(),
+            length,
+        }
+    }
+
+    pub fn encoder(&self, x: &Tensor) -> Option<Tensor> {
+        let embedded = self.embedding_encoder.forward(&x.reshape(vec![self.length as i32]));
+        let embedded = self.layer_norm_encoder.forward(&embedded);
+
+        let mut _hidden = None;
+        for i in 0..self.length {
+            let x = embedded.index(vec![i as i32]).reshape(vec![1, -1]);
+            let out = self.gru_encoder.forward(&x, _hidden);
+            _hidden = Some(out);
+        }
+
+        _hidden
+    }
+
+    pub fn decoder(&self, context_vector: Option<Tensor>) -> Tensor {
+        let mut x = Tensor::new([0.0]);
+        let mut output = vec![];
+
+        let mut _hidden = context_vector;
+        for _ in 0..self.length {
+            let embedded = self.embedding_decoder.forward(&x);
+            let embedded = self.layer_norm_decoder.forward(&embedded);
+            let out = self.gru_decoder.forward(&embedded, _hidden);
+
+            let linear = self.linear_decoder.forward(&out);
+            x = linear.argmax(-1);
+
+            output.push(linear);
+
+            _hidden = Some(out);
+        }
+
+        output.concat_tensor(0)
+    }
+}
+
+impl ParDataHandler for MySeq2SeqModel {
+    type Input = Tensor;
+    type Output = Tensor;
+    fn forward(&self, data: &Self::Input) -> Self::Output {
+        let context_vector = self.encoder(data);
+
+        let decoder = self.decoder(context_vector);
+        decoder
+    }
+}
+
+// dataset
+struct MyDataset {
+    input: Vec<Tensor>,
+    label: Vec<Tensor>,
+}
+
+impl Dataset for MyDataset {
+    fn get(&self, idx: usize) -> (Tensor, Tensor) {
+        (self.input[idx].clone(), self.label[idx].clone())
+    }
+
+    fn len(&self) -> usize {
+        self.input.len()
+    }
+}
+
+fn main() {
+    let mut buffer = String::new();
+    let _read = File::open("./dataset/nlp/Dataset for chatbot_Georgy Silkin/dialogs.txt")
+        .unwrap()
+        .read_to_string(&mut buffer);
+
+    let slicing = buffer
+        .split('\n')
+        .collect::<Vec<&str>>()[..10]
+        .to_vec()
+        .iter()
+        .map(|&slice| { slice.split('\t').collect::<Vec<&str>>() })
+        .collect::<Vec<Vec<&str>>>();
+
+    let mut tokenizer = Tokenizer::init();
+    tokenizer.set_up_from_slicing(&slicing);
+
+    let length = 15;
+
+    let mut ask_tensors = vec![];
+    let mut ans_tensors = vec![];
+    for ask_ans in slicing {
+        let word_ask = ask_ans[0].split(' ').collect::<Vec<&str>>();
+        let mut ask_index = vec![1.0;length];
+        for (idx, word) in word_ask.into_iter().enumerate() {
+            ask_index[idx] = *tokenizer.word2index.get(word).unwrap() as f32;
+        }
+        let ask_tensor = Tensor::from_vector(vec![1, length], ask_index);
+        ask_tensors.push(ask_tensor);
+
+        let word_ans = ask_ans[1].split(' ').collect::<Vec<&str>>();
+        let mut ans_index = vec![1.0;length];
+        for (idx, word) in word_ans.into_iter().enumerate() {
+            ans_index[idx] = *tokenizer.word2index.get(word).unwrap() as f32;
+        }
+        let ans_tensor = Tensor::from_vector(vec![1, length], ans_index);
+        ans_tensors.push(ans_tensor);
+    }
+
+    let dataset = MyDataset {
+        input: ask_tensors,
+        label: ans_tensors,
+    };
+    let mut datahander = DataHandler::init(dataset);
+
+    let mut model = Module::init();
+    model.update_initialization(rotta_rs::WeightInitialization::Glorot);
+
+    let mut my_model = MySeq2SeqModel::init(tokenizer.count, 128, length, &mut model);
+    let mut optimazer = Adam::init(model.parameters(), 0.01);
+
+    let tick = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
+
+    for epoch in 0..18 {
+        let mut loss_accu = Tensor::new([0.0]);
+        for _loop in 0..5 {
+            optimazer.zero_grad();
+            let (loss, model) = datahander.par_by_sample(my_model, 2, |(input, label), model| {
+                let decoder = model.forward(input);
+                let prediction = softmax(&decoder, -1);
+                let actual = label.reshape(vec![-1]);
+                let loss = model.loss_fn.forward(&prediction, &actual);
+
+                loss.backward();
+                loss
+            });
+
+            loss_accu = &loss_accu + &loss;
+            // for param in optimazer.parameters.lock().unwrap().iter() {
+            //     let mut param = param.grad.write().unwrap();
+            //     *param = &*param / 2.0;
+            // }
+
+            optimazer.optim();
+
+            my_model = model;
+        }
+        println!("epoch:{epoch} | loss => {}", &loss_accu / 5.0);
+    }
+    let tock = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_millis();
+    println!("{}ms", tock - tick);
+
+    // testing
+    let mut buffer = String::new();
+    let _read = File::open("./dataset/nlp/Dataset for chatbot_Georgy Silkin/dialogs.txt")
+        .unwrap()
+        .read_to_string(&mut buffer);
+
+    let slicing = buffer
+        .split('\n')
+        .collect::<Vec<&str>>()[..10]
+        .to_vec()
+        .iter()
+        .map(|&slice| { slice.split('\t').collect::<Vec<&str>>() })
+        .collect::<Vec<Vec<&str>>>();
+
+    let mut tokenizer = Tokenizer::init();
+    tokenizer.set_up_from_slicing(&slicing);
+
+    let length = 15;
+
+    let mut ask_tensors = vec![];
+    let mut ans_tensors = vec![];
+    for ask_ans in slicing {
+        let word_ask = ask_ans[0].split(' ').collect::<Vec<&str>>();
+        let mut ask_index = vec![1.0;length];
+        for (idx, word) in word_ask.into_iter().enumerate() {
+            ask_index[idx] = *tokenizer.word2index.get(word).unwrap() as f32;
+        }
+        let ask_tensor = Tensor::from_vector(vec![1, length], ask_index);
+        ask_tensors.push(ask_tensor);
+
+        let word_ans = ask_ans[1].split(' ').collect::<Vec<&str>>();
+        let mut ans_index = vec![1.0;length];
+        for (idx, word) in word_ans.into_iter().enumerate() {
+            ans_index[idx] = *tokenizer.word2index.get(word).unwrap() as f32;
+        }
+        let ans_tensor = Tensor::from_vector(vec![1, length], ans_index);
+        ans_tensors.push(ans_tensor);
+    }
+
+    // loss
+
+    // optimazer
+
+    // testing
+    for i in 0..ask_tensors.len() {
+        let input = &ask_tensors[i];
+        let label = &ans_tensors[i];
+
+        // encoder
+        let context_vector = my_model.encoder(input);
+
+        // decoder
+        let decoder = my_model.decoder(context_vector);
+
+        let prob = softmax(&decoder, -1);
+        let max = prob.argmax(-1);
+
+        // label
+        let mut ask = String::new();
+        for index in input.value().value {
+            let mut word = tokenizer.index2word
+                .get(&(index as usize))
+                .unwrap()
+                .clone();
+            word.push(' ');
+            ask.push_str(&word);
+        }
+
+        // label
+        let mut actual = String::new();
+        for index in label.value().value {
+            let mut word = tokenizer.index2word
+                .get(&(index as usize))
+                .unwrap()
+                .clone();
+            word.push(' ');
+            actual.push_str(&word);
+        }
+
+        // prediction
+        let mut output = String::new();
+        for index in max.value().value {
+            let mut word = tokenizer.index2word
+                .get(&(index as usize))
+                .unwrap()
+                .clone();
+            word.push(' ');
+            output.push_str(&word);
+        }
+
+        println!("=====================");
+        println!("ask:\n{}", ask);
+        println!("actual:\n{}", actual);
+        println!("prediction:\n{}", output);
+        println!("=====================");
+    }
+}
