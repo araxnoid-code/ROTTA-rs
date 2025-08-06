@@ -170,7 +170,7 @@ fn main() {
 
     let hidden = 64;
     let mut seq2seq_model = MySeq2SeqModel::init(tokenizer.count, hidden, length);
-    // seq2seq_model._model.load_save("./test_saving/a.json");
+    seq2seq_model._model.load_save("./test_saving/a.json");
 
     // loss
     let loss_fn = CrossEntropyLoss::init();
