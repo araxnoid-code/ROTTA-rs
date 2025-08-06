@@ -1,8 +1,10 @@
 use std::vec;
 
+use serde::{ Deserialize, Serialize };
+
 use crate::rotta_rs_module::{ arrayy::{ negative_indexing, MultipleSum, RecFlatten } };
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Arrayy {
     pub value: Vec<f32>,
     pub shape: Vec<usize>,

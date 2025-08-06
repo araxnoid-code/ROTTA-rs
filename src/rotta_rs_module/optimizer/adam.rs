@@ -42,6 +42,10 @@ impl Adam {
     pub fn optim(&mut self) {
         for (i, node_type) in self.parameters.lock().unwrap().iter().enumerate() {
             let node = node_type;
+            if !node.able_update_grad() {
+                continue;
+            }
+
             if let None = self.g.get(i) {
                 self.g.push(
                     Arrayy::arrayy_from_element(node.value.read().unwrap().shape.clone(), 0.0)

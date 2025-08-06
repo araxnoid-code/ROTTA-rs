@@ -1,9 +1,9 @@
-use std::sync::{ Arc, Mutex, RwLock };
+use std::{ fs, sync::{ Arc, Mutex, RwLock } };
 
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
-use crate::{ rotta_rs_module::{ WeightInitialization }, ShareTensor };
+use crate::{ rotta_rs_module::WeightInitialization, ShareTensor };
 
 pub struct Module {
     pub parameters: Arc<Mutex<Vec<ShareTensor>>>,

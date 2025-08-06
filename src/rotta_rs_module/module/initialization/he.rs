@@ -1,6 +1,6 @@
 use rand_distr::{ Distribution, Normal };
 
-use crate::rotta_rs_module::Module;
+use crate::{ rotta_rs_module::Module };
 
 impl Module {
     pub fn he_initialization(&mut self, input: usize) -> f32 {

@@ -2,7 +2,7 @@ mod linear;
 
 pub use linear::*;
 
-use crate::rotta_rs_module::{ arrayy::Arrayy, Module, Tensor, WeightInitialization };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, Module, Tensor, WeightInitialization } };
 
 impl Module {
     pub fn liniar_init(&mut self, input: usize, output: usize) -> Linear {
@@ -33,14 +33,12 @@ impl Module {
         self.parameters.lock().unwrap().push(tensor_bias.shared_tensor());
 
         // linear cfg
-        let linear_cfg = Linear {
+        let mut linear_cfg = Linear {
             input,
             output,
             weight: tensor_weight,
             bias: tensor_bias,
         };
-
-        // self.functions.push(Box::new(Arc::new(Mutex::new(linear_cfg))));
 
         linear_cfg
     }

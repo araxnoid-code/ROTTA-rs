@@ -16,6 +16,7 @@ pub struct Tensor {
     // requires
     pub requires_grad: Arc<RwLock<bool>>,
     pub auto_zero_grad: Arc<RwLock<bool>>,
+    pub able_update_grad: Arc<RwLock<bool>>,
 }
 
 impl Tensor {
@@ -32,6 +33,7 @@ impl Tensor {
             label: None,
             requires_grad: Arc::new(RwLock::new(true)),
             auto_zero_grad: Arc::new(RwLock::new(true)),
+            able_update_grad: Arc::new(RwLock::new(true)),
         }
     }
 
@@ -44,6 +46,7 @@ impl Tensor {
             label: None,
             requires_grad: Arc::new(RwLock::new(true)),
             auto_zero_grad: Arc::new(RwLock::new(true)),
+            able_update_grad: Arc::new(RwLock::new(true)),
         }
     }
 
@@ -58,6 +61,7 @@ impl Tensor {
             label: None,
             requires_grad: Arc::new(RwLock::new(true)),
             auto_zero_grad: Arc::new(RwLock::new(true)),
+            able_update_grad: Arc::new(RwLock::new(true)),
         }
     }
 
@@ -72,6 +76,7 @@ impl Tensor {
             label: None,
             requires_grad: Arc::new(RwLock::new(true)),
             auto_zero_grad: Arc::new(RwLock::new(true)),
+            able_update_grad: Arc::new(RwLock::new(true)),
         }
     }
 
@@ -86,6 +91,7 @@ impl Tensor {
             label: None,
             requires_grad: Arc::new(RwLock::new(true)),
             auto_zero_grad: Arc::new(RwLock::new(true)),
+            able_update_grad: Arc::new(RwLock::new(true)),
         }
     }
 
@@ -157,6 +163,15 @@ impl Tensor {
     // requires grad
     pub fn set_requires_grad(&self, stat: bool) {
         *self.requires_grad.write().unwrap() = stat;
+    }
+
+    // able_update_grad
+    pub fn able_update_grad(&self) -> bool {
+        *self.able_update_grad.read().unwrap()
+    }
+
+    pub fn set_able_update_grad(&self, stat: bool) {
+        *self.able_update_grad.write().unwrap() = stat;
     }
 
     // auto zero grad

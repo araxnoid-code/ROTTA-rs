@@ -1,7 +1,7 @@
 use rand::{ distr::Distribution };
 use rand_distr::Normal;
 
-use crate::rotta_rs_module::Module;
+use crate::{ rotta_rs_module::Module };
 
 impl Module {
     pub fn glorot_initialization(&mut self, input: usize, output: usize) -> f32 {

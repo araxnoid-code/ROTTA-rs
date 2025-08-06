@@ -26,10 +26,14 @@ impl Module {
         let r_mean = Tensor::from_element(shape.clone(), 0.0);
         r_mean.set_auto_zero_grad(false);
         r_mean.set_requires_grad(false);
+        r_mean.set_able_update_grad(false);
+        parameters.push(r_mean.shared_tensor());
 
         let r_variant = Tensor::from_element(shape.clone(), 0.0);
         r_variant.set_auto_zero_grad(false);
         r_variant.set_requires_grad(false);
+        r_variant.set_able_update_grad(false);
+        parameters.push(r_variant.shared_tensor());
 
         let eval_status = Arc::new(Mutex::new(false));
         self.eval_handlers.push(eval_status.clone());

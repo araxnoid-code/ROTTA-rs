@@ -2,7 +2,7 @@ mod dropout;
 use std::sync::{ Arc, Mutex };
 
 pub use dropout::*;
-use crate::rotta_rs_module::Module;
+use crate::{ rotta_rs_module::Module };
 use rand::distr::Bernoulli;
 
 impl Module {

@@ -1,4 +1,4 @@
-use crate::rotta_rs_module::{ matmul, Tensor };
+use crate::{ rotta_rs_module::{ matmul, Tensor } };
 
 #[derive(Clone)]
 pub struct Linear {
