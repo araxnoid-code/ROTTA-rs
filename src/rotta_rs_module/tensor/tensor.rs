@@ -1,10 +1,10 @@
-use std::{ fmt::Display, sync::{ Arc, RwLock } };
+use std::{ fmt::Display, ops::Range, sync::{ Arc, RwLock } };
 
 use rand::{ Rng, SeedableRng };
 use rand_chacha::ChaCha8Rng;
 use uuid::Uuid;
 
-use crate::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, ShareTensor };
+use crate::{ arrayy::{ Arrayy, RecFlatten }, BackwardLabel, ShareTensor, TensorRange };
 
 #[derive(Clone, Debug)]
 pub struct Tensor {
@@ -100,9 +100,9 @@ impl Tensor {
         Tensor::from_arrayy(Arrayy::arrayy_from_shape_fn(shape, || rng.random()))
     }
 
-    // pub fn arange(range: Ra<usize>) -> TensorRange {
-    //     TensorRange::init(range)
-    // }
+    pub fn arange(range: Range<usize>) -> TensorRange {
+        TensorRange::init(range)
+    }
 
     pub fn zeros(shape: Vec<usize>) -> Tensor {
         Tensor::from_arrayy(Arrayy::zeros(shape))
