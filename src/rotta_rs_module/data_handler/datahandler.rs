@@ -1,16 +1,9 @@
-use std::{ marker, sync::{ Arc, Mutex, RwLock }, thread };
+use std::{ sync::{ Arc, RwLock }, thread };
 
 use rand::{ seq::SliceRandom, SeedableRng };
 use rand_chacha::ChaCha8Rng;
-use rayon::iter::{ IntoParallelRefIterator, ParallelIterator };
 
-use crate::{
-    arrayy::ArrSlice,
-    rotta_rs_module::data_handler::dataset,
-    ParDataHandler,
-    Dataset,
-    Tensor,
-};
+use crate::{ arrayy::ArrSlice, ParDataHandler, Dataset, Tensor };
 
 pub struct DataHandler {
     rng: ChaCha8Rng,
@@ -48,9 +41,9 @@ impl DataHandler {
     }
 
     // get
-    // pub fn get(&self, idx: usize) -> Option<&(Tensor, Tensor)> {
+    // pub fn get(&self, idx: usize) -> (Tensor, Tensor) {
     //     // self.dataset.get(idx)
-    //     self.dataset.lock().unwrap().get(idx)
+    //     *self.dataset.read().unwrap().get(idx).unwrap()
     // }
 
     pub fn len(&self) -> usize {
