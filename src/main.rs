@@ -68,17 +68,33 @@ fn main() {
     let mut my_model = MyModel::init(&mut model);
     let mut optimazer = Adam::init(model.parameters(), 0.001);
 
+    // for i in 0..10 {
+    //     for (input, label) in &mut datahandler {
+    //         let x = my_model.forward(&input);
+
+    //         let loss = my_model.loss_fn.forward(&x, &label);
+    //         println!("{}", loss);
+
+    //         optimazer.zero_grad();
+
+    //         loss.backward();
+
+    //         optimazer.optim();
+    //     }
+    // }
+
     for epoch in 0..10 {
         optimazer.zero_grad();
         let (loss, model) = datahandler.par_by_sample(my_model, 2, |(input, label), model| {
             let x = model.forward(input);
 
             let loss = model.loss_fn.forward(&x, &label);
+
             loss.backward();
 
             loss
         });
-        println!("epoch:{epoch} => {}", loss);
+        // println!("epoch:{epoch} => {}", loss);
 
         optimazer.optim();
 
