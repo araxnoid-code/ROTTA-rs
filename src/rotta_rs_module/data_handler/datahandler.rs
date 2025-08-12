@@ -70,10 +70,10 @@ impl DataHandler {
         model: M,
         par_num: usize,
         f: F
-    ) -> (Tensor, M) {
+    ) -> (Vec<Tensor>, M) {
         let len = self.len();
 
-        let mut loss = Tensor::new([0.0]);
+        let mut loss_list = Vec::new();
         let model_arc = Arc::new(model.clone());
 
         let par_num = if self.par_num == 0 {
@@ -86,11 +86,13 @@ impl DataHandler {
             self.par_num
         };
 
-        let mut handles = vec![];
+        if self.par_idx > len - 1 {
+            self.par_idx = 0;
+        }
 
+        let mut handles = vec![];
         for sample_idx in self.par_idx..self.par_idx + par_num {
             if sample_idx >= len {
-                self.par_idx = 0;
                 break;
             }
 
@@ -105,24 +107,17 @@ impl DataHandler {
             });
             handles.push(handle);
         }
+        self.par_idx += self.par_num;
 
         let mut iteration = 0.0;
         for handle in handles {
             let _loss = handle.join().unwrap();
-            loss = &loss + &_loss;
+            loss_list.push(_loss);
+            // loss = &loss + &_loss;
             iteration += 1.0;
         }
 
-        if self.par_idx < len - 1 {
-            if self.par_idx + self.par_num >= len {
-                self.par_idx = 0;
-            }
-            self.par_idx += self.par_num;
-        } else {
-            self.par_idx = 0;
-        }
-
-        (&loss / (iteration as f32), model)
+        (loss_list, model)
     }
 }
 
