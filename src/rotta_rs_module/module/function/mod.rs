@@ -20,4 +20,4 @@ mod gru;
 pub use gru::*;
 
 mod parameter;
-pub use parameter::*;
+// pub use parameter::*;

@@ -153,7 +153,7 @@ fn main() {
         let word_ask = ask_ans[0].split(' ').collect::<Vec<&str>>();
         let mut ask_index = vec![1.0;length];
         for (idx, word) in word_ask.into_iter().enumerate() {
-            ask_index[idx] = *tokenizer.word2index.get(word).unwrap() as f64;
+            ask_index[idx] = *tokenizer.word2index.get(word).unwrap() as f32;
         }
         let ask_tensor = Tensor::from_vector(vec![1, length], ask_index);
         ask_tensors.push(ask_tensor);
@@ -161,7 +161,7 @@ fn main() {
         let word_ans = ask_ans[1].split(' ').collect::<Vec<&str>>();
         let mut ans_index = vec![1.0;length];
         for (idx, word) in word_ans.into_iter().enumerate() {
-            ans_index[idx] = *tokenizer.word2index.get(word).unwrap() as f64;
+            ans_index[idx] = *tokenizer.word2index.get(word).unwrap() as f32;
         }
         let ans_tensor = Tensor::from_vector(vec![1, length], ans_index);
         ans_tensors.push(ans_tensor);
@@ -201,7 +201,7 @@ fn main() {
             optimazer.optim();
         }
 
-        println!("epoch:{epoch} | loss => {}", avg / (ask_tensors.len() as f64));
+        println!("epoch:{epoch} | loss => {}", avg / (ask_tensors.len() as f32));
     }
 
     // testing

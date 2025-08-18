@@ -1,5 +1,5 @@
 use crate::{
-    rotta_rs_module::{ arrayy::{ to_shape_arr, Arrayy }, BackwardLabel, NodeType, Tensor },
+    rotta_rs_module::{ arrayy::{ to_shape_arr, Arrayy }, BackwardLabel, Tensor },
     ShareTensor,
 };
 

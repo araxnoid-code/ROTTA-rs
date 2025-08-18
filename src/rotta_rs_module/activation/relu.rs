@@ -1,4 +1,4 @@
-use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 #[allow(dead_code)]
 pub fn relu(x: &Tensor) -> Tensor {

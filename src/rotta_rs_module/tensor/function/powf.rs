@@ -1,4 +1,4 @@
-use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 pub fn powf(x: &Tensor, n: f32) -> Tensor {
     let arrayy = x.value.read().unwrap().powf(n);

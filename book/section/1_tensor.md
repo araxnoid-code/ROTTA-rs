@@ -1,5 +1,5 @@
 # Tensor
-the only data types possible on tensors are f64
+the only data types possible on tensors are f32
 
 ```rust
 use rotta_rs::{ arrayy::Arrayy, * };

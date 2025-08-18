@@ -1,7 +1,6 @@
 <div align="center">
 
 <img width="300px" src="https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta_logo.png?raw=true">
-<!-- ![ROTTA Logo](https://github.com/araxnoid-code/ROTTA-rs/blob/main/assets/rotta_logo.png?raw=true) -->
 
 # ROTTA-rs  
 **A Deep Learning Library In Rust 🦀**
@@ -28,8 +27,8 @@ fn main() {
 }
 ```
 
-## 📦 Version `0.0.6`
-### see more details about what's new in: [0.0.6](https://github.com/araxnoid-code/ROTTA-rs/releases/tag/0.0.6)
+## 📦 Version `0.1.0`
+### see more details about what's new in: [0.1.0](https://github.com/araxnoid-code/ROTTA-rs/releases/tag/0.1.0)
 
 
 🧑‍💻 see other versions: </br>
@@ -46,7 +45,7 @@ To use it:
 Or add the following line to your Cargo.toml 📁:
 ```toml
 [dependencies]
-rotta_rs = "0.0.6"
+rotta_rs = "0.1.0"
 ```
 or
 
@@ -131,3 +130,5 @@ araxnoid0@gmail.com
 - [rayon](https://crates.io/crates/rayon)
 - [matrixmultiply](https://crates.io/crates/matrixmultiply)
 - [rand_chacha](https://crates.io/crates/rand_chacha)
+- [serde](https://crates.io/crates/serde)
+- [serde_json](https://crates.io/crates/serde_json)

@@ -1,6 +1,6 @@
 use std::sync::{ Arc, Mutex };
 
-use crate::{ rotta_rs_module::{ arrayy::Arrayy, Backward, NodeType }, ShareTensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy }, ShareTensor };
 
 pub struct SgdMomen {
     parameters: Arc<Mutex<Vec<ShareTensor>>>,

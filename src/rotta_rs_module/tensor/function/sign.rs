@@ -1,4 +1,4 @@
-use crate::{ rotta_rs_module::{ BackwardLabel, NodeType, Tensor }, ShareTensor };
+use crate::{ rotta_rs_module::{ BackwardLabel, Tensor }, ShareTensor };
 
 pub fn sign(x: &Tensor) -> Tensor {
     let mut tensor = Tensor::from_arrayy(x.value.read().unwrap().sign());

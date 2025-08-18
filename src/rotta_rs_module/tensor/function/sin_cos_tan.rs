@@ -1,4 +1,4 @@
-use crate::{ arrayy::Arrayy, NodeType, ShareTensor, Tensor };
+use crate::{ arrayy::Arrayy, ShareTensor, Tensor };
 
 // sin
 pub fn sin(x: &Tensor) -> Tensor {

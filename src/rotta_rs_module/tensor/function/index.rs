@@ -1,4 +1,4 @@
-use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 pub fn index(x: &Tensor, index: Vec<i32>) -> Tensor {
     let mut tensor = Tensor::from_arrayy(x.value.read().unwrap().index(index.clone()));

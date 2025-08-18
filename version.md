@@ -1,5 +1,49 @@
-## 📦 Version: `0.0.6`
+## 📦 Version: `0.1.0`
+### ✨ New Features
+- change `tensor` type from `f64` to `f32`
 
+- optimazing `tensor` for `multithread`
+see more detail in [Tensor Philosophy]()
+
+- `parallel training via DataHandler`
+```rust
+let (loss, model) = datahandler.par_by_sample(my_model, 2, |(input, label), model| {
+        let x = model.forward(input);
+
+        let loss = model.loss_fn.forward(&x, &label);
+        loss.backward();
+    });
+```
+see more detail in [par_DataHanlder]()
+
+- `saving parameters`
+```rust
+struct MyModel {
+    linear_a: Linear,
+    linear_b: Linear,
+}
+
+impl MyModel {
+    pub fn init(module: &mut Module) -> MyModel {
+        Self {
+            linear_a: module.liniar_init(1, 8),
+            linear_b: module.liniar_init(8, 1),
+        }
+    }
+}
+
+fn main() {
+    let mut model = Module::init();
+    let my_model = MyModel::init(&mut model);
+    model.save("parameters.json");
+    // or
+    model.load_save("parameters.json");
+}
+```
+see more detail in [saving parameters]()
+
+
+## 📦 Version: `0.0.6`
 ### ✨ New Features
 - `lstm function`
 ```rust

@@ -5,7 +5,6 @@ use crate::{
         arrayy::{ broadcast_concat, Arrayy, MultipleSum },
         broadcasting_tensor_non_panic,
         BackwardLabel,
-        NodeType,
         Tensor,
     },
     ShareTensor,

@@ -1,4 +1,4 @@
-use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 pub fn exp(x: &Tensor) -> Tensor {
     let exp_arr = x.value.read().unwrap().exp();

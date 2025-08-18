@@ -1,4 +1,4 @@
-use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, NodeType, Tensor }, ShareTensor };
+use crate::{ rotta_rs_module::{ arrayy::Arrayy, BackwardLabel, Tensor }, ShareTensor };
 
 #[derive(Clone)]
 pub struct CrossEntropyLoss {}

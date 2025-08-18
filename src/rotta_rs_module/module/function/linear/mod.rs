@@ -33,7 +33,7 @@ impl Module {
         self.parameters.lock().unwrap().push(tensor_bias.shared_tensor());
 
         // linear cfg
-        let mut linear_cfg = Linear {
+        let linear_cfg = Linear {
             input,
             output,
             weight: tensor_weight,
