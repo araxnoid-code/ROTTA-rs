@@ -3,7 +3,9 @@
 - change `tensor` type from `f64` to `f32`
 
 - optimazing `tensor` for `multithread`
-see more detail in [Tensor Philosophy]()
+see more detail in
+
+[Tensor Philosophy](https://github.com/araxnoid-code/ROTTA-rs/blob/main/philosophy_of_rotta_rs/3_tensor_philosophy.md)
 
 - `parallel training via DataHandler`
 ```rust
@@ -14,7 +16,7 @@ let (loss, model) = datahandler.par_by_sample(my_model, 2, |(input, label), mode
         loss.backward();
     });
 ```
-see more detail in [par_DataHanlder]()
+see more detail in [par_DataHanlder](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/8_par_datahandler.md)
 
 - `saving parameters`
 ```rust
@@ -40,7 +42,7 @@ fn main() {
     model.load_save("parameters.json");
 }
 ```
-see more detail in [saving parameters]()
+see more detail in [saving parameters](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/9_saving_parameters.md)
 
 
 ## 📦 Version: `0.0.6`
