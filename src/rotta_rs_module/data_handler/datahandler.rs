@@ -109,12 +109,10 @@ impl DataHandler {
         }
         self.par_idx += self.par_num;
 
-        let mut iteration = 0.0;
         for handle in handles {
             let _loss = handle.join().unwrap();
             loss_list.push(_loss);
             // loss = &loss + &_loss;
-            iteration += 1.0;
         }
 
         (loss_list, model)
