@@ -3,9 +3,8 @@
 - change `tensor` type from `f64` to `f32`
 
 - optimazing `tensor` for `multithread`
-see more detail in
-
-[Tensor Philosophy](https://github.com/araxnoid-code/ROTTA-rs/blob/main/philosophy_of_rotta_rs/3_tensor_philosophy.md)
+  
+see more detail in [Tensor Philosophy](https://github.com/araxnoid-code/ROTTA-rs/blob/main/philosophy_of_rotta_rs/3_tensor_philosophy.md)
 
 - `parallel training via DataHandler`
 ```rust
