@@ -229,17 +229,26 @@ x = [a, b, c, d, e]
 ```
 and it continues like that...
 ```sh
-par_by_sample(x)
 x = [a, b, c, d, e]
-
+par_by_sample(x)
 x = [a, b, c, d, e]
      ^  ^
     paralel
 
 par_by_sample(x)
 x = [a, b, c, d, e]
+           ^  ^
+          paralel
+
+par_by_sample(x)
+x = [a, b, c, d, e]
                  ^
                paralel
+
+par_by_sample(x)
+x = [a, b, c, d, e]
+     ^  ^
+    paralel
 ```
 When it reaches the end, `par_by_sample` will stop automatically, and when we call it again, `par_by_sample` will return to the first sample.
 
