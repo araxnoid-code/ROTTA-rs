@@ -23,3 +23,9 @@
 ## [🚀 Optimazer](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/5_Optimizer.md)
 
 ## [🤖 Simple AI Model & Training](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/6_simple_AI_model.md)
+
+## [📊 Dataset & DataHandler](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/7_Dataset_and_DataHandler.md)
+
+## [💻️ Par_datahandler](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/8_par_datahandler.md)
+
+## [📄 Saving Parameter](https://github.com/araxnoid-code/ROTTA-rs/blob/main/book/section/9_saving_parameters.md)
