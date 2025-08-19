@@ -24,7 +24,7 @@ fn main() {
     // from_element(shape, element)
     let tensor = Tensor::from_element(vec![2, 3], 10.0);
 
-    // from_shape_fn(shape, FnMut -> f64)
+    // from_shape_fn(shape, FnMut -> f32)
     let tensor = Tensor::from_shape_fn(vec![2, 3], || { 1.0 });
 
     // arange(range)
