@@ -8,7 +8,7 @@
 <div align=center>
 
 # GUIDE
-### version 0.0.4
+### version 0.1.0
 </div align=center>
 
 
